@@ -6,7 +6,10 @@
 /*.blg
 /*.log
 /*.out
-/*.pdf
+/*.fdb_latexmk
+/*.fls
+/*.synctex.gz
+/thesis.pdf
 
 /template.zip
 /bib/
