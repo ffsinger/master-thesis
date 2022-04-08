@@ -1,49 +1,28 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% EPFL report package, main thesis file
-% Goal: provide formatting for theses and project reports
-% Author: Mathias Payer <mathias.payer@epfl.ch>
-%
-% This work may be distributed and/or modified under the
-% conditions of the LaTeX Project Public License, either version 1.3
-% of this license or (at your option) any later version.
-% The latest version of this license is in
-%   http://www.latex-project.org/lppl.txt
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,11pt,oneside]{report}
 % Options: MScThesis, BScThesis, MScProject, BScProject, lablogo
 \usepackage[MScThesis]{EPFLreport}
 \usepackage{xspace}
 
-\title{A wonderful thesis\\about the merits of scientific writing}
-\author{The Student}
-\supervisor{The Doctoral Student}
-\adviser{Prof. Dr. sc. ETH Mathias Payer}
-%\coadviser{Second Adviser}
-\expert{The External Reviewer}
+\title{Document representation for end to end encrypted search and machine learning}
+\author{Florian Singer}
+\epflsupervisor{Prof. Serge Vaudenay}
+\industrysupervisor{Nicolas Casademont}
 
-\newcommand{\sysname}{FooSystem\xspace}
+%\dedication{...}
+%\acknowledgments{...}
 
 \begin{document}
 \maketitle
-\makededication
-\makeacks
+%\makededication
+%\makeacks
 
 \begin{abstract}
-The \sysname tool enables lateral decomposition of a multi-dimensional
-flux compensator along the timing and space axes.
-
 The abstract serves as an executive summary of your project.
 Your abstract should cover at least the following topics, 1-2 sentences for
 each: what area you are in, the problem you focus on, why existing work is
 insufficient, what the high-level intuition of your work is, maybe a neat
 design or implementation decision, and key results of your evaluation.
 \end{abstract}
-
-\begin{frenchabstract}
-For a doctoral thesis, you have to provide a French translation of the
-English abstract. For other projects this is optional.
-\end{frenchabstract}
 
 \maketoc
 
@@ -52,7 +31,7 @@ English abstract. For other projects this is optional.
 %%%%%%%%%%%%%%%%%%%%%%
 
 The introduction is a longer writeup that gently eases the reader into your
-thesis~\cite{dinesh20oakland}. Use the first paragraph to discuss the setting.
+thesis~\cite{kim_logistic_2018}. Use the first paragraph to discuss the setting.
 In the second paragraph you can introduce the main challenge that you see.
 The third paragraph lists why related work is insufficient.
 The fourth and fifth paragraphs discuss your approach and why it is needed.
@@ -133,20 +112,5 @@ advances the status quo.
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \printbibliography
-
-% Appendices are optional
-% \appendix
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \chapter{How to make a transmogrifier}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% In case you ever need an (optional) appendix.
-%
-% You need the following items:
-% \begin{itemize}
-% \item A box
-% \item Crayons
-% \item A self-aware 5-year old
-% \end{itemize}
 
 \end{document}

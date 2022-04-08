@@ -67,19 +67,14 @@
   \renewcommand{\projectterm}{Bachelor Project Report}
 \fi
 
-\def\@adviser{Thesis Advisor}
-\newcommand{\adviser}[1]{
-  \def\@adviser{#1}
+\def\@epflsupervisor{EPFL Supervisor}
+\newcommand{\epflsupervisor}[1]{
+  \def\@epflsupervisor{#1}
 }
 
-\def\@supervisor{Thesis Supervisor}
-\newcommand{\supervisor}[1]{
-  \def\@supervisor{#1}
-}
-
-\def\@expert{Expert Reviewer}
-\newcommand{\expert}[1]{
-  \def\@expert{#1}
+\def\@industrysupervisor{Industry Supervisor}
+\newcommand{\industrysupervisor}[1]{
+  \def\@industrysupervisor{#1}
 }
 
 \def\maketitle{\par
@@ -126,20 +121,16 @@ by \@author\par
 \vspace{\drop}
 
 \flushleft
-{Approved by the Examining Committee:}\par
 \vspace{1.5\baselineskip}
-\@adviser\\
-Thesis Advisor \\[1\baselineskip]
-\@expert\\
-External Expert \\[1\baselineskip]
-\@supervisor\\
-Thesis Supervisor\par
+\@epflsupervisor\\
+EPFL Supervisor \\[1\baselineskip]
+\@industrysupervisor\\
+Industry Supervisor\par
 \centering
 \vspace{1\baselineskip}
-EPFL IC IINFCOM HEXHIVE \\
-BC 160 (Bâtiment BC) \\
-Station 14 \\
-CH-1015 Lausanne \\[\baselineskip]
+Ketl \\
+33 Rue des Bains \\
+1205 Genève, Switzerland \\[\baselineskip]
 \today
 \par
 \vfill
@@ -205,7 +196,7 @@ and show them with \texttt{\textbackslash{}makeacks}.
 \def\abstract{\cleardoublepage
 \chapter*{Abstract}
 \markboth{Abstract}{Abstract}
-\addcontentsline{toc}{chapter}{Abstract (English/Français)}}
+\addcontentsline{toc}{chapter}{Abstract}}
 \def\endabstract{}
 
 \def\frenchabstract{\begin{otherlanguage}{french}
