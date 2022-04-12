@@ -52,6 +52,23 @@ that must be resolved to understand your design and implementation.
 
 This section is usually 3-5 pages.
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Logistic regression}
+
+Loss function
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Neural networks}
+
+Forward pass, backward pass
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Homomorphic encryption}
+
+Schemes
+
+Homomorphic operations
+
 
 %%%%%%%%%%%%%%%%
 \chapter{Design}
@@ -62,6 +79,30 @@ Highlight why individual decisions are important and/or necessary. Discuss
 how the design fits together.
 
 This section is usually 5-10 pages.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Threat model}
+
+In order to justify the use of encrypted machine learning as a mitigation, it is important to identify and formalize the potential threats that an ML system can face. This also helps us to understand how this type of mitigation can be bypassed.
+
+\subsection{Data-flow diagram}
+
+\subsection{Adversaries}
+
+\subsection{Threats}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Logistic regression}
+
+Based on Kim et al.
+
+Packing.
+
+No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Neural network}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,6 +115,39 @@ you wrote but covers the implementation aspects of the projects.
 
 This section is usually 3-5 pages.
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{FHE libraries}
+
+\subsection{PALISADE}
+
+Parameters (higher level)
+
+Wrapper
+
+Helper functions
+
+\subsection{SEAL}
+
+Parameters (lower level)
+
+Wrapper
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Logistic regression}
+
+\subsection{Challenges}
+Crypto and ML parameters.
+
+Scale
+
+Library-specific problems
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Neural network}
+
+\subsection{PDF-split}
+
+
 
 %%%%%%%%%%%%%%%%%%%%
 \chapter{Evaluation}
@@ -84,6 +158,17 @@ Describe the evaluation setup, the designed experiments, and how the
 experiments showcase the individual points you want to prove.
 
 This section is usually 5-10 pages.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Logistic regression}
+
+Benchmarks of the different versions (plaintext, palisade, seal, sklearn) with the different metrics (accuracy, AUC, runtime, memory)
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Neural network}
+
+\subsection{PDF-split}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%
