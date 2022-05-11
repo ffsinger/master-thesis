@@ -2,6 +2,9 @@
 % Options: MScThesis, BScThesis, MScProject, BScProject, lablogo
 \usepackage[MScThesis]{EPFLreport}
 \usepackage{xspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{calrsfs}
 
 \title{Document representation for end to end encrypted search and machine learning}
 \author{Florian Singer}
@@ -58,16 +61,19 @@ The goal of this thesis is to identify, implement and evaluate the state-of-the-
 \chapter{Background}
 %%%%%%%%%%%%%%%%%%%%
 
-The background section introduces the necessary background to understand your
-work. This is not necessarily related work but technologies and dependencies
-that must be resolved to understand your design and implementation.
+% The background section introduces the necessary background to understand your work. 
+% This is not necessarily related work but technologies and dependencies that must be resolved to understand your design and implementation.
 
-This section is usually 3-5 pages.
+% This section is usually 3-5 pages.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Loss function
+Logistic regression is a simple and widely used model for classification. Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^f$ and the corresponding label $y_i \in \{-1,1\}$, the training phase consists of learning a vector of weights $\boldsymbol\beta \in \mathbb{R}^{f+1}$ minimizing the loss function:
+\begin{equation}\label{logistic_reg}
+    \mathcal{L}(\boldsymbol\beta) = \frac{1}{n} \sum_{i=1}^{n} \log(1 + \exp(-\mathbf{z}_i^T \boldsymbol\beta)) 
+\end{equation}
+where $\mathbf{z}_i = y_i \cdot (1, \mathbf{x}_i)$ for $i=1,...,n$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural networks}
