@@ -6,7 +6,7 @@
 \title{Document representation for end to end encrypted search and machine learning}
 \author{Florian Singer}
 \epflsupervisor{Prof. Serge Vaudenay}
-\industrysupervisor{Nicolas Casademont}
+\companysupervisor{Nicolas Casademont}
 
 %\dedication{...}
 %\acknowledgments{...}
@@ -30,17 +30,29 @@ design or implementation decision, and key results of your evaluation.
 \chapter{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%
 
-The introduction is a longer writeup that gently eases the reader into your
-thesis~\cite{kim_logistic_2018}. Use the first paragraph to discuss the setting.
-In the second paragraph you can introduce the main challenge that you see.
-The third paragraph lists why related work is insufficient.
-The fourth and fifth paragraphs discuss your approach and why it is needed.
-The sixth paragraph will introduce your thesis statement. Think how you can
-distill the essence of your thesis into a single sentence.
-The seventh paragraph will highlight some of your results
-The eights paragraph discusses your core contribution.
+% The introduction is a longer writeup that gently eases the reader into your thesis. 
+% Use the first paragraph to discuss the setting.
+% In the second paragraph you can introduce the main challenge that you see.
+% The third paragraph lists why related work is insufficient.
+% The fourth and fifth paragraphs discuss your approach and why it is needed.
+% The sixth paragraph will introduce your thesis statement. Think how you can distill the essence of your thesis into a single sentence.
+% The seventh paragraph will highlight some of your results
+% The eights paragraph discusses your core contribution.
 
-This section is usually 3-5 pages.
+% This section is usually 3-5 pages.
+
+The boom of artificial intelligence and machine learning seen in the past decade has had significant impact on societies, with the rise of recommender systems, image recognition software and large-scale advertisement platforms, to name a few. These advances can be beneficial, but they come with many risks and challenges that are often disregarded for the sake of short-term profit.
+
+One of the main challenge is related to the sensitivity of the data used in these systems. As many different actors are usually participating in the training and usage of a machine learning model, a high level of trust is necessary for the data providers. 
+
+This trust can be achieved through legal bindings, but only technological safeguards can provide real guarantees that the data will not be misused.
+
+One of these safeguards is to hide the data with encryption. However, the mainstream cryptography of today only protects the data while in transit or at rest, and it cannot be used when performing operations on it. This limitation is fortunately lifted in a particular subset of cryptographic schemes, called homomorphic encryption schemes. These have the advantage of allowing some operations, primarily additions and multiplications, while keeping the numbers fully encrypted.
+
+The downside of this approach is that it comes with severe performance and precision limitations, and is thus difficult to apply in the context of machine learning where computations are already gluttonous in resources. Nevertheless, this has been an active research field that has seen promising advances in the past decade [...].
+
+The goal of this thesis is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. It also aims to formalize and describe on a more granular level which steps of a machine learning algorithm can be protected using homomorphic encryption, and why.
+
 
 %%%%%%%%%%%%%%%%%%%%
 \chapter{Background}
@@ -94,7 +106,7 @@ In order to justify the use of encrypted machine learning as a mitigation, it is
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Based on Kim et al.
+Based on Kim et al. ~\cite{kim_logistic_2018}
 
 Packing.
 
@@ -102,6 +114,8 @@ No bootstrapping, but it would be interesting to compare. The problem is that fe
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
+
+2 packing alternatives with different trade-offs.
 
 
 
@@ -132,6 +146,10 @@ Parameters (lower level)
 
 Wrapper
 
+\subsection{Plaintext}
+
+With numpy vectors, for debugging and performance comparisons.
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
@@ -144,8 +162,6 @@ Library-specific problems
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
-
-\subsection{PDF-split}
 
 
 
@@ -166,8 +182,6 @@ Benchmarks of the different versions (plaintext, palisade, seal, sklearn) with t
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
-
-\subsection{PDF-split}
 
 
 
