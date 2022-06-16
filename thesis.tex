@@ -29,6 +29,10 @@ design or implementation decision, and key results of your evaluation.
 
 \maketoc
 
+% Memo: shortcuts VSCode
+% Jump from code to pdf: Ctrl+Alt+J
+% Jump from pdf to code: Ctrl+Click
+
 %%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -46,7 +50,7 @@ design or implementation decision, and key results of your evaluation.
 
 The boom of artificial intelligence and machine learning seen in the past decade has had significant impact on societies, with the rise of recommender systems, image recognition software and large-scale advertisement platforms, to name a few. These advances can be beneficial, but they come with many risks and challenges that are often disregarded for the sake of short-term profit.
 
-One of the main challenge is related to the sensitivity of the data used in these systems. As many different actors are usually participating in the training and usage of a machine learning model, a high level of trust is necessary for the data providers. 
+One of the main challenge is related to the sensitivity of the data used in these systems. As many different actors are usually participating in the training and usage of a machine learning model, the data providers need to place a high level of trust in the other actors.
 
 This trust can be achieved through legal bindings, but only technological safeguards can provide real guarantees that the data will not be misused.
 
@@ -69,16 +73,23 @@ The goal of this thesis is to identify, implement and evaluate the state-of-the-
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Logistic regression is a simple and widely used model for classification. Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^f$ and the corresponding label $y_i \in \{-1,1\}$, the training phase consists of learning a vector of weights $\boldsymbol\beta \in \mathbb{R}^{f+1}$ minimizing the loss function:
+Logistic regression is a simple and widely used model for classification. Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^f$ and the corresponding label $y_i \in \{-1,1\}$, the training phase consists of learning a vector of weights $\mathbf{w} \in \mathbb{R}^{f+1}$ minimizing the loss function:
 \begin{equation}\label{logistic_reg}
-    \mathcal{L}(\boldsymbol\beta) = \frac{1}{n} \sum_{i=1}^{n} \log(1 + \exp(-\mathbf{z}_i^T \boldsymbol\beta)) 
+    \mathcal{L}(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^{n} \log(1 + \exp(-\mathbf{z}_i^T \mathbf{w})) 
 \end{equation}
 where $\mathbf{z}_i = y_i \cdot (1, \mathbf{x}_i)$ for $i=1,...,n$.
+
+A common method used to minimize the loss function is the gradient descent algorithm. It iteratively updates the weights vector by following the direction opposite to the gradient of the function:
+\begin{align}\label{gradient_descent}
+    \mathbf{w}^{t+1} & = \mathbf{w}^t - \gamma\nabla\mathcal{L}(\mathbf{w}) \nonumber \\ 
+    & = \mathbf{w}^t + \frac{\gamma}{n} \sum_{i=1}^{n} \sigma(-\mathbf{z}_i^T \mathbf{w}^t) \cdot \mathbf{z}_i
+\end{align}
+where $\gamma$ is the learning rate and $\sigma(x) = \frac{1}{1 + e^{-x}}$ is the logistic function.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural networks}
 
-Forward pass, backward pass
+Forward pass, (backward pass)
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Homomorphic encryption}
