@@ -23,10 +23,22 @@
   style=numeric-comp,
   hyperref=true,
   %style=numeric,
-  %sorting=ydnt,
+  sorting=none,
   defernumbers=true,
   maxbibnames=99,
 ]{biblatex}
+% Hide notes, "visited on..." and the url (except for software and websites)
+\AtEveryBibitem{
+  \ifentrytype{software}{}{
+    \ifentrytype{online}{}{
+      \clearfield{url}
+    }
+  }
+  \clearfield{urldate}
+  \clearfield{urlmonth}
+  \clearfield{urlyear}
+  \clearfield{note}
+}
 \addbibresource{thesis.bib}
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
