@@ -133,9 +133,26 @@ The traditional architecture of a convolutional neural network starts with an al
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Homomorphic encryption}
 
-Schemes
+The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern schemes used today. This problem has been studied for many years, with the first schemes supporting only one type of operation, such as the Paillier \cite{stern_public-key_1999} cryptosystem supporting homomorphic additions. 
 
-Homomorphic operations
+The main revolution of the field was due to Gentry \cite{gentry_fully_2009} in 2009, when he presented a blueprint for constructing fully homomorphic encryption schemes. Fully homomorphic schemes support two types of primitive operations, typically additions and multiplications, and can evaluate arithmetic circuits of arbitrary depth thanks to a \emph{bootstrapping} procedure.
+
+From this blueprint were born many cryptosystems that are used today, such as BGV \cite{brakerski_leveled_2012}, BFV \cite{fan_somewhat_2012}, or CKKS \cite{cheon_homomorphic_2016, cheon_full_2018}. The former two work with vectors of integers, and the latter works with vectors of complex numbers.
+
+Here is a list of the basic operations available with CKKS:
+\begin{itemize}
+    \item \texttt{KeyGen}: Generate a public key and a private key.
+    \item \texttt{Encode}: Encode a vector of complex numbers into a plaintext, which is a polynomial in the ring $R = \mathbb{Z}[X]/(X^N + 1)$.
+    \item \texttt{Decode}: Decode a plaintext back into a vector.
+    \item \texttt{Encrypt}: Encrypt a plaintext with the public key.
+    \item \texttt{Decrypt}: Decrypt a ciphertext with the private key.
+    \item \texttt{Add}: Pairwise addition of two ciphertexts, or one ciphertext and one plaintext.
+    \item \texttt{Multiply}: Pairwise multiplication of two ciphertexts/plaintext.
+    \item \texttt{Rotate}: Permute the elements in a ciphertext by shifting them by $k$ positions.
+    \item \texttt{Relinearize}: ...
+    \item \texttt{Rescale}: ...
+    \item \texttt{Bootstrap} \cite{nielsen_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%
