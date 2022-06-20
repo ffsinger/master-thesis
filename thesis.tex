@@ -144,13 +144,13 @@ Here is a list of the basic operations available with CKKS:
     \item \texttt{KeyGen}: Generate a public key and a private key.
     \item \texttt{Encode}: Encode a vector of complex numbers into a plaintext, which is a polynomial in the ring $R = \mathbb{Z}[X]/(X^N + 1)$.
     \item \texttt{Decode}: Decode a plaintext back into a vector.
-    \item \texttt{Encrypt}: Encrypt a plaintext with the public key.
+    \item \texttt{Encrypt}: Encrypt a plaintext with the public key into an element of $R_q^2$ where $R_q = R/qR$ is a set of polynomials with coefficients modulo $q$.
     \item \texttt{Decrypt}: Decrypt a ciphertext with the private key.
     \item \texttt{Add}: Pairwise addition of two ciphertexts, or one ciphertext and one plaintext.
     \item \texttt{Multiply}: Pairwise multiplication of two ciphertexts/plaintext.
     \item \texttt{Rotate}: Permute the elements in a ciphertext by shifting them by $k$ positions.
-    \item \texttt{Relinearize}: ...
-    \item \texttt{Rescale}: ...
+    \item \texttt{Relinearize}: After a multiplication, the resulting ciphertext will be in $R_q^3$ and will continue to grow after each multiplication. Relinearization is used to bring it back to $R_q^2$ and facilitate decryption.
+    \item \texttt{Rescale}: Rounding operation performed to maintain the size of a ciphertext after a multiplication.
     \item \texttt{Bootstrap} \cite{nielsen_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
 \end{itemize}
 
@@ -168,27 +168,69 @@ This section is usually 5-10 pages.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Threat model}
 
-In order to justify the use of encrypted machine learning as a mitigation, it is important to identify and formalize the potential threats that an ML system can face. This also helps us to understand how this type of mitigation can be bypassed.
+In order to justify the use of cryptography as a mitigation, it is useful to identify and formalize the potential threats that a machine learning system can face. This also helps us to understand how this type of mitigation can be bypassed.
 
 \subsection{Data-flow diagram}
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/dataflow-ml.png}
+    \caption{Dataflow diagram for a general ML system.}
+    \label{fig:dataflow}
+\end{figure}
+
+In order to better visualize how a machine learning system looks like, figure \ref{fig:dataflow} attempts to model the data flow in a general case. This diagram could be refined in more concrete applications. For instance, the model provider and the data collector may be the same entity, which would remove a trust boundary. Another gray area is the feature extraction process that can happen in different ways: it could be done directly on the client and the data collector, or it could rely on an external service controlled by the model provider.
+
+Thus, in this case, the goal of this diagram is to be a tool for identifying the threats, rather than an exhaustive reference.
+
 \subsection{Adversaries}
+
+[List here, or remove and mention in following section.]
 
 \subsection{Threats}
 
+From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many types of threats:
+
+% TODO maybe as subsections, with more details
+
+\begin{itemize}
+    \item Poisoning attacks
+    \item Evasion/impersonation attacks
+    \item Membership inference attack
+    \item Inversion attack
+    \item Model extraction attack
+    \item Attribute inference attack (leakings features of samples)
+    \item Property inference attack (leaking features of datasets)
+    \item Data ordering attack
+\end{itemize}
+
+[What we will focus on (training phase and inference phase). How it solves the problem.]
+
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Logistic regression}
+\section{Secure training}
 
-Based on Kim et al. ~\cite{kim_logistic_2018}
+Among the threats that we identified, one is that external actors, such as hackers or cloud providers, could observe the training process and exfiltrate the data. A potential defense mechanism is to train the model on homomorphically encrypted data.
 
-Packing.
+As training can be a fairly complex and resource-intensive process, it is wise to start with a simple classification model. Logistic regression models are simple and have been extensively studied as part of the 2017 iDASH secure genome analysis competition. The winning solution has been proposed by Kim et al. ~\cite{kim_logistic_2018}. This will be the basis of our implementation.
 
-No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.
+[Packing.]
+
+[No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.]
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Neural network}
+\section{Private inference}
 
-2 packing alternatives with different trade-offs.
+In the case of an inference service provided by a model owner to a client, another threat is that the client's data can be abused. Even with a privacy policy, the client has no technical guarantee that this data will not be shared, stolen, or used for different purposes. Homomorphic encryption aims to reduce this risk, thus improving the overall trust in the system. 
+
+There are two approaches to this problem. In both cases, we assume that a model has been trained beforehand. 
+
+In the most common approach, the client encrypts the data and sends it to the inference service, who learns nothing about the data and the inference result.
+
+In the second approach, the weights of the model are encrypted and sent to the client. This requires an additional round-trip of communications for the decryption step, which can reveal the inference result to the service if no precautions are made. In addition, the architecture of the model must be revealed to the client, which incurs the risk of it being stolen and retrained from scratch by a competitor. Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two.
+
+Because inference requires much less resources than training, we can look at more complex models. As neural networks are extremely popular nowadays, a deep learning framework compatible with encrypted data has many use-cases.
+
+[2 packing alternatives (one custom and one from CryptoNets) with different trade-offs.]
 
 
 
