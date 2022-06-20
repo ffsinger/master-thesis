@@ -50,11 +50,11 @@ design or implementation decision, and key results of your evaluation.
 
 The boom of artificial intelligence and machine learning seen in the past decade has had significant impact on societies, with the rise of recommender systems, image recognition software and large-scale advertisement platforms, to name a few. These advances can be beneficial, but they come with many risks and challenges that are often disregarded for the sake of short-term profit.
 
-One of the main challenge is related to the sensitivity of the data used in these systems. As many different actors are usually participating in the training and usage of a machine learning model, the data providers need to place a high level of trust in the other actors.
+One of the main challenge is related to the sensitivity of the data used in these systems. As many different actors are usually participating in the training and usage of a machine learning (ML) model, the data providers need to place a high level of trust in the other actors.
 
 This trust can be achieved through legal bindings, but only technological safeguards can provide real guarantees that the data will not be misused.
 
-One of these safeguards is to hide the data with encryption. However, the mainstream cryptography of today only protects the data while in transit or at rest, and it cannot be used when performing operations on it. This limitation is fortunately lifted in a particular subset of cryptographic schemes, called homomorphic encryption schemes. These have the advantage of allowing some operations, primarily additions and multiplications, while keeping the numbers fully encrypted.
+One of these safeguards is to hide the data with encryption. However, the mainstream cryptography of today only protects the data while in transit or at rest, and it cannot be used when performing operations on it. This limitation is fortunately lifted in a particular subset of cryptographic schemes, called homomorphic encryption (HE) schemes. These have the advantage of allowing some operations, primarily additions and multiplications, while keeping the numbers fully encrypted.
 
 The downside of this approach is that it comes with severe performance and precision limitations, and is thus difficult to apply in the context of machine learning where computations are already gluttonous in resources. Nevertheless, this has been an active research field that has seen promising advances in the past decade [...].
 
@@ -159,11 +159,11 @@ Here is a list of the basic operations available with CKKS:
 \chapter{Design}
 %%%%%%%%%%%%%%%%
 
-Introduce and discuss the design decisions that you made during this project.
-Highlight why individual decisions are important and/or necessary. Discuss
-how the design fits together.
+% Introduce and discuss the design decisions that you made during this project.
+% Highlight why individual decisions are important and/or necessary. 
+% Discuss how the design fits together.
 
-This section is usually 5-10 pages.
+% This section is usually 5-10 pages.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Threat model}
@@ -204,18 +204,26 @@ From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_
     \item Data ordering attack
 \end{itemize}
 
-[What we will focus on (training phase and inference phase). How it solves the problem.]
+[Describe some of them and reference relevant works.]
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Secure training}
+\section{Secure training}\label{sec:secure_training}
 
-Among the threats that we identified, one is that external actors, such as hackers or cloud providers, could observe the training process and exfiltrate the data. A potential defense mechanism is to train the model on homomorphically encrypted data.
+In addition to the threats that we identified, one is that external actors, such as hackers or cloud providers, could observe the training process and exfiltrate the data. A potential defense mechanism is to train the model on homomorphically encrypted data.
+
+In our case, we assume that the whole training data matrix is encrypted with the same key. The holder of this key is both the model owner and the data owner. The data should be encrypted in a secure enclave before sending it to the training service. 
+
+If the data comes from external data owners and should not be visible to the model owner, we can design a protocol using multi-party homomorphic encryption. However, this feature is not available in many HE libraries.
+
+If we distinguish the client (data and model owner) and the server (computing power provider), the steps of an encrypted training procedure can be described as follows:
+\begin{enumerate}
+    \item Client: initialize the keys and encrypt the data. Send the encrypted data and other objects or parameters required for homomorphic computations (e.g. rotation keys, relinearization keys).
+    \item Server: do the training. Send back the encrypted weights.
+    \item Client: decrypt the weights.
+\end{enumerate}
 
 As training can be a fairly complex and resource-intensive process, it is wise to start with a simple classification model. Logistic regression models are simple and have been extensively studied as part of the 2017 iDASH secure genome analysis competition. The winning solution has been proposed by Kim et al. ~\cite{kim_logistic_2018}. This will be the basis of our implementation.
 
-[Packing.]
-
-[No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.]
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Private inference}
@@ -228,26 +236,47 @@ In the most common approach, the client encrypts the data and sends it to the in
 
 In the second approach, the weights of the model are encrypted and sent to the client. This requires an additional round-trip of communications for the decryption step, which can reveal the inference result to the service if no precautions are made. In addition, the architecture of the model must be revealed to the client, which incurs the risk of it being stolen and retrained from scratch by a competitor. Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two.
 
+This time, if we consider the client to be the data owner and the server to be the model owner, the steps are very similar to section \ref{sec:secure_training}:
+\begin{enumerate}
+    \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys.
+    \item Server: do the inference. Send back the result.
+    \item Client: decrypt the result.
+\end{enumerate}
+
+Note that the inference step can also be delegated to an external cloud provider without risks of compromising the data.
+
 Because inference requires much less resources than training, we can look at more complex models. As neural networks are extremely popular nowadays, a deep learning framework compatible with encrypted data has many use-cases.
 
-[2 packing alternatives (one custom and one from CryptoNets) with different trade-offs.]
+\subsection{Packing}
 
+This problem, especially for the special case of neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. One of the particularity of their approach is that they pack the $n$ pixels of an image into $n$ different ciphertexts. This is very efficient when batching multiple images (by putting the pixels of the first image in the first slots, the pixels of the second image in the second slots, etc) but results in a lot of wasted if only one image needs to be evaluated. In the following, we will call this method \emph{pixelwise packing}.
+
+An alternative is to pack the pixels of an image one after the others in the same ciphertext. This results in a more efficient use of space when doing few inferences. For simplicity, we assume that the number of pixels fit into a single ciphertext. We also separate each channel into its own ciphertext. For this reason, we call this method \emph{channelwise packing}.
+
+Both methods have their own trade-offs that highly depend on the architecture of the network. They are evaluated side by side in chapter \ref{chap:evaluation}.
+
+["If we look at the theoretical complexity..." Detail the trade-off]
+
+[Check: has channelwise packing been described in the literature?]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Implementation}
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-The implementation covers some of the implementation details of your project.
-This is not intended to be a low level description of every line of code that
-you wrote but covers the implementation aspects of the projects.
+% The implementation covers some of the implementation details of your project.
+% This is not intended to be a low level description of every line of code that you wrote but covers the implementation aspects of the projects.
 
-This section is usually 3-5 pages.
+% This section is usually 3-5 pages.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{FHE libraries}
+\section{Backends}
+
+There are multiple HE libraries providing the CKKS scheme. Most of them are implemented in \texttt{C++}, such as SEAL \cite{microsoft_corporation_microsoft_2022}, Palisade \cite{palisade_palisade_2022} or HEAAN \cite{cryptolab_inc_heaan_2022}, but Lattigo \cite{tune_insight_sa_lattigo_2022} is implemented in Golang. A more complete survey and comparison of the different libraries can be found in \cite{viand_sok_2021}.
 
 \subsection{PALISADE}
+
+Bindings (incomplete)
 
 Parameters (higher level)
 
@@ -256,6 +285,8 @@ Wrapper
 Helper functions
 
 \subsection{SEAL}
+
+Bindings \cite{hugang_seal-python_2022}
 
 Parameters (lower level)
 
@@ -268,12 +299,14 @@ With numpy vectors, for debugging and performance comparisons.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
+[No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.]
+
 \subsection{Challenges}
 Crypto and ML parameters.
 
 Scale
 
-Library-specific problems
+Library-specific problems, standardization
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
@@ -281,7 +314,7 @@ Library-specific problems
 
 
 %%%%%%%%%%%%%%%%%%%%
-\chapter{Evaluation}
+\chapter{Evaluation}\label{chap:evaluation}
 %%%%%%%%%%%%%%%%%%%%
 
 In the evaluation you convince the reader that your design works as intended.
@@ -312,6 +345,10 @@ you overcome some of the weaknesses of related work by discussing the
 trade-offs. Stay positive!
 
 This section is usually 3-5 pages.
+
+[Kim et al.: what differences between their solution and mine]
+
+[Dowlin et al.: other encryption scheme, how they evaluated (MNIST on a very simple network of 5 layers)]
 
 
 %%%%%%%%%%%%%%%%%%%%
