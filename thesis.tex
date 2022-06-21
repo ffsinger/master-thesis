@@ -6,6 +6,9 @@
 \usepackage{amssymb}
 \usepackage{calrsfs}
 
+% Needs to be in this file if we want autocompletion to work
+\addbibresource{thesis.bib}
+
 \title{Document representation for end to end encrypted search and machine learning}
 \author{Florian Singer}
 \epflsupervisor{Prof. Serge Vaudenay}
@@ -133,7 +136,7 @@ The traditional architecture of a convolutional neural network starts with an al
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Homomorphic encryption}
 
-The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern schemes used today. This problem has been studied for many years, with the first schemes supporting only one type of operation, such as the Paillier \cite{stern_public-key_1999} cryptosystem supporting homomorphic additions. 
+The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern schemes used today. This problem has been studied for many years, with the first schemes supporting only one type of operation, such as the Paillier \cite{paillier_public-key_1999} cryptosystem supporting homomorphic additions. 
 
 The main revolution of the field was due to Gentry \cite{gentry_fully_2009} in 2009, when he presented a blueprint for constructing fully homomorphic encryption schemes. Fully homomorphic schemes support two types of primitive operations, typically additions and multiplications, and can evaluate arithmetic circuits of arbitrary depth thanks to a \emph{bootstrapping} procedure.
 
@@ -276,7 +279,7 @@ Both methods have their own trade-offs that highly depend on the architecture of
 
 There are multiple HE libraries providing the CKKS scheme. Most of them are implemented in \texttt{C++}, such as SEAL \cite{microsoft_corporation_microsoft_2022}, Palisade \cite{palisade_palisade_2022} or HEAAN \cite{cryptolab_inc_heaan_2022}, but Lattigo \cite{tune_insight_sa_lattigo_2022} is implemented in Golang. A more complete survey and comparison of the different libraries can be found in \cite{viand_sok_2021}.
 
-Each of these libraries has its own particularities, as there is not yet a complete standard for homomomorphic encryption (although the work has been started in \cite{lauter_homomorphic_2021-1}). In the next subsections, we will introduce the ones that have been used in this project.
+Each of these libraries has its own particularities, as there is not yet a complete standard for homomomorphic encryption (although the work has been started in \cite{albrecht_homomorphic_2021}). In the next subsections, we will introduce the ones that have been used in this project.
 
 Despite these differences, we implemented a higher abstraction to unify the usage of these libraries, and to provide a more intuitive API for non-expert programmers. Thanks to this, the ML algorithms can be implemented independently of the backend. The set of available primitives is slightly reduced, because the relinearization and rescaling operations are performed automatically when necessary.
 
