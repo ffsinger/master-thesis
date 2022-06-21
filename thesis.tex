@@ -74,23 +74,23 @@ The goal of this thesis is to identify, implement and evaluate the state-of-the-
 \section{Logistic regression}
 
 Logistic regression is a simple and widely used model for classification. Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^d$ and the corresponding label $y_i \in \{-1,1\}$, the training phase consists of learning a vector of weights $\mathbf{w} \in \mathbb{R}^{d+1}$ minimizing the loss function:
-\begin{equation}\label{logistic_reg_train}
+\begin{equation}\label{eq:logistic_reg_train}
     \mathcal{L}(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^{n} \log(1 + \exp(-\mathbf{z}_i^T \mathbf{w})) 
 \end{equation}
 where $\mathbf{z}_i = y_i \cdot (1, \mathbf{x}_i)$ for $i=1,...,n$.
 
 A common method used to minimize the loss function is the gradient descent algorithm. It iteratively updates the weights vector by following the direction opposite to the gradient of the function:
-\begin{align}\label{gradient_descent}
+\begin{align}\label{eq:gradient_descent}
     \mathbf{w}^{t+1} & = \mathbf{w}^t - \gamma\nabla\mathcal{L}(\mathbf{w}) \nonumber \\ 
     & = \mathbf{w}^t + \frac{\gamma}{n} \sum_{i=1}^{n} \sigma(-\mathbf{z}_i^T \mathbf{w}^t) \cdot \mathbf{z}_i
 \end{align}
 where $\gamma$ is the learning rate and $\sigma$ is the sigmoid function (or logistic function) defined as:
-\begin{equation}\label{sigmoid}
+\begin{equation}\label{eq:sigmoid}
     \sigma(x) = \frac{1}{1 + e^{-x}}
 \end{equation}
 
 Classifying a new point $\mathbf{x}$ can be done as follows:
-\begin{equation}\label{logistic_reg_pred}
+\begin{equation}\label{eq:logistic_reg_pred}
     y = 
     \begin{cases}
         1, & \text{if } (1, \mathbf{x}) \cdot \mathbf{w} > 0 \\
@@ -105,11 +105,11 @@ Neural networks are defined as a succession of \emph{layers}, each consisting of
 
 Basic networks make use of \emph{fully connected} (or linear) layers, which are defined as such for an input vector $\mathbf{x} \in \mathbb{R}^d$, a weights matrix $W \in \mathbb{R}^{k \times d}$ and a bias vector $\mathbf{b} \in \mathbb{R}^k$:
 
-\begin{equation}\label{linear_layer}
+\begin{equation}\label{eq:linear_layer}
     h^{\mathrm{linear}}(\mathbf{x}) = W \mathbf{x} + \mathbf{b}
 \end{equation}
 
-Usually, a non-linear \emph{activation function} is applied to the output in order to learn more complex decision boundaries. The most common is $\mathrm{ReLU}(x) = \max(0, x)$, but the sigmoid (\ref{sigmoid}) or the hyperbolic tangent function are also often used.
+Usually, a non-linear \emph{activation function} is applied to the output in order to learn more complex decision boundaries. The most common is $\mathrm{ReLU}(x) = \max(0, x)$, but the sigmoid (\autoref{eq:sigmoid}) or the hyperbolic tangent function are also often used.
 
 The training phase is made of two main steps. First, a data point (or a batch of data points) is evaluated successively through the layers, in what we call the forward pass. Then, we perform a gradient descent by computing the gradients at each neuron and by updating the weights, starting from the end of the network. This is called the backward pass.
 
@@ -120,7 +120,7 @@ Once the model is trained, it can be used to classify new data points. For this 
 In many practical cases, particularly for image recognition, the input dimensions can be quite big. This is a problem, because a linear layer connects every input neuron with every output neuron. In order to improve performance and better exploit the spatiality properties of pixels in images, we can limit the connections of a pixel to its neighborhood. This amounts to applying a convolution.
 
 For an image $x \in \mathbb{R}^{c \times h \times w}$ with $c$ channels, a height of $h$ and a width of $w$ pixels, a 2D convolutional layer is defined as follows for each output channel $i$:
-\begin{equation}\label{conv2d_layer}
+\begin{equation}\label{eq:conv2d_layer}
     h_i^{\mathrm{conv2d}}(x) = b_i + \sum_{k=1}^{c} w_{i, k} \star x_{k}
 \end{equation}
 where $b_i$ is the bias, $w_i \in \mathbb{R}^{c \times k_1 \times k_2}$ is the kernel and $\star$ is the 2D cross-correlation operation.
@@ -154,6 +154,8 @@ Here is a list of the basic operations available with CKKS:
     \item \texttt{Bootstrap} \cite{nielsen_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
 \end{itemize}
 
+[List and explain CKKS parameters]
+
 
 %%%%%%%%%%%%%%%%
 \chapter{Design}
@@ -174,12 +176,12 @@ In order to justify the use of cryptography as a mitigation, it is useful to ide
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\textwidth]{figures/dataflow-ml.png}
+    \includegraphics[width=\textwidth]{figures/dataflow-ml.pdf}
     \caption{Dataflow diagram for a general ML system.}
     \label{fig:dataflow}
 \end{figure}
 
-In order to better visualize how a machine learning system looks like, figure \ref{fig:dataflow} attempts to model the data flow in a general case. This diagram could be refined in more concrete applications. For instance, the model provider and the data collector may be the same entity, which would remove a trust boundary. Another gray area is the feature extraction process that can happen in different ways: it could be done directly on the client and the data collector, or it could rely on an external service controlled by the model provider.
+In order to better visualize how a machine learning system looks like, \autoref{fig:dataflow} attempts to model the data flow in a general case. This diagram could be refined in more concrete applications. For instance, the model provider and the data collector may be the same entity, which would remove a trust boundary. Another gray area is the feature extraction process that can happen in different ways: it could be done directly on the client and the data collector, or it could rely on an external service controlled by the model provider.
 
 Thus, in this case, the goal of this diagram is to be a tool for identifying the threats, rather than an exhaustive reference.
 
@@ -236,7 +238,7 @@ In the most common approach, the client encrypts the data and sends it to the in
 
 In the second approach, the weights of the model are encrypted and sent to the client. This requires an additional round-trip of communications for the decryption step, which can reveal the inference result to the service if no precautions are made. In addition, the architecture of the model must be revealed to the client, which incurs the risk of it being stolen and retrained from scratch by a competitor. Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two.
 
-This time, if we consider the client to be the data owner and the server to be the model owner, the steps are very similar to section \ref{sec:secure_training}:
+This time, if we consider the client to be the data owner and the server to be the model owner, the steps are very similar to \autoref{sec:secure_training}:
 \begin{enumerate}
     \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys.
     \item Server: do the inference. Send back the result.
@@ -253,7 +255,7 @@ This problem, especially for the special case of neural networks, has already be
 
 An alternative is to pack the pixels of an image one after the others in the same ciphertext. This results in a more efficient use of space when doing few inferences. For simplicity, we assume that the number of pixels fit into a single ciphertext. We also separate each channel into its own ciphertext. For this reason, we call this method \emph{channelwise packing}.
 
-Both methods have their own trade-offs that highly depend on the architecture of the network. They are evaluated side by side in chapter \ref{chap:evaluation}.
+Both methods have their own trade-offs that highly depend on the architecture of the network. They are evaluated side by side in \autoref{chap:evaluation}.
 
 ["If we look at the theoretical complexity..." Detail the trade-off]
 
@@ -274,27 +276,33 @@ Both methods have their own trade-offs that highly depend on the architecture of
 
 There are multiple HE libraries providing the CKKS scheme. Most of them are implemented in \texttt{C++}, such as SEAL \cite{microsoft_corporation_microsoft_2022}, Palisade \cite{palisade_palisade_2022} or HEAAN \cite{cryptolab_inc_heaan_2022}, but Lattigo \cite{tune_insight_sa_lattigo_2022} is implemented in Golang. A more complete survey and comparison of the different libraries can be found in \cite{viand_sok_2021}.
 
+Each of these libraries has its own particularities, as there is not yet a complete standard for homomomorphic encryption (although the work has been started in \cite{lauter_homomorphic_2021-1}). In the next subsections, we will introduce the ones that have been used in this project.
+
+Despite these differences, we implemented a higher abstraction to unify the usage of these libraries, and to provide a more intuitive API for non-expert programmers. Thanks to this, the ML algorithms can be implemented independently of the backend. The set of available primitives is slightly reduced, because the relinearization and rescaling operations are performed automatically when necessary.
+
+One of the requirements of the project was to code in Python. This means that our implementation needs bindings to use these libraries.
+
 \subsection{PALISADE}
 
-Bindings (incomplete)
+PALISADE is a widely used open-source library written in \texttt{C++}. It provides incomplete bindings for Python, but we can extend them as needed. 
 
-Parameters (higher level)
+In its basic usage, the library creates a context from a set of parameters and stores the keys needed for the evaluation (rotation keys, etc). It is slightly higher-level than other libraries by default, e.g., it rescales ciphertexts automatically. It also provides a wide set of utility functions, such as polynomial evaluation.
 
-Wrapper
-
-Helper functions
+Multi-party HE is supported, but not bootstrapping.
 
 \subsection{SEAL}
 
-Bindings \cite{hugang_seal-python_2022}
+SEAL, developed by Microsoft, is one of the most popular libraries. A complete set of Python bindings are already available \cite{hugang_seal-python_2022}.
 
-Parameters (lower level)
+It offers finer grained initialization parameters and a lower-level API (e.g., we need to set the moduli size at each level, and rescaling needs to be done manually).
 
-Wrapper
+It does not offer bootstrapping, nor a multi-party version.
 
 \subsection{Plaintext}
 
-With numpy vectors, for debugging and performance comparisons.
+When dealing with ciphertexts, it is extremely useful to have a cleartext pipeline that can be inspected for easier debugging. It can also be used to evaluate the cost of translating an algorithm to a homomorphic-encryption-friendly version, independently of the cost of encryption. 
+
+For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
@@ -303,6 +311,8 @@ With numpy vectors, for debugging and performance comparisons.
 
 \subsection{Challenges}
 Crypto and ML parameters.
+
+Security level
 
 Scale
 
