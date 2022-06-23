@@ -192,7 +192,7 @@ Thus, in this case, the goal of this diagram is to be a tool for identifying the
 
 [List here, or remove and mention in following section.]
 
-\subsection{Threats}
+\subsection{Threats}\label{sec:threats}
 
 From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many types of threats:
 
@@ -201,20 +201,31 @@ From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_
 \begin{itemize}
     \item Poisoning attacks
     \item Evasion/impersonation attacks
-    \item Membership inference attack
-    \item Inversion attack
-    \item Model extraction attack
-    \item Attribute inference attack (leakings features of samples)
-    \item Property inference attack (leaking features of datasets)
-    \item Data ordering attack
+    \item Data ordering attacks
+    \item Model extraction attacks
+    \item Membership inference attacks
+    \item Inversion attacks
+    \item Attribute inference attacks (leakings features of samples)
+    \item Property inference attacks (leaking features of datasets)
 \end{itemize}
 
-[Describe some of them and reference relevant works.]
+In many cases, the attacker needs to influence the training process by injecting or modifying the input data.
+
+Let us take the example of a classification model based on textual data from documents. To carry out a poisoning attack, an adversary could create spam documents with uncommon words. This will reduce the utility of the system by replacing useful words in the feature vector. If the system lets adversaries define the labels, the model can also be poisoned with incorrect labels. This type of attack can be detected with the help of another model specialized in anomaly detection.
+
+For evasion or impersonation attacks, the attack vector is the same but it involves carefully crafted inputs in order to produce a specific result. 
+
+In the same vein, data ordering attacks aim to reduce the utility or even bias the model by putting some data points first \cite{shumailov_manipulating_2021}. This could be used to introduce racist or sexist biases, for instance. Thus, it is important to shuffle the training data properly.
+
+If the attacker has unlimited access to the prediction results, it may be possible to reconstruct and steal an approximation the model (model extraction attack). The typical type of adversary carrying out this attack could be a competitor unwilling to dedicate the resources necessary for training a model from scratch.
+
+In the case of membership inference attacks, inversion attacks, attribute and property inference attacks, the goal is to reconstruct part of the training dataset. This can either be general or target a single individual. To be successful, the attacker sometimes needs to do data poisoning \cite{hidano_model_2017}, or needs access to additional information, such as confidence levels or auxiliary datasets \cite{fredrikson_model_2015, wang_variational_2022}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Secure training}\label{sec:secure_training}
 
-In addition to the threats that we identified, one is that external actors, such as hackers or cloud providers, could observe the training process and exfiltrate the data. A potential defense mechanism is to train the model on homomorphically encrypted data.
+In addition to the threats that we identified in \autoref{sec:threats}, another one is that external actors, such as hackers or cloud providers, could observe the training process and exfiltrate the data. A potential defense mechanism is to train the model on homomorphically encrypted data.
 
 In our case, we assume that the whole training data matrix is encrypted with the same key. The holder of this key is both the model owner and the data owner. The data should be encrypted in a secure enclave before sending it to the training service. 
 
@@ -233,7 +244,7 @@ As training can be a fairly complex and resource-intensive process, it is wise t
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Private inference}
 
-In the case of an inference service provided by a model owner to a client, another threat is that the client's data can be abused. Even with a privacy policy, the client has no technical guarantee that this data will not be shared, stolen, or used for different purposes. Homomorphic encryption aims to reduce this risk, thus improving the overall trust in the system. 
+In the case of an inference service provided by a model owner to a client, another threat is that the client's data can be abused. Even with a privacy policy, the client has no technical guarantee that this data will not be shared, stolen, or used for different purposes. As opposed to the attacks mentioned in \autoref{sec:threats}, this threat is independent of the ML model and involves only the data. Homomorphic encryption aims to reduce this risk, thus improving the overall trust in the system.
 
 There are two approaches to this problem. In both cases, we assume that a model has been trained beforehand. 
 
@@ -310,19 +321,30 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-[No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.]
+Matrix packing, padding.
 
-\subsection{Challenges}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Neural network}
+
+Layers are defined with pytorch. Training is done with pytorch. Weights are exported to a file.
+
+% TODO refactor the other way around
+Layers are translated to the homomorphic version if all are supported.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Challenges}
+
 Crypto and ML parameters.
+
+No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.
 
 Security level
 
 Scale
 
 Library-specific problems, standardization
-
-%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Neural network}
 
 
 
