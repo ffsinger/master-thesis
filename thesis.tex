@@ -23,11 +23,9 @@
 %\makeacks
 
 \begin{abstract}
-The abstract serves as an executive summary of your project.
-Your abstract should cover at least the following topics, 1-2 sentences for
-each: what area you are in, the problem you focus on, why existing work is
-insufficient, what the high-level intuition of your work is, maybe a neat
-design or implementation decision, and key results of your evaluation.
+% The abstract serves as an executive summary of your project.
+% Your abstract should cover at least the following topics, 1-2 sentences for each: what area you are in, the problem you focus on, why existing work is insufficient, what the high-level intuition of your work is, maybe a neat design or implementation decision, and key results of your evaluation.
+[...]
 \end{abstract}
 
 \maketoc
@@ -157,7 +155,16 @@ Here is a list of the basic operations available with CKKS:
     \item \texttt{Bootstrap} \cite{nielsen_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
 \end{itemize}
 
-[List and explain CKKS parameters]
+To initialize the context, some parameters need to be set:
+
+\emph{Ring degree} [...]
+
+\emph{Moduli chain} [...]
+
+The \emph{scale} of the plaintext, determining how many bits are consumed during a rescale operation.
+
+\emph{Error distribution} [...]
+
 
 
 %%%%%%%%%%%%%%%%
@@ -188,15 +195,9 @@ In order to better visualize how a machine learning system looks like, \autoref{
 
 Thus, in this case, the goal of this diagram is to be a tool for identifying the threats, rather than an exhaustive reference.
 
-\subsection{Adversaries}
-
-[List here, or remove and mention in following section.]
-
 \subsection{Threats}\label{sec:threats}
 
 From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many types of threats:
-
-% TODO maybe as subsections, with more details
 
 \begin{itemize}
     \item Poisoning attacks
@@ -321,30 +322,32 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Matrix packing, padding.
+[Matrix packing, padding]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
 
-Layers are defined with pytorch. Training is done with pytorch. Weights are exported to a file.
+[Layers are defined with pytorch. Training is done with pytorch. Weights are exported to a file.]
 
 % TODO refactor the other way around
-Layers are translated to the homomorphic version if all are supported.
+[Layers are translated to the homomorphic version if all are supported.]
+
+[...]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Challenges}
 
-Crypto and ML parameters.
+[Crypto and ML parameters]
 
-No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation.
+[No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation]
 
-Security level
+[Security level]
 
-Scale
+[Scale]
 
-Library-specific problems, standardization
+[Library-specific problems, standardization]
 
 
 
@@ -352,19 +355,19 @@ Library-specific problems, standardization
 \chapter{Evaluation}\label{chap:evaluation}
 %%%%%%%%%%%%%%%%%%%%
 
-In the evaluation you convince the reader that your design works as intended.
-Describe the evaluation setup, the designed experiments, and how the
-experiments showcase the individual points you want to prove.
-
-This section is usually 5-10 pages.
+% In the evaluation you convince the reader that your design works as intended.
+% Describe the evaluation setup, the designed experiments, and how the experiments showcase the individual points you want to prove.
+% This section is usually 5-10 pages.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Benchmarks of the different versions (plaintext, palisade, seal, sklearn) with the different metrics (accuracy, AUC, runtime, memory)
+[Benchmarks of the different versions (plaintext, palisade, seal, sklearn) with the different metrics (accuracy, AUC, runtime, memory)]
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
+
+[Benchmarks of the different versions (plaintext, palisade, seal, pytorch; pixelwise and channelwise) with the different metrics (accuracy, runtime, memory)]
 
 
 
@@ -372,14 +375,9 @@ Benchmarks of the different versions (plaintext, palisade, seal, sklearn) with t
 \chapter{Related Work}
 %%%%%%%%%%%%%%%%%%%%%%
 
-The related work section covers closely related work. Here you can highlight
-the related work, how it solved the problem, and why it solved a different
-problem. Do not play down the importance of related work, all of these
-systems have been published and evaluated! Say what is different and how
-you overcome some of the weaknesses of related work by discussing the 
-trade-offs. Stay positive!
-
-This section is usually 3-5 pages.
+% The related work section covers closely related work. 
+% Here you can highlight the related work, how it solved the problem, and why it solved a different problem. Do not play down the importance of related work, all of these systems have been published and evaluated! Say what is different and how you overcome some of the weaknesses of related work by discussing the trade-offs. Stay positive!
+% This section is usually 3-5 pages.
 
 [Kim et al.: what differences between their solution and mine]
 
@@ -390,9 +388,9 @@ This section is usually 3-5 pages.
 \chapter{Conclusion}
 %%%%%%%%%%%%%%%%%%%%
 
-In the conclusion you repeat the main result and finalize the discussion of
-your project. Mention the core results and why as well as how your system
-advances the status quo.
+% In the conclusion you repeat the main result and finalize the discussion of your project. Mention the core results and why as well as how your system advances the status quo.
+
+[...]
 
 \cleardoublepage
 \phantomsection
