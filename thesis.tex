@@ -1,10 +1,6 @@
 \documentclass[a4paper,11pt,oneside]{report}
 % Options: MScThesis, BScThesis, MScProject, BScProject, lablogo
 \usepackage[MScThesis]{EPFLreport}
-\usepackage{xspace}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{calrsfs}
 
 % Needs to be in this file if we want autocompletion to work
 \addbibresource{thesis.bib}
@@ -362,7 +358,50 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-[Benchmarks of the different versions (plaintext, palisade, seal, sklearn) with the different metrics (accuracy, AUC, runtime, memory)]
+\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms.
+
+\begin{table}[h!]
+    \begin{center}
+      \caption{Runtime of each step in seconds}
+      \label{table:lr_runtime}
+      \pgfplotstabletypeset[
+        % multicolumn names,
+        col sep=comma,
+        display columns/0/.style={
+          column name=$ $,
+          column type={l},string type},
+        display columns/1/.style={
+          column name=Init,
+          column type={l}},
+        display columns/2/.style={
+          column name=Encrypt train,
+          column type={l}},
+        display columns/3/.style={
+          column name=Train,
+          column type={l}},
+        display columns/4/.style={
+          column name=Encrypt test,
+          column type={l}},
+        display columns/5/.style={
+          column name=Predict,
+          column type={l}},
+        display columns/6/.style={
+          column name=Decrypt,
+          column type={l}},
+        every head row/.style={
+            before row={\toprule},
+            after row={
+                % si{\second} & \si{\second} ... \\
+                \midrule
+            }
+        },
+        every last row/.style={after row=\bottomrule},
+    ]{data/lr_runtime.csv}
+\end{center}
+\end{table}
+
+[Accuracy table]
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
