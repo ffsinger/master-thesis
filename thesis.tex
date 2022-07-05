@@ -366,7 +366,7 @@ The following evaluation has been carried out on a simple dataset of $80$ traini
 
 \begin{table}[h!]
     \begin{center}
-      \caption{Runtime of each step in seconds}
+      \caption{Runtime of the LR at each step, in seconds}
       \label{table:lr_runtime}
       \pgfplotstabletypeset[
         % multicolumn names,
@@ -410,7 +410,7 @@ The following evaluation has been carried out on a simple dataset of $80$ traini
 
 \begin{table}[h!]
   \begin{center}
-    \caption{Model performance metrics}
+    \caption{LR performance metrics}
     \label{table:lr_metrics}
     \pgfplotstabletypeset[
       % multicolumn names,
@@ -446,8 +446,77 @@ The following evaluation has been carried out on a simple dataset of $80$ traini
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
 
-[Benchmarks of the different versions (plaintext, palisade, seal, pytorch; pixelwise and channelwise) with the different metrics (accuracy, runtime, memory, serialization)]
+[network architecture]
 
+The runtime of the encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}.
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Runtime of the CNN at each step, in seconds}
+    \label{table:cnn_runtime}
+    \pgfplotstabletypeset[
+      col sep=comma,
+      display columns/0/.style={
+        column name=$ $,
+        column type={l},string type},
+      display columns/1/.style={
+        column name=Init client,
+        column type={l}},
+      display columns/2/.style={
+        column name=Encrypt,
+        column type={l}},
+      display columns/3/.style={
+        column name=Init server,
+        column type={l}},
+      display columns/4/.style={
+        column name=Predict,
+        column type={l}},
+      display columns/5/.style={
+        column name=Decrypt,
+        column type={l}},
+      display columns/6/.style={
+        column name=Serialize,
+        column type={l}},
+      every head row/.style={
+        before row={\toprule},
+        after row={\midrule}
+      },
+      every last row/.style={after row=\bottomrule},
+  ]{data/cnn_runtime.csv}
+\end{center}
+\end{table}
+
+\autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type.
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Runtime of the CNN prediction at each layer, in seconds}
+    \label{table:cnn_layers}
+    \pgfplotstabletypeset[
+      col sep=comma,
+      display columns/0/.style={
+        column name=$ $,
+        column type={l},string type},
+      display columns/1/.style={
+        column name=Convolution,
+        column type={l}},
+      display columns/2/.style={
+        column name=Average pooling,
+        column type={l}},
+      display columns/3/.style={
+        column name=Square,
+        column type={l}},
+      display columns/4/.style={
+        column name=Linear,
+        column type={l}},
+      every head row/.style={
+        before row={\toprule},
+        after row={\midrule}
+      },
+      every last row/.style={after row=\bottomrule},
+  ]{data/cnn_layers.csv}
+\end{center}
+\end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%
