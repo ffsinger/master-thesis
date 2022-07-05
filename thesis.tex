@@ -358,6 +358,10 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
+The following evaluation has been carried out on a simple dataset of $80$ training samples and $20$ test samples. The samples have $2$ features and can be linearly separated in two classes.
+
+[More details on the settings]
+
 \autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms.
 
 \begin{table}[h!]
@@ -400,13 +404,49 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 \end{center}
 \end{table}
 
-[Accuracy table]
+\autoref{table:lr_metrics} shows that the model performance metrics (accuracy, area under the curve) are not different from the baseline.
+
+[TODO: use a non-trivial dataset]
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Model performance metrics}
+    \label{table:lr_metrics}
+    \pgfplotstabletypeset[
+      % multicolumn names,
+      col sep=comma,
+      display columns/0/.style={
+        column name=$ $,
+        column type={l},string type},
+      display columns/1/.style={
+        column name=Predicted distribution,
+        column type={l}},
+      display columns/2/.style={
+        column name=True distribution,
+        column type={l}},
+      display columns/3/.style={
+        column name=Accuracy,
+        column type={l}},
+      display columns/4/.style={
+        column name=AUC,
+        column type={l}},
+      every head row/.style={
+          before row={\toprule},
+          after row={
+              % si{\second} & \si{\second} ... \\
+              \midrule
+          }
+      },
+      every last row/.style={after row=\bottomrule},
+  ]{data/lr_metrics.csv}
+\end{center}
+\end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
 
-[Benchmarks of the different versions (plaintext, palisade, seal, pytorch; pixelwise and channelwise) with the different metrics (accuracy, runtime, memory)]
+[Benchmarks of the different versions (plaintext, palisade, seal, pytorch; pixelwise and channelwise) with the different metrics (accuracy, runtime, memory, serialization)]
 
 
 

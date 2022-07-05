@@ -1,0 +1,6 @@
+version,pred_distribution,true_distribution,accuracy,auc
+plaintext,0.50,0.50,1.00,1.00
+palisade,0.50,0.50,1.00,1.00
+seal,0.50,0.50,1.00,1.00
+standard,0.50,0.50,1.00,1.00
+sklearn,0.50,0.50,1.00,1.00
