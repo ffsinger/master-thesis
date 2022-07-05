@@ -1,0 +1,6 @@
+version,memory [MB]
+plaintext-channelwise,368
+seal-channelwise,1090
+plaintext-pixelwise,402
+seal-pixelwise,2620
+pytorch,371
