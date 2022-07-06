@@ -151,16 +151,15 @@ Here is a list of the basic operations available with CKKS:
     \item \texttt{Bootstrap} \cite{nielsen_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
 \end{itemize}
 
-To initialize the context, some parameters need to be set:
+During the initialization phase, some parameters need to be set:
 
-\emph{Ring degree} [...]
+\begin{itemize}
+  \item The \emph{ring degree} $N$ determines the size of the vectors that we encode. A higher degree also provides more security.
+  \item The \emph{moduli chain} is a set of coprime integers of approximately the same size as $q$. The number of elements should be at least the multiplicative depth of the function to be computed.
+  \item The \emph{scale} of the plaintext, determining how many bits are consumed during a rescale operation.
+\end{itemize}
 
-\emph{Moduli chain} [...]
-
-The \emph{scale} of the plaintext, determining how many bits are consumed during a rescale operation.
-
-\emph{Error distribution} [...]
-
+These parameters need to be carefully tuned based on the problem at hand. Other parameters, such as the \emph{error distribution} or the \emph{key distribution} are often hardcoded in practice.
 
 
 %%%%%%%%%%%%%%%%
@@ -520,6 +519,12 @@ The runtime of the encrypted inference with a convolutional neural network is pr
   ]{data/cnn_layers.csv}
 \end{center}
 \end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PDF-split}
+
+[...]
 
 
 %%%%%%%%%%%%%%%%%%%%%%
