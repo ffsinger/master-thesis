@@ -365,6 +365,8 @@ In the next subsections, we will introduce the ones that have been used in this 
 Despite these differences, we implemented a higher abstraction to unify the usage of these libraries, and to provide a more intuitive API for non-expert programmers. 
 Thanks to this, the ML algorithms can be implemented independently of the backend. 
 The set of available primitives is slightly reduced, because the relinearization and rescaling operations are performed automatically when necessary.
+There are also utility functions to export the keys and ciphertexts - into a \texttt{base64} encoded JSON object.
+This gives an example of how clients and servers can share these objects in practice.
 
 One of the requirements of the project was to code in Python. 
 This means that our implementation needs bindings to use these libraries.
@@ -399,15 +401,31 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-[Separation of code]
+The API for the logistic regression implementation is inspired by other ML libraries. 
+It consists of a class providing a \texttt{train} and a \texttt{predict} function, along with their encrypted counterparts. 
+Separate functions are available for encrypting and decrypting the data. 
+This modularization is important for any real setting where the client and the server are different applications.
 
+Complete pipelines are also provided as an example and for the evaluation.
+It shows which parts should be run on the client, which parts should be run on the server, and which objects must be shared.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
 
-[Layers are defined with pytorch. Training is done with pytorch. Weights are exported to a file.]
+Similarly to the logistic regression, a class wraps encryption, prediction and decryption functions. 
+It also translates layers defined with the \texttt{pytorch} library into an encrypted version.
 
-[Layers are translated to the homomorphic version if all are supported.]
+The following layers are supported, for both the \emph{pixelwise} and the \emph{channelwise} packing methods:
+\begin{itemize}
+  \item Fully connected layer
+  \item 2D convolution
+  \item 2D Average pooling
+  \item Approximate sigmoid activation
+  \item Approximate $\tanh$ activation
+  \item Square activation $f(x) = x^2$
+\end{itemize}
+
+The pipelines show an example of a client-server separation and a non-encrypted training procedure.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -618,6 +636,8 @@ The runtime of the encrypted inference with a convolutional neural network is pr
 [Kim et al.: what differences between their solution and mine]
 
 [Dowlin et al.: other encryption scheme, how they evaluated (MNIST on a very simple network of 5 layers)]
+
+[Other works on NN: shallow networks optimized for a single architecture,  GPUs, ... Mine is meant to be flexible.]
 
 
 %%%%%%%%%%%%%%%%%%%%
