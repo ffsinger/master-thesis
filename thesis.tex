@@ -53,9 +53,9 @@ This trust can be achieved through legal bindings, but only technological safegu
 
 One of these safeguards is to hide the data with encryption. However, the mainstream cryptography of today only protects the data while in transit or at rest, and it cannot be used when performing operations on it. This limitation is fortunately lifted in a particular subset of cryptographic schemes, called homomorphic encryption (HE) schemes. These have the advantage of allowing some operations, primarily additions and multiplications, while keeping the numbers fully encrypted.
 
-The downside of this approach is that it comes with severe performance and precision limitations, and is thus difficult to apply in the context of machine learning where computations are already gluttonous in resources. Nevertheless, this has been an active research field that has seen promising advances in the past decade [...].
+The downside of this approach is that it comes with severe performance and precision limitations, and is thus difficult to apply in the context of machine learning where computations are already gluttonous in resources. Nevertheless, this has been an active research field that has seen promising advances in the past decade.
 
-The goal of this thesis is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. It also aims to formalize and describe on a more granular level which steps of a machine learning algorithm can be protected using homomorphic encryption, and why.
+The goal of this thesis is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. It also aims to formalize and describe on a more granular level which steps of a machine learning algorithm can be protected using homomorphic encryption, and why. This will be useful to find the right trade-off between security and performance.
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -236,6 +236,10 @@ If we distinguish the client (data and model owner) and the server (computing po
 
 As training can be a fairly complex and resource-intensive process, it is wise to start with a simple classification model. Logistic regression models are simple and have been extensively studied as part of the 2017 iDASH secure genome analysis competition. The winning solution has been proposed by Kim et al. ~\cite{kim_logistic_2018}. This will be the basis of our implementation.
 
+However, it was necessary to make a few adjustments to remove some limitations. The input matrix is padded with zeros such that the number of columns is a power of two. This step is necessary for efficiently summing the elements of each row. Then, the matrix is packed row by row into one or multiple ciphertexts. This method supports an arbitrary number of data points but requires that the number of features is lower than the number of slots (usually between $8`192$ and $32`768$). 
+
+For the training step, a regularization term has also been added. Apart from its common usage in ML for avoiding overfitting, it has in this case the added advantage of improving the precision of the computations. This is because the learned coefficients are kept small, and the sigmoid approximation that we use is only precise for a certain interval around $0$.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Private inference}
@@ -261,15 +265,15 @@ Because inference requires much less resources than training, we can look at mor
 
 \subsection{Packing}
 
-This problem, especially for the special case of neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. One of the particularity of their approach is that they pack the $n$ pixels of an image into $n$ different ciphertexts. This is very efficient when batching multiple images (by putting the pixels of the first image in the first slots, the pixels of the second image in the second slots, etc) but results in a lot of wasted if only one image needs to be evaluated. In the following, we will call this method \emph{pixelwise packing}.
+This problem, especially for the special case of neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. One of the particularity of their approach is that they pack the $n$ pixels of an image into $n$ different ciphertexts. This is very efficient when batching multiple images (by putting the pixels of the first image in the first slots, the pixels of the second image in the second slots, etc) but results in a lot of wasted space if only one image needs to be evaluated. In the following, we will call this method \emph{pixelwise packing}.
 
 An alternative is to pack the pixels of an image one after the others in the same ciphertext. This results in a more efficient use of space when doing few inferences. For simplicity, we assume that the number of pixels fit into a single ciphertext. We also separate each channel into its own ciphertext. For this reason, we call this method \emph{channelwise packing}.
 
-Both methods have their own trade-offs that highly depend on the architecture of the network. They are evaluated side by side in \autoref{chap:evaluation}.
+Both methods have their own trade-offs that highly depend on the architecture of the network. They are evaluated side by side in \autoref{chap:evaluation}. From the theoretical complexity, we expect pixelwise packing to be best when kernels and fully connected layers are small.
 
-["If we look at the theoretical complexity..." Detail the trade-off]
+In terms of memory, pixelwise packing may produce more ciphertexts, but it has the advantage of not needing any rotation key, which can take a few gigabytes when the ring dimension is large.
 
-[Check: has channelwise packing been described in the literature?]
+For our framework to be flexible on the architecture of the model, the same type of packing is kept throughout the layers. However, it would be possible to optimize a specific architecture by switching between multiple packings, as is done for LoLa in \cite{brutzkus_low_2019}. The authors describe other packing methods optimized for certain tasks.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -317,7 +321,7 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-[Matrix packing, padding]
+[Separation of code]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -325,10 +329,7 @@ For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 
 [Layers are defined with pytorch. Training is done with pytorch. Weights are exported to a file.]
 
-% TODO refactor the other way around
 [Layers are translated to the homomorphic version if all are supported.]
-
-[...]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
