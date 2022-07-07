@@ -365,7 +365,7 @@ In the next subsections, we will introduce the ones that have been used in this 
 Despite these differences, we implemented a higher abstraction to unify the usage of these libraries, and to provide a more intuitive API for non-expert programmers. 
 Thanks to this, the ML algorithms can be implemented independently of the backend. 
 The set of available primitives is slightly reduced, because the relinearization and rescaling operations are performed automatically when necessary.
-There are also utility functions to export the keys and ciphertexts - into a \texttt{base64} encoded JSON object.
+There are also utility functions to export the keys and ciphertexts into a \texttt{base64} encoded JSON object.
 This gives an example of how clients and servers can share these objects in practice.
 
 One of the requirements of the project was to code in Python. 
@@ -431,16 +431,31 @@ The pipelines show an example of a client-server separation and a non-encrypted 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Challenges}
 
-[Crypto and ML parameters]
+Many problems arise when implementing or using these algorithms. 
+First, the limited number of operations available with homomomorphic encryption forces us to find approximations or workarounds. 
+Then, we are in practice limited in the number of operations that we can chain. 
+The error will grow, either through the approximations or through the inherent imprecision related to CKKS. 
+Also, the bootstrapping operation is not available in all libraries and is very slow.
 
-[No bootstrapping, but it would be interesting to compare. The problem is that few libraries implement the bootstrapping operation]
+An important consideration is to be aware of the security level of the encryption. 
+The security level is commonly defined as a number of bits. 
+It estimates roughly the number of operations that an attacker would have to do on a ciphertext to learn some information about the private key or the data.
+The Homomorphic Encryption Standard \cite{albrecht_homomorphic_2021} suggests values of the ring dimension $N$ and the coefficient modulus $q$ that achieve a security level of $128$, $192$, and $256$. 
+A security of $128$ bits is often the minimum for future-proof applications, but $80$ bits can also be considered sufficient for the current computing power.
+Thus, many researchers in the field of homomomorphic encryption use a level of $80$ bits to present their results, and we did the same in \autoref{chap:evaluation}.
+It is however important to keep in mind that security can (and probably should) be increased for use in production, at the cost of an additional sacrifice in performance.
 
-[Security level]
+We can also encounter library-specific problems. 
+For instance, the bit size of the moduli in the chain is not configurable in PALISADE. 
+Because of this, the approximation error is sometimes too high at the last level, where the decryption is supposed to happen. 
+In addition, if the scale is not high enough at intermediate levels, the error can also become too big.
 
-[Scale]
+Another issue is that HE libraries are not yet interoperable, which means that clients and servers must use the same library when exchanging keys and ciphertexts. 
+Hopefully, this will be resolved in the future with the current effort on standardization.
 
-[Library-specific problems, standardization]
-
+Finally, it is also more challenging to set the numerous ML parameters.
+Without knowledge of the training data, a model owner has little means to evaluate a model and tune the parameters.
+Solutions include having domain knowledge or using auxiliary datasets.
 
 
 %%%%%%%%%%%%%%%%%%%%
