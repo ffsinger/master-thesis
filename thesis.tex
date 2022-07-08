@@ -356,7 +356,7 @@ The authors describe other packing methods optimized for certain tasks.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Backends}
 
-There are multiple HE libraries providing the CKKS scheme. Most of them are implemented in \texttt{C++}, such as SEAL \cite{microsoft_corporation_microsoft_2022}, Palisade \cite{palisade_palisade_2022} or HEAAN \cite{cryptolab_inc_heaan_2022}, but Lattigo \cite{tune_insight_sa_lattigo_2022} is implemented in Golang. 
+There are multiple HE libraries providing the CKKS scheme. Most of them are implemented in \texttt{C++}, such as SEAL \cite{microsoft_corporation_microsoft_2022}, PALISADE \cite{palisade_palisade_2022} or HEAAN \cite{cryptolab_inc_heaan_2022}, but Lattigo \cite{tune_insight_sa_lattigo_2022} is implemented in Golang. 
 A more complete survey and comparison of the different libraries can be found in \cite{viand_sok_2021}.
 
 Each of these libraries has its own particularities, as there is not yet a complete standard for homomomorphic encryption (although the work has been started in \cite{albrecht_homomorphic_2021}). 
@@ -378,7 +378,9 @@ It provides incomplete bindings for Python, but we can extend them as needed.
 
 In its basic usage, the library creates a context from a set of parameters and stores the keys needed for the evaluation (rotation keys, etc). 
 It is slightly higher-level than other libraries by default, e.g., it rescales ciphertexts automatically. 
-It also provides a wide set of utility functions, such as polynomial evaluation.
+It also provides a wide set of utility functions, such as polynomial evaluation. 
+Surprisingly, this function is not optimized to minimize the multiplication depth, which is critical in our case.
+Thus, we still need to implement our polynomial functions manually.
 
 Multi-party HE is supported, but not bootstrapping.
 
@@ -408,6 +410,10 @@ This modularization is important for any real setting where the client and the s
 
 Complete pipelines are also provided as an example and for the evaluation.
 It shows which parts should be run on the client, which parts should be run on the server, and which objects must be shared.
+
+Since we do not have access to bootstrapping with SEAL and PALISADE, the number of gradient descent operations is limited. 
+To overcome this, it would be possible to send the intermediate weights to the client and re-encrypt them. 
+However, this way the client learns some information on the weights.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
@@ -447,7 +453,7 @@ It is however important to keep in mind that security can (and probably should) 
 
 We can also encounter library-specific problems. 
 For instance, the bit size of the moduli in the chain is not configurable in PALISADE. 
-Because of this, the approximation error is sometimes too high at the last level, where the decryption is supposed to happen. 
+Because of this, the approximation error is sometimes too high at the last level, where the decryption is supposed to happen.  [TODO: check: has this been fixed?]
 In addition, if the scale is not high enough at intermediate levels, the error can also become too big.
 
 Another issue is that HE libraries are not yet interoperable, which means that clients and servers must use the same library when exchanging keys and ciphertexts. 
@@ -471,12 +477,10 @@ Solutions include having domain knowledge or using auxiliary datasets.
 
 The following evaluation has been carried out on a simple dataset of $80$ training samples and $20$ test samples. 
 The samples have $2$ features and can be linearly separated in two classes.
+For the cryptographic parameters, we take a ring dimension of $2^{14}$, a scale of $25$ and a security level of $80$ bits. 
+The number of gradient descent iterations is $3$ and the degree of the polynomial approximation of the sigmoid is $3$.
 
-[More details on the settings]
-
-\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms.
-
-\begin{table}[h!]
+\begin{table}[t]
   \begin{center}
     \caption{Runtime of the LR at each step, in seconds}
     \label{table:lr_runtime}
@@ -516,44 +520,68 @@ The samples have $2$ features and can be linearly separated in two classes.
   \end{center}
 \end{table}
 
-\autoref{table:lr_metrics} shows that the model performance metrics (accuracy, area under the curve) are not different from the baseline.
+\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms.
+We observe that the encrypted pipelines are order of magnitude slower than the baselines.
+PALISADE is faster than SEAL by a factor $3$ for training and a factor $10$ for the initialization. These are the two most time-consuming steps in this setting.
+Except for the initialization, we can expect the runtime of all steps to grow linearly with the number of ciphertexts and at about the same rate.
 
-\begin{table}[h!]
+By comparing the plaintext and the standard pipelines, it appears that transforming the algorithm to a homomorphically-friendly has a negligible performance cost in relation to the overhead of encryption.
+
+%% This is not relevant for the small dataset where everything is 1
+% \begin{table}[t]
+%   \begin{center}
+%     \caption{LR performance metrics}
+%     \label{table:lr_metrics}
+%     \pgfplotstabletypeset[
+%       % multicolumn names,
+%       col sep=comma,
+%       display columns/0/.style={
+%         column name=$ $,
+%         column type={r},string type},
+%       display columns/1/.style={
+%         column name=Predicted distribution,
+%         column type={r}},
+%       display columns/2/.style={
+%         column name=True distribution,
+%         column type={r}},
+%       display columns/3/.style={
+%         column name=Accuracy,
+%         column type={r}},
+%       display columns/4/.style={
+%         column name=AUC,
+%         column type={r}},
+%       display columns/5/.style={
+%         column name=Memory (MB),
+%         column type={r}},
+%       every head row/.style={
+%           before row={\toprule},
+%           after row={
+%               % si{\second} & \si{\second} ... \\
+%               \midrule
+%           }
+%       },
+%       every last row/.style={after row=\bottomrule},
+%     ]{data/lr_metrics.csv}
+%   \end{center}
+% \end{table}
+
+\begin{table}[t]
   \begin{center}
-    \caption{LR performance metrics}
-    \label{table:lr_metrics}
-    \pgfplotstabletypeset[
-      % multicolumn names,
-      col sep=comma,
-      display columns/0/.style={
-        column name=$ $,
-        column type={r},string type},
-      display columns/1/.style={
-        column name=Predicted distribution,
-        column type={r}},
-      display columns/2/.style={
-        column name=True distribution,
-        column type={r}},
-      display columns/3/.style={
-        column name=Accuracy,
-        column type={r}},
-      display columns/4/.style={
-        column name=AUC,
-        column type={r}},
-      display columns/5/.style={
-        column name=Memory (MB),
-        column type={r}},
-      every head row/.style={
-          before row={\toprule},
-          after row={
-              % si{\second} & \si{\second} ... \\
-              \midrule
-          }
-      },
-      every last row/.style={after row=\bottomrule},
-    ]{data/lr_metrics.csv}
+    \caption{Memory footprint of the LR pipelines, in MB}
+    \label{table:lr_memory}
+    \begin{tabular}{ c c c c c c }
+    \hline
+     & plaintext & palisade & seal & standard & sklearn \\
+    \hline
+    Memory [MB] & $367$ & $1100$ & $4750$ & $366$ & $368$ \\
+    \hline
+    \end{tabular}
   \end{center}
 \end{table}
+
+The model performance metrics (accuracy and area under the curve) are not different from the baseline and are both equal to 1.
+
+Memory usage is summarized in \autoref{table:lr_memory}. As we are using a small dataset, memory usage is dominated by the rotation key which can take a few gigabytes if the ring dimension is high.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -562,7 +590,7 @@ The samples have $2$ features and can be linearly separated in two classes.
 
 The network architecture used in this evaluation is not designed for maximal accuracy, rather it shows the differences between different layer types.
 
-\begin{table}[h!]
+\begin{table}[t]
   \begin{center}
     \caption{Architecture of an homomorphically encrypted network as a proof-of-concept}
     \label{table:poc}
@@ -581,7 +609,7 @@ The network architecture used in this evaluation is not designed for maximal acc
 
 The runtime of the encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}.
 
-\begin{table}[h!]
+\begin{table}[t]
   \begin{center}
     \caption{Runtime of the CNN at each step, in seconds}
     \label{table:cnn_runtime}
@@ -617,9 +645,11 @@ The runtime of the encrypted inference with a convolutional neural network is pr
   \end{center}
 \end{table}
 
-\autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type.
+\autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type. 
+However, it is important to keep in mind that homomorphic computations are slower on the first levels, with fresh ciphertexts. 
+Thus, a layer placed at the beginning of a network will be faster than its equivalent at the end of the network.
 
-\begin{table}[h!]
+\begin{table}[t]
   \begin{center}
     \caption{Runtime of the CNN prediction at each layer, in seconds}
     \label{table:cnn_layers}
@@ -657,7 +687,7 @@ In this section, we try to apply our framework to a real use-case. [...]
 
 The network architecture is LeNet-5 by LeCun \cite{lecun_gradient-based_1998} (\autoref{table:lenet})
 
-\begin{table}[h!]
+\begin{table}[t]
   \begin{center}
     \caption{Architecture of an homomorphically encrypted LeNet-5}
     \label{table:lenet}
