@@ -520,7 +520,13 @@ The number of gradient descent iterations is $3$ and the degree of the polynomia
   \end{center}
 \end{table}
 
-\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms.
+\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms. 
+Two pipelines serve as baselines:
+\begin{itemize}
+  \item \texttt{standard}: a simple implementation of a textbook logistic regression, without encryption.
+  \item \texttt{sklearn}: a commonly used ML library.
+\end{itemize}
+
 We observe that the encrypted pipelines are order of magnitude slower than the baselines.
 PALISADE is faster than SEAL by a factor $3$ for training and a factor $10$ for the initialization. These are the two most time-consuming steps in this setting.
 Except for the initialization, we can expect the runtime of all steps to grow linearly with the number of ciphertexts and at about the same rate.
@@ -583,12 +589,17 @@ The model performance metrics (accuracy and area under the curve) are not differ
 
 Memory usage is summarized in \autoref{table:lr_memory}. As we are using a small dataset, memory usage is dominated by the rotation key which can take a few gigabytes if the ring dimension is high.
 
+[TODO: compare with a bigger dataset]
+% Reorganize the tables:
+% **Total** runtime for all pipelines and both datasets
+% Steps breakdown only for plaintext-palisade-seal, maybe both datasets
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
 
 
-The network architecture used in this evaluation is not designed for maximal accuracy, rather it shows the differences between different layer types.
+The network architecture used in this evaluation (\autoref{table:poc}) is not designed for maximal accuracy, rather it shows the differences between different layer types.
 
 \begin{table}[t]
   \begin{center}
@@ -685,7 +696,8 @@ Thus, a layer placed at the beginning of a network will be faster than its equiv
 
 In this section, we try to apply our framework to a real use-case. [...]
 
-The network architecture is LeNet-5 by LeCun \cite{lecun_gradient-based_1998} (\autoref{table:lenet})
+The network architecture is identical to LeNet-5 by LeCun \cite{lecun_gradient-based_1998}, except that we replace the $\tanh$ layers with an approximation. 
+It is described in \autoref{table:lenet}.
 
 \begin{table}[t]
   \begin{center}
