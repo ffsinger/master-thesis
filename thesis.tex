@@ -477,48 +477,46 @@ The samples have $2$ features and can be linearly separated in two classes.
 \autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms.
 
 \begin{table}[h!]
-    \begin{center}
-      \caption{Runtime of the LR at each step, in seconds}
-      \label{table:lr_runtime}
-      \pgfplotstabletypeset[
-        % multicolumn names,
-        col sep=comma,
-        display columns/0/.style={
-          column name=$ $,
-          column type={l},string type},
-        display columns/1/.style={
-          column name=Init,
-          column type={l}},
-        display columns/2/.style={
-          column name=Encrypt train,
-          column type={l}},
-        display columns/3/.style={
-          column name=Train,
-          column type={l}},
-        display columns/4/.style={
-          column name=Encrypt test,
-          column type={l}},
-        display columns/5/.style={
-          column name=Predict,
-          column type={l}},
-        display columns/6/.style={
-          column name=Decrypt,
-          column type={l}},
-        every head row/.style={
-            before row={\toprule},
-            after row={
-                % si{\second} & \si{\second} ... \\
-                \midrule
-            }
-        },
-        every last row/.style={after row=\bottomrule},
+  \begin{center}
+    \caption{Runtime of the LR at each step, in seconds}
+    \label{table:lr_runtime}
+    \pgfplotstabletypeset[
+      % multicolumn names,
+      col sep=comma,
+      display columns/0/.style={
+        column name=$ $,
+        column type={l},string type},
+      display columns/1/.style={
+        column name=Init,
+        column type={l}},
+      display columns/2/.style={
+        column name=Encrypt train,
+        column type={l}},
+      display columns/3/.style={
+        column name=Train,
+        column type={l}},
+      display columns/4/.style={
+        column name=Encrypt test,
+        column type={l}},
+      display columns/5/.style={
+        column name=Predict,
+        column type={l}},
+      display columns/6/.style={
+        column name=Decrypt,
+        column type={l}},
+      every head row/.style={
+          before row={\toprule},
+          after row={
+              % si{\second} & \si{\second} ... \\
+              \midrule
+          }
+      },
+      every last row/.style={after row=\bottomrule},
     ]{data/lr_runtime.csv}
-\end{center}
+  \end{center}
 \end{table}
 
 \autoref{table:lr_metrics} shows that the model performance metrics (accuracy, area under the curve) are not different from the baseline.
-
-[TODO: use a non-trivial dataset]
 
 \begin{table}[h!]
   \begin{center}
@@ -553,15 +551,33 @@ The samples have $2$ features and can be linearly separated in two classes.
           }
       },
       every last row/.style={after row=\bottomrule},
-  ]{data/lr_metrics.csv}
-\end{center}
+    ]{data/lr_metrics.csv}
+  \end{center}
 \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}
 
-[network architecture]
+
+The network architecture used in this evaluation is not designed for maximal accuracy, rather it shows the differences between different layer types.
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Architecture of an homomorphically encrypted network as a proof-of-concept}
+    \label{table:poc}
+    \begin{tabular}{ c c c c c c c c }
+    \hline
+    Layer & In chan. & Out chan. & Kernel & In neurons & Out neurons & Padding & Stride \\
+    \hline
+    Conv2d & $1$ & $3$ & $5$ & $28 \times 28$ & $24 \times 24$ & $0$ & $0$ \\
+    AvgPool2d & $3$ & $3$ & $3$ & $24 \times 24$ & $8 \times 8$ & $0$ & $3$ \\
+    Square & $3$ & $3$ & & $8 \times 8$ & $8 \times 8$ &  &  \\
+    Linear & & & & $192$ & $10$ & &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 The runtime of the encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}.
 
@@ -597,8 +613,8 @@ The runtime of the encrypted inference with a convolutional neural network is pr
         after row={\midrule}
       },
       every last row/.style={after row=\bottomrule},
-  ]{data/cnn_runtime.csv}
-\end{center}
+    ]{data/cnn_runtime.csv}
+  \end{center}
 \end{table}
 
 \autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type.
@@ -629,15 +645,41 @@ The runtime of the encrypted inference with a convolutional neural network is pr
         after row={\midrule}
       },
       every last row/.style={after row=\bottomrule},
-  ]{data/cnn_layers.csv}
-\end{center}
+    ]{data/cnn_layers.csv}
+  \end{center}
 \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{PDF-split}
 
-[...]
+In this section, we try to apply our framework to a real use-case. [...]
+
+The network architecture is LeNet-5 by LeCun \cite{lecun_gradient-based_1998} (\autoref{table:lenet})
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Architecture of an homomorphically encrypted LeNet-5}
+    \label{table:lenet}
+    \begin{tabular}{ c c c c c c c c }
+    \hline
+    Layer & In chan. & Out chan. & Kernel & In neurons & Out neurons & Padding & Stride \\
+    \hline
+    Conv2d & $1$ & $6$ & $5$ & $28 \times 28$ & $28 \times 28$ & $2$ & $0$ \\
+    TanhApprox & & & & & & &  \\
+    AvgPool2d & $6$ & $6$ & $2$ & $28 \times 28$ & $14 \times 14$ & $0$ & $2$ \\
+    Conv2d & $6$ & $16$ & $5$ & $14 \times 14$ & $10 \times 10$ & $0$ & $0$ \\
+    TanhApprox & & & & & & &  \\
+    AvgPool2d & $16$ & $16$ & $2$ & $10 \times 10$ & $5 \times 5$ & $0$ & $2$ \\
+    Linear & & & & $400$ & $120$ & &  \\
+    TanhApprox & & & & & & &  \\
+    Linear & & & & $120$ & $84$ & &  \\
+    TanhApprox & & & & & & &  \\
+    Linear & & & & $84$ & $10$ & &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%
