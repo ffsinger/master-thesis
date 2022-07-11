@@ -343,6 +343,10 @@ For our framework to be flexible on the architecture of the model, the same type
 However, it would be possible to optimize a specific architecture by switching between multiple packings, as is done for LoLa in \cite{brutzkus_low_2019}. 
 The authors describe other packing methods optimized for certain tasks.
 
+\subsection{Hybrid approach}
+
+[Make the first convolutions on the client, non-encrypted. Some part of the model is revealed to the client which can make it a bit easier to steal, but the data is still secure.]
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Implementation}
@@ -823,7 +827,18 @@ Although NN and LR are the most studied models, there are also solutions for dec
 
 % In the conclusion you repeat the main result and finalize the discussion of your project. Mention the core results and why as well as how your system advances the status quo.
 
-[...]
+The field of homomorphic encryption is still emerging from the academia, and it still needs improvements before being usable in a real-world application. 
+In particular, machine learning is a resource-intensive process that suffers greatly from the overhead of encryption.
+
+Even simple models like logistic regression are several orders of magnitude slower to train, and require a lot of memory. 
+The same applies for neural networks. Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases like document splitting.
+
+However, the potential threats that would be solved by these solutions are sufficiently important to justify continuing the efforts in this field.
+Optimizations can be found either at the cryptographic level or at the algorithmic level of machine learning models, by using different packing methods or approximations.
+Parallelization can also considerably improve performance.
+
+Another promising paradigm is to delegate some computations to the client and to keep the encrypted parts of the pipeline to a strict minimum while still providing enough security. 
+
 
 \cleardoublepage
 \phantomsection
