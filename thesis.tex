@@ -292,7 +292,7 @@ This is because the learned coefficients are kept small, and the sigmoid approxi
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Private inference}
+\section{Private inference}\label{sec:private_inference}
 
 In the case of an inference service provided by a model owner to a client, another threat is that the client's data can be abused. 
 Even with a privacy policy, the client has no technical guarantee that this data will not be shared, stolen, or used for different purposes. 
@@ -473,7 +473,7 @@ Solutions include having domain knowledge or using auxiliary datasets.
 % This section is usually 5-10 pages.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Logistic regression}
+\section{Logistic regression}\label{sec:eval_lr}
 
 The following evaluation has been carried out on a simple dataset of $80$ training samples and $20$ test samples. 
 The samples have $2$ features and can be linearly separated in two classes.
@@ -618,7 +618,19 @@ The network architecture used in this evaluation (\autoref{table:poc}) is not de
   \end{center}
 \end{table}
 
-The runtime of the encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}.
+The runtime of the encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}. 
+For this setting, we omit the PALISADE pipeline and show only the SEAL and plaintext pipelines with both packing methods, along with a baseline using \texttt{pytorch}.
+
+The other difference with \autoref{sec:eval_lr} is that we simulate a true client-server communication and report the time needed to serialize and deserialize the request and the response.
+These steps are summed in one column \emph{Serialize} for readability.
+As introduced in \autoref{sec:private_inference}, the client needs to send the encrypted data, the relinearization key, and the rotation keys if needed.
+The server responds with the encrypted result.
+For this evaluation, these objects are encoded in \texttt{base64} and sent in JSON via HTTP.
+
+We observe that the serialization step takes a considerable amount of time because the data and the keys can be quite big. 
+However, the runtime is still dominated by the prediction step, which takes around 2 minutes for this simple network.
+The channelwise packing method was designed to reduce the latency for non-batched data, but it completely fails in this aspect by being even slower than pixelwise packing.
+This is due to the high number of rotation operations and the higher multiplicative depth.
 
 \begin{table}[t]
   \begin{center}
@@ -690,13 +702,36 @@ Thus, a layer placed at the beginning of a network will be faster than its equiv
   \end{center}
 \end{table}
 
+In terms of memory usage, shown in \autoref{table:cnn_memory}, channelwise packing has a clear advantage.
+This is not surprising because 
+It indicates that channelwise packing, even if it is slower, can be useful for systems with limited memory.
+However, it is important to note that both the memory usage and the runtime will grow linearly with channelwise packing, while pixelwise packing will be able to batch multiple data points at no additional cost.
+
+\begin{table}[t]
+  \begin{center}
+    \caption{Memory footprint of the LR pipelines, in MB}
+    \label{table:cnn_memory}
+    \begin{tabular}{ c c c c c c }
+    \hline
+    & plaintext & seal & plaintext & seal & pytorch \\
+    & channelwise & channelwise & pixelwise & pixelwise & \\
+    \hline
+    Memory [MB] & $368$ & $1090$ & $402$ & $2620$ & $371$ \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{PDF-split}
 
-In this section, we try to apply our framework to a real use-case. [...]
+In this section, we try to apply our framework to a real use-case. 
+The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
+It should be accurate enough while still having reasonable performance.
 
-The network architecture is identical to LeNet-5 by LeCun \cite{lecun_gradient-based_1998}, except that we replace the $\tanh$ layers with an approximation. 
+For this reason, we need to choose a very simple architecture. 
+The network is identical to LeNet-5 by LeCun \cite{lecun_gradient-based_1998}, except that we replace the $\tanh$ layers with an approximation. 
 It is described in \autoref{table:lenet}.
 
 \begin{table}[t]
@@ -722,6 +757,8 @@ It is described in \autoref{table:lenet}.
     \end{tabular}
   \end{center}
 \end{table}
+
+[TODO results]
 
 
 %%%%%%%%%%%%%%%%%%%%%%
