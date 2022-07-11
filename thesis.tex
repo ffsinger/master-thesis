@@ -479,8 +479,9 @@ The following evaluation has been carried out on a simple dataset of $80$ traini
 The samples have $2$ features and can be linearly separated in two classes.
 For the cryptographic parameters, we take a ring dimension of $2^{14}$, a scale of $25$ and a security level of $80$ bits. 
 The number of gradient descent iterations is $3$ and the degree of the polynomial approximation of the sigmoid is $3$.
+These tests were run on an \emph{AMD Ryzen 5 5600x} with with $12$ vCPUs and $32$ GB of RAM.
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
     \caption{Runtime of the LR at each step, in seconds}
     \label{table:lr_runtime}
@@ -571,7 +572,7 @@ By comparing the plaintext and the standard pipelines, it appears that transform
 %   \end{center}
 % \end{table}
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
     \caption{Memory footprint of the LR pipelines, in MB}
     \label{table:lr_memory}
@@ -601,7 +602,7 @@ Memory usage is summarized in \autoref{table:lr_memory}. As we are using a small
 
 The network architecture used in this evaluation (\autoref{table:poc}) is not designed for maximal accuracy, rather it shows the differences between different layer types.
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
     \caption{Architecture of an homomorphically encrypted network as a proof-of-concept}
     \label{table:poc}
@@ -632,7 +633,7 @@ However, the runtime is still dominated by the prediction step, which takes arou
 The channelwise packing method was designed to reduce the latency for non-batched data, but it completely fails in this aspect by being even slower than pixelwise packing.
 This is due to the high number of rotation operations and the higher multiplicative depth.
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
     \caption{Runtime of the CNN at each step, in seconds}
     \label{table:cnn_runtime}
@@ -672,7 +673,7 @@ This is due to the high number of rotation operations and the higher multiplicat
 However, it is important to keep in mind that homomorphic computations are slower on the first levels, with fresh ciphertexts. 
 Thus, a layer placed at the beginning of a network will be faster than its equivalent at the end of the network.
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
     \caption{Runtime of the CNN prediction at each layer, in seconds}
     \label{table:cnn_layers}
@@ -703,13 +704,12 @@ Thus, a layer placed at the beginning of a network will be faster than its equiv
 \end{table}
 
 In terms of memory usage, shown in \autoref{table:cnn_memory}, channelwise packing has a clear advantage.
-This is not surprising because 
 It indicates that channelwise packing, even if it is slower, can be useful for systems with limited memory.
 However, it is important to note that both the memory usage and the runtime will grow linearly with channelwise packing, while pixelwise packing will be able to batch multiple data points at no additional cost.
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
-    \caption{Memory footprint of the LR pipelines, in MB}
+    \caption{Memory footprint of the CNN pipelines, in MB}
     \label{table:cnn_memory}
     \begin{tabular}{ c c c c c c }
     \hline
@@ -729,12 +729,13 @@ However, it is important to note that both the memory usage and the runtime will
 In this section, we try to apply our framework to a real use-case. 
 The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
 It should be accurate enough while still having reasonable performance.
+These tests were run on an Azure \texttt{D16as\_v4} with $16$ vCPUs and $64$ GB of RAM.
 
 For this reason, we need to choose a very simple architecture. 
 The network is identical to LeNet-5 by LeCun \cite{lecun_gradient-based_1998}, except that we replace the $\tanh$ layers with an approximation. 
 It is described in \autoref{table:lenet}.
 
-\begin{table}[t]
+\begin{table}[h!]
   \begin{center}
     \caption{Architecture of an homomorphically encrypted LeNet-5}
     \label{table:lenet}
@@ -758,7 +759,29 @@ It is described in \autoref{table:lenet}.
   \end{center}
 \end{table}
 
-[TODO results]
+As this problem requires us to make a prediction for each page in a document, pixelwise packing is more appropriate for its ability to batch many inferences.
+
+The results in \autoref{table:lenet_results} indicate that even a simple network needs a lot of resources.
+However, if a latency of $170$ minutes (in the case of SEAL) can be tolerated, the time per inference is only of about $1.2$ seconds with a batch of $8192$.
+
+[TODO: take pdf split dataset, make a full batch and compute f1-score]
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Results for LeNet-5}
+    \label{table:lenet_results}
+    \begin{tabular}{ c c c c }
+    \hline
+    & plaintext & seal & pytorch \\
+    & pixelwise & pixelwise &  \\
+    \hline
+    Runtime [min] & $0.17$ & $170$ & $...$ \\
+    Memory [MB] & $662$ & $52600$ & $...$ \\
+    F1-score & $...$ & $...$ & $...$ \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -769,11 +792,29 @@ It is described in \autoref{table:lenet}.
 % Here you can highlight the related work, how it solved the problem, and why it solved a different problem. Do not play down the importance of related work, all of these systems have been published and evaluated! Say what is different and how you overcome some of the weaknesses of related work by discussing the trade-offs. Stay positive!
 % This section is usually 3-5 pages.
 
-[Kim et al.: what differences between their solution and mine]
 
-[Dowlin et al.: other encryption scheme, how they evaluated (MNIST on a very simple network of 5 layers)]
+Many papers suggest solutions for homomorphically encrypted machine learning.
+One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which is a 5-layers CNN evaluated on the MNIST dataset.
 
-[Other works on NN: shallow networks optimized for a single architecture,  GPUs, ... Mine is meant to be flexible.]
+It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
+
+For instance, Badawi et al. \cite{badawi_privft_2019, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification).
+
+LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it, and selects an optimal packing method at each layer.
+
+Lee et al. \cite{lee_privacy-preserving_2021} focus on maximum accuracy by using a deep model (ResNet-20).
+
+Compared to these solutions, our design is meant to be flexible to allow finding the desired trade-off between performance and utility.
+
+Some works tackle NN training, but this requires either to use bootstrapping or to delegate the weights update to the client \cite{mihara_neural_2020} or to a semi-honest server \cite{bellafqira_secure_2018}.
+
+Regarding logistic regression training, Kim et al. \cite{kim_logistic_2018} heavily inspired this work, with the exception of a few generalizations on the input size and the use of regularization.
+The libraries used are also different.
+
+Other solutions include Bonte and Vercauteren \cite{bonte_privacy-preserving_2018} and Chen et al. \cite{chen_logistic_2018}.
+Both are using the BFV encryption scheme.
+
+Although NN and LR are the most studied models, there are also solutions for decision trees \cite{akavia_privacy-preserving_2019} and SVMs \cite{park_he-friendly_2020}.
 
 
 %%%%%%%%%%%%%%%%%%%%
