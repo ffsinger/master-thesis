@@ -24,7 +24,8 @@
 
 With the ever increasing use of machine learning models processing millions of data points, techniques for protecting this data have emerged.
 The use of homomorphic encryption is promising but still suffers from strong performance issues and relatively low adoption outside of the academia.
-We attempt to solve the problems of secure model training and inference using this technique, and analyze the results with the goal of a real-world deployement.
+We formalize the threats related to machine learning and attempt to solve the problems of secure model training and private inference using homomomorphic encryption.
+We analyze the results in terms of runtime, memory usage and accuracy, with the perspective of a real-world deployement.
 We find that heavy optimizations or security and privacy sacrifices need to be made for many use-cases.
 
 \end{abstract}
@@ -66,7 +67,7 @@ These have the advantage of allowing some operations, primarily additions and mu
 The downside of this approach is that it comes with severe performance and precision limitations, and is thus difficult to apply in the context of machine learning where computations are already gluttonous in resources. 
 Nevertheless, this has been an active research field that has seen promising advances in the past decade.
 
-The goal of this thesis is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. 
+The goal of this project is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. 
 It also aims to formalize and describe on a more granular level which steps of a machine learning algorithm can be protected using homomorphic encryption, and why. 
 This will be useful to find the right trade-off between security and performance.
 
@@ -96,7 +97,7 @@ It iteratively updates the weights vector by following the direction opposite to
     \mathbf{w}^{t+1} & = \mathbf{w}^t - \gamma\nabla\mathcal{L}(\mathbf{w}) \nonumber \\ 
     & = \mathbf{w}^t + \frac{\gamma}{n} \sum_{i=1}^{n} \sigma(-\mathbf{z}_i^T \mathbf{w}^t) \cdot \mathbf{z}_i
 \end{align}
-where $\gamma$ is the learning rate and $\sigma$ is the sigmoid function (or logistic function) defined as:
+where $\gamma > 0$ is the learning rate and $\sigma$ is the sigmoid function (or logistic function) defined as:
 \begin{equation}\label{eq:sigmoid}
     \sigma(x) = \frac{1}{1 + e^{-x}}
 \end{equation}
@@ -115,7 +116,7 @@ Classifying a new point $\mathbf{x}$ can be done as follows:
 
 Neural networks are defined as a succession of \emph{layers}, each consisting of operations on a set of input neurons, which are typically real numbers.
 
-Basic networks make use of \emph{fully connected} (or linear) layers, which are defined as such for an input vector $\mathbf{x} \in \mathbb{R}^d$, a weights matrix $W \in \mathbb{R}^{k \times d}$ and a bias vector $\mathbf{b} \in \mathbb{R}^k$:
+Basic networks make use of \emph{fully connected} (or \emph{linear}) layers, which are defined as such for an input vector $\mathbf{x} \in \mathbb{R}^d$, a weights matrix $W \in \mathbb{R}^{k \times d}$ and a bias vector $\mathbf{b} \in \mathbb{R}^k$:
 
 \begin{equation}\label{eq:linear_layer}
     h^{\mathrm{linear}}(\mathbf{x}) = W \mathbf{x} + \mathbf{b}
@@ -132,7 +133,7 @@ This is called the backward pass.
 Once the model is trained, it can be used to classify new data points. 
 For this operation, only the forward pass is required.
 
-\subsection{Convolutional neural networks}
+\section{Convolutional neural networks}
 
 In many practical cases, particularly for image recognition, the input dimensions can be quite big. 
 This is a problem, because a linear layer connects every input neuron with every output neuron. 
@@ -190,7 +191,7 @@ During the initialization phase, some parameters need to be set:
 \end{itemize}
 
 These parameters need to be carefully tuned based on the problem at hand. 
-Other parameters, such as the \emph{error distribution} or the \emph{key distribution} are often hardcoded in practice.
+Other parameters, such as the \emph{error distribution} or the \emph{key distribution}, are often set to the same standard value.
 
 
 %%%%%%%%%%%%%%%%
@@ -211,7 +212,7 @@ This also helps us to understand how this type of mitigation can be bypassed.
 
 \subsection{Data-flow diagram}
 
-\begin{figure}[t]
+\begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth]{figures/dataflow-ml.pdf}
     \caption{Dataflow diagram for a general ML system.}
@@ -219,7 +220,7 @@ This also helps us to understand how this type of mitigation can be bypassed.
 \end{figure}
 
 In order to better visualize how a machine learning system looks like, \autoref{fig:dataflow} attempts to model the data flow in a general case. 
-This diagram could be refined in more concrete applications. 
+This diagram could be refined for more concrete applications. 
 For instance, the model provider and the data collector may be the same entity, which would remove a trust boundary. 
 Another gray area is the feature extraction process that can happen in different ways: it could be done directly on the client and the data collector, or it could rely on an external service controlled by the model provider.
 
@@ -253,11 +254,11 @@ For evasion or impersonation attacks, the attack vector is the same but it invol
 In the same vein, data ordering attacks aim to reduce the utility or even bias the model by putting some data points first \cite{shumailov_manipulating_2021}. 
 This could be used to introduce racist or sexist biases, for instance. Thus, it is important to shuffle the training data properly.
 
-If the attacker has unlimited access to the prediction results, it may be possible to reconstruct and steal an approximation the model (model extraction attack). 
-The typical type of adversary carrying out this attack could be a competitor unwilling to dedicate the resources necessary for training a model from scratch.
+If the attacker has unlimited access to the prediction results, it may be possible to reconstruct and steal an approximation of the model (model extraction attack). 
+The typical adversary carrying out this attack could be a competitor unwilling to dedicate the resources necessary for training a model from scratch.
 
 In the case of membership inference attacks, inversion attacks, attribute and property inference attacks, the goal is to reconstruct part of the training dataset. 
-This can either be general or target a single individual. To be successful, the attacker sometimes needs to do data poisoning \cite{hidano_model_2017}, or needs access to additional information, such as confidence levels or auxiliary datasets \cite{fredrikson_model_2015, wang_variational_2022}.
+This can either be general or target a single individual. To be successful, the attacker sometimes requires data poisoning \cite{hidano_model_2017}, or needs access to additional information, such as confidence levels or auxiliary datasets \cite{fredrikson_model_2015, wang_variational_2022}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -287,7 +288,7 @@ This will be the basis of our implementation.
 
 However, it was necessary to make a few adjustments to remove some limitations. 
 The input matrix is padded with zeros such that the number of columns is a power of two. 
-This step is necessary for efficiently summing the elements of each row. 
+This step is necessary for efficiently summing the elements of each row in logarithmic time. 
 Then, the matrix is packed row by row into one or multiple ciphertexts. 
 This method supports an arbitrary number of data points but requires that the number of features is lower than the number of slots (usually between $8`192$ and $32`768$). 
 
@@ -309,7 +310,7 @@ Homomorphic encryption aims to reduce this risk, thus improving the overall trus
 There are two approaches to this problem. 
 In both cases, we assume that a model has been trained beforehand. 
 
-In the most common approach, the client encrypts the data and sends it to the inference service, who learns nothing about the data and the inference result.
+In the most common approach, the client encrypts the data and sends it to the inference service, which learns nothing about the data and the inference result.
 
 In the second approach, the weights of the model are encrypted and sent to the client. 
 This requires an additional round-trip of communications for the decryption step, which can reveal the inference result to the service if no precautions are made. 
@@ -318,7 +319,7 @@ Due to these limitations, we will focus on the first approach, but the runtime e
 
 This time, if we consider the client to be the data owner and the server to be the model owner, the steps are very similar to \autoref{sec:secure_training}:
 \begin{enumerate}
-    \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys.
+    \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys (relinearization or rotation keys).
     \item Server: do the inference. Send back the result.
     \item Client: decrypt the result.
 \end{enumerate}
@@ -326,12 +327,12 @@ This time, if we consider the client to be the data owner and the server to be t
 Note that the inference step can also be delegated to an external cloud provider without risks of compromising the data.
 
 Because inference requires much less resources than training, we can look at more complex models. 
-As neural networks are extremely popular nowadays, a deep learning framework compatible with encrypted data has many use-cases.
+As neural networks are extremely popular nowadays, a deep learning framework compatible with encrypted data would have many use-cases.
 
 \subsection{Data packing}
 
 This problem, especially for the special case of neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. 
-One of the particularity of their approach is that they pack the $n$ pixels of an image into $n$ different ciphertexts. 
+One of the particularity of their approach is that they pack the $n$ pixels of an input image into $n$ different ciphertexts. 
 This is very efficient when batching multiple images (by putting the pixels of the first image in the first slots, the pixels of the second image in the second slots, etc) but results in a lot of wasted space if only one image needs to be evaluated. 
 In the following, we will call this method \emph{pixelwise packing}.
 
@@ -352,7 +353,7 @@ The authors describe other packing methods optimized for certain tasks.
 
 \subsection{Hybrid approach}
 
-[Make the first convolutions on the client, non-encrypted. Some part of the model is revealed to the client which can make it a bit easier to steal, but the data is still secure.]
+[(TODO) Make the first convolutions on the client, non-encrypted. Some parts of the model are revealed to the client which can make it a bit easier to steal, but the final layers are secret and the data is still secure.]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -398,7 +399,7 @@ Multi-party HE is supported, but not bootstrapping.
 \subsection{SEAL}
 
 SEAL, developed by Microsoft, is one of the most popular libraries. 
-A complete set of Python bindings are already available \cite{hugang_seal-python_2022}.
+A complete set of Python bindings is already available \cite{hugang_seal-python_2022}.
 
 It offers finer grained initialization parameters and a lower-level API (e.g., we need to set the moduli size at each level, and rescaling needs to be done manually).
 
@@ -464,7 +465,7 @@ It is however important to keep in mind that security can (and probably should) 
 
 We can also encounter library-specific problems. 
 For instance, the bit size of the moduli in the chain is not configurable in PALISADE. 
-Because of this, the approximation error is sometimes too high at the last level, where the decryption is supposed to happen.  [TODO: check: has this been fixed?]
+Because of this, the approximation error is sometimes too high at the last level, where the decryption is supposed to happen.
 In addition, if the scale is not high enough at intermediate levels, the error can also become too big.
 
 Another issue is that HE libraries are not yet interoperable, which means that clients and servers must use the same library when exchanging keys and ciphertexts. 
@@ -818,6 +819,8 @@ Lee et al. \cite{lee_privacy-preserving_2021} focus on maximum accuracy by using
 Compared to these solutions, our design is meant to be flexible to allow finding the desired trade-off between performance and utility.
 
 Some works tackle NN training, but this requires either to use bootstrapping or to delegate the weights update to the client \cite{mihara_neural_2020} or to a semi-honest server \cite{bellafqira_secure_2018}.
+
+Surveys \cite{pulido-gaytan_privacy-preserving_2021,podschwadt_sok_2022} of privacy-preserving neural networks summarize these works, list the available libraries and explain the challenges.
 
 Regarding logistic regression training, Kim et al. \cite{kim_logistic_2018} heavily inspired this work, with the exception of a few generalizations on the input size and the use of regularization.
 The libraries used are also different.
