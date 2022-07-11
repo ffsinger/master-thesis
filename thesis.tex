@@ -21,7 +21,12 @@
 \begin{abstract}
 % The abstract serves as an executive summary of your project.
 % Your abstract should cover at least the following topics, 1-2 sentences for each: what area you are in, the problem you focus on, why existing work is insufficient, what the high-level intuition of your work is, maybe a neat design or implementation decision, and key results of your evaluation.
-[...]
+
+With the ever increasing use of machine learning models processing millions of data points, techniques for protecting this data have emerged.
+The use of homomorphic encryption is promising but still suffers from strong performance issues and relatively low adoption outside of the academia.
+We attempt to solve the problems of secure model training and inference using this technique, and analyze the results with the goal of a real-world deployement.
+We find that heavy optimizations or security and privacy sacrifices need to be made for many use-cases.
+
 \end{abstract}
 
 \maketoc
@@ -294,6 +299,8 @@ This is because the learned coefficients are kept small, and the sigmoid approxi
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Private inference}\label{sec:private_inference}
 
+\subsection{Overview}
+
 In the case of an inference service provided by a model owner to a client, another threat is that the client's data can be abused. 
 Even with a privacy policy, the client has no technical guarantee that this data will not be shared, stolen, or used for different purposes. 
 As opposed to the attacks mentioned in \autoref{sec:threats}, this threat is independent of the ML model and involves only the data. 
@@ -321,7 +328,7 @@ Note that the inference step can also be delegated to an external cloud provider
 Because inference requires much less resources than training, we can look at more complex models. 
 As neural networks are extremely popular nowadays, a deep learning framework compatible with encrypted data has many use-cases.
 
-\subsection{Packing}
+\subsection{Data packing}
 
 This problem, especially for the special case of neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. 
 One of the particularity of their approach is that they pack the $n$ pixels of an image into $n$ different ciphertexts. 
