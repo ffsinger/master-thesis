@@ -531,7 +531,7 @@ The approximate memory usage is almost identical to for the two datasets.
 This indicates that it is dominated by the crypto context, especially the rotation key which can take a few gigabytes if the ring dimension is high. 
 
 \autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
-PALISADE is faster than SEAL by a factor $3$ for training and a factor $10$ for the initialization. 
+PALISADE is faster than SEAL by around a factor $2$ for training and a factor $10$ for the initialization. 
 These are the two most time-consuming steps in this setting.
 
 \begin{table}[h!]
