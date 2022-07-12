@@ -487,11 +487,52 @@ Solutions include having domain knowledge or using auxiliary datasets.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}\label{sec:eval_lr}
 
-The following evaluation has been carried out on a simple dataset of $80$ training samples and $20$ test samples. 
+The following evaluation has been carried out on a small dataset of $80$ training samples and $20$ test samples. 
 The samples have $2$ features and can be linearly separated in two classes.
+We also compare our results with a bigger dataset of $16000$ training points and $4000$ test points.
+
 For the cryptographic parameters, we take a ring dimension of $2^{14}$, a scale of $25$ and a security level of $80$ bits. 
-The number of gradient descent iterations is $3$ and the degree of the polynomial approximation of the sigmoid is $3$.
+The number of gradient descent iterations is $3$, the learning rate at iteration t is the function $f(t) = 10 / (t+1)$ and the degree of the polynomial approximation of the sigmoid is $3$.
 These tests were run on an \emph{AMD Ryzen 5 5600x} with with $12$ vCPUs and $32$ GB of RAM.
+
+The total runtime and memory usage of the different pipelines are summarized in \autoref{table:lr_metrics}. 
+Two pipelines serve as baselines:
+\begin{itemize}
+  \item \texttt{standard}: a simple implementation of a textbook logistic regression, without encryption.
+  \item \texttt{sklearn}: a commonly used ML library.
+\end{itemize}
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{Memory footprint and total runtime of the LR pipelines}
+    \label{table:lr_metrics}
+    \begin{tabular}{ c c c c c c }
+    \hline
+     & plaintext & palisade & seal & standard & sklearn \\
+    \hline
+    Total runtime [s] - small & $0.00281$ & $1.57305$ & $9.34806$ & $0.00027$ & $0.00560$ \\
+    Total runtime [s] - big & $0.01043$ & $6.21762$ & $19.03898$ & $0.00199$ & $0.00926$ \\
+    Memory [MB] - small & $369$ & $1040$ & $3710$ & $367$ & $369$ \\
+    Memory [MB] - big & $369$ & $1060$ & $3820$ & $348$ & $349$ \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+Note that the small training dataset can be put entirely in 1 ciphertext, while it takes 10 ciphertexts to encrypt the big dataset.
+
+We first observe that the encrypted pipelines are orders of magnitude slower than the baselines.
+By comparing the plaintext and the standard pipelines, it appears that transforming the algorithm to a homomorphically-friendly version has a negligible performance cost in relation to the overhead of encryption.
+There is also not a big time difference between training on $80$ points and on $16000$ points, because part of the algorithm is independent on the number of ciphertexts.
+
+The model performance metrics (accuracy and area under the curve) are not different from the baseline (equal to 1 for the small dataset and close to 1 for the big one).
+
+The approximate memory usage is almost identical to for the two datasets.
+This indicates that it is dominated by the crypto context, especially the rotation key which can take a few gigabytes if the ring dimension is high. 
+
+\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
+PALISADE is faster than SEAL by a factor $3$ for training and a factor $10$ for the initialization. 
+These are the two most time-consuming steps in this setting.
 
 \begin{table}[h!]
   \begin{center}
@@ -529,84 +570,9 @@ These tests were run on an \emph{AMD Ryzen 5 5600x} with with $12$ vCPUs and $32
           }
       },
       every last row/.style={after row=\bottomrule},
-    ]{data/lr_runtime.csv}
+    ]{data/lr_small_steps.csv}
   \end{center}
 \end{table}
-
-\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different logistic regression algorithms. 
-Two pipelines serve as baselines:
-\begin{itemize}
-  \item \texttt{standard}: a simple implementation of a textbook logistic regression, without encryption.
-  \item \texttt{sklearn}: a commonly used ML library.
-\end{itemize}
-
-We observe that the encrypted pipelines are orders of magnitude slower than the baselines.
-PALISADE is faster than SEAL by a factor $3$ for training and a factor $10$ for the initialization. 
-These are the two most time-consuming steps in this setting.
-Except for the initialization, we can expect the runtime of all steps to grow linearly with the number of ciphertexts and at about the same rate.
-
-By comparing the plaintext and the standard pipelines, it appears that transforming the algorithm to a homomorphically-friendly version has a negligible performance cost in relation to the overhead of encryption.
-
-%% This is not relevant for the small dataset where everything is 1
-% \begin{table}[t]
-%   \begin{center}
-%     \caption{LR performance metrics}
-%     \label{table:lr_metrics}
-%     \pgfplotstabletypeset[
-%       % multicolumn names,
-%       col sep=comma,
-%       display columns/0/.style={
-%         column name=$ $,
-%         column type={r},string type},
-%       display columns/1/.style={
-%         column name=Predicted distribution,
-%         column type={r}},
-%       display columns/2/.style={
-%         column name=True distribution,
-%         column type={r}},
-%       display columns/3/.style={
-%         column name=Accuracy,
-%         column type={r}},
-%       display columns/4/.style={
-%         column name=AUC,
-%         column type={r}},
-%       display columns/5/.style={
-%         column name=Memory (MB),
-%         column type={r}},
-%       every head row/.style={
-%           before row={\toprule},
-%           after row={
-%               % si{\second} & \si{\second} ... \\
-%               \midrule
-%           }
-%       },
-%       every last row/.style={after row=\bottomrule},
-%     ]{data/lr_metrics.csv}
-%   \end{center}
-% \end{table}
-
-\begin{table}[h!]
-  \begin{center}
-    \caption{Memory footprint of the LR pipelines, in MB}
-    \label{table:lr_memory}
-    \begin{tabular}{ c c c c c c }
-    \hline
-     & plaintext & palisade & seal & standard & sklearn \\
-    \hline
-    Memory [MB] & $367$ & $1100$ & $4750$ & $366$ & $368$ \\
-    \hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-The model performance metrics (accuracy and area under the curve) are not different from the baseline and are both equal to 1.
-
-Memory usage is summarized in \autoref{table:lr_memory}. As we are using a small dataset, memory usage is dominated by the rotation key which can take a few gigabytes if the ring dimension is high.
-
-[TODO: compare with a bigger dataset]
-% Reorganize the tables:
-% **Total** runtime for all pipelines and both datasets
-% Steps breakdown only for plaintext-palisade-seal, maybe both datasets
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
