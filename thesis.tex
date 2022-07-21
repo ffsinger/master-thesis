@@ -353,7 +353,25 @@ The authors describe other packing methods optimized for certain tasks.
 
 \subsection{Hybrid approach}
 
-[(TODO) Make the first convolutions on the client, non-encrypted. Some parts of the model are revealed to the client which can make it a bit easier to steal, but the final layers are secret and the data is still secure.]
+As will be shown in \autoref{chap:evaluation}, a fully encrypted inference on a deep network can still be very time-consuming.
+This is mainly due to the first convolutional layers that extract features from an image.
+
+These first layers are often quite generic and sometimes rely on publicly available pre-trained weights.
+From the perspective of the model owner, making these layers public can be acceptable because most of the knowledge derived from the data is concentrated in the last classification layers.
+
+Thus, an hybrid solution alternating between cleartext and encrypted parts could provide an important performance improvement at the expense of a reasonably small security sacrifice.
+Although more computing power is required from the client, they keep the same guarantees in terms of data privacy.
+
+Such an architecture is illustrated in \autoref{fig:hybrid_cnn}.
+In this case, the client computes all the convolutions and pooling layers, then flattens and encrypts the result. 
+The server only has to evaluate the fully connected layers on encrypted data.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{figures/layers.pdf}
+  \caption{Hybrid CNN inference, the first part is done on the client in cleartext and the last layers are computed on the server.}
+  \label{fig:hybrid_cnn}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
