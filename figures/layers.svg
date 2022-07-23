@@ -10,6 +10,9 @@
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    sodipodi:docname="layers.svg"
    xml:space="preserve"
+   inkscape:export-filename="layers.pdf"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +28,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="2.096401"
-     inkscape:cx="306.23912"
+     inkscape:cx="271.41754"
      inkscape:cy="135.70877"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
@@ -405,15 +408,15 @@
        style="font-style:normal;font-weight:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3757);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.03541"><tspan
          x="148.44336"
          y="39.698045"
-         id="tspan7349"><tspan
+         id="tspan7691"><tspan
            style="font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans'"
-           id="tspan7347">Convolutions
+           id="tspan7689">Convolutions
 </tspan></tspan><tspan
          x="148.44336"
          y="56.364671"
-         id="tspan7353"><tspan
+         id="tspan7695"><tspan
            style="font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans'"
-           id="tspan7351">+ Pooling</tspan></tspan></text><text
+           id="tspan7693">+ Pooling</tspan></tspan></text><text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.40712px;line-height:1.25;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans';stroke-width:0.264583"
        x="96.877014"
