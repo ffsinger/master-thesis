@@ -725,10 +725,10 @@ However, it is important to note that both the memory usage and the runtime will
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{PDF-split}
+\section{Hybrid CNN}
 
 In this section, we apply our framework to a real use-case. 
-The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
+%The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
 It should be accurate enough while still having reasonable performance.
 These tests were run on an Azure \texttt{D16as\_v4} machine with $16$ vCPUs and $64$ GB of RAM.
 
@@ -761,16 +761,12 @@ Layers are described in \autoref{table:lenet}.
   \end{center}
 \end{table}
 
-We also consider a hybrid version, as described in \autoref{sec:hybrid_cnn}, where only the last five layers after flattening are in the encrypted domain. In this case, the two first $\tanh$ layers do not need to be approximated.
+We also consider a hybrid version, as described in \autoref{sec:hybrid_cnn}, where only the last five layers after flattening are in the encrypted domain. In this case, the two first $\tanh$ layers do not need to be approximated and the learning rate is a bit different.
 
-As this problem requires us to make a prediction for each page in a document, pixelwise packing is more appropriate for its ability to batch many inferences.
+%As this problem requires us to make a prediction for each page in a document, pixelwise packing is more appropriate for its ability to batch many inferences.
 
 The results in \autoref{table:lenet_results} indicate that even a simple network needs a lot of resources.
-However, if a latency of $170$ minutes (in the case of SEAL) can be tolerated, the time per inference is only of about $1.2$ seconds with a batch of $8192$ pages.
-
-[TODO: evaluate hybrid]
-
-[TODO: take pdf split dataset, make a full batch and compute f1-score]
+However, if a latency of $176$ minutes (in the case of SEAL) can be tolerated, the time per inference is only of about $1.3$ seconds with a batch of $8192$ pages.
 
 \begin{table}[h!]
   \begin{center}
@@ -781,13 +777,15 @@ However, if a latency of $170$ minutes (in the case of SEAL) can be tolerated, t
     & pytorch & plaintext & seal & hybrid seal \\
     & & pixelwise & pixelwise & pixelwise \\
     \hline
-    Runtime [min] & $...$ & $0.17$ & $170$ & $...$ \\
-    Memory [MB] & $...$ & $662$ & $52600$ & $...$ \\
-    F1-score & $...$ & $...$ & $...$ & $...$ \\
+    Runtime [min] & $0.00468$ & $0.136$ & $176$ & $8.57$ \\
+    Memory [MB] & $392$ & $379$ & $51800$ & $2210$ \\
+    Accuracy & $0.976$ & $0.976$ & $0.953$ & $0.964$ \\
     \hline
     \end{tabular}
   \end{center}
 \end{table}
+
+[TODO analyze]
 
 
 %%%%%%%%%%%%%%%%%%%%%%
