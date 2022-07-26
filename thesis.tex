@@ -68,8 +68,8 @@ The downside of this approach is that it comes with severe performance and preci
 Nevertheless, this has been an active research field that has seen promising advances in the past decade.
 
 The goal of this project is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. 
-It also aims to formalize and describe on a more granular level which steps of a machine learning algorithm can be protected using homomorphic encryption, and why. 
-This will be useful to find the right trade-off between security and performance.
+It also aims to formalize the threats that exist in machine learning processes, and describe how they can be mitigated using homomorphic encryption.
+Finally, it discusses the trade-off between security and performance in this context.
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -727,11 +727,10 @@ However, it is important to note that both the memory usage and the runtime will
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Hybrid CNN}
 
-In this section, we apply our framework to a real use-case. 
-%The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
-It should be accurate enough while still having reasonable performance.
+In this section, we use a standard network architecture to see how our framework can be applied to a real use-case. 
 These tests were run on an Azure \texttt{D16as\_v4} machine with $16$ vCPUs and $64$ GB of RAM.
 
+It should be accurate enough while still having reasonable performance.
 Judging from the results of \autoref{sec:eval_cnn}, we need to choose a very simple architecture. 
 The network is identical to LeNet-5 by LeCun \cite{lecun_gradient-based_1998}, except that we replace the $\tanh$ layers with a polynomial approximation of degree $3$. 
 Layers are described in \autoref{table:lenet}.
@@ -761,12 +760,14 @@ Layers are described in \autoref{table:lenet}.
   \end{center}
 \end{table}
 
-We also consider a hybrid version, as described in \autoref{sec:hybrid_cnn}, where only the last five layers after flattening are in the encrypted domain. In this case, the two first $\tanh$ layers do not need to be approximated and the learning rate is a bit different.
+We also consider a hybrid version, as described in \autoref{sec:hybrid_cnn}, where only the last five layers after flattening are in the encrypted domain. In this case, the two first $\tanh$ layers do not need to be approximated and the learning rate is adapted accordingly.
 
-%As this problem requires us to make a prediction for each page in a document, pixelwise packing is more appropriate for its ability to batch many inferences.
+The model is trained on the MNIST dataset, and the test samples are batched together in the same ciphertext with pixelwise packing. This lets us compute and compare the accuracy of the different versions in \autoref{table:lenet_results}, along with the runtime and memory usage.
 
-The results in \autoref{table:lenet_results} indicate that even a simple network needs a lot of resources.
-However, if a latency of $176$ minutes (in the case of SEAL) can be tolerated, the time per inference is only of about $1.3$ seconds with a batch of $8192$ pages.
+The results indicate that even a simple network needs a lot of resources, with a latency of $176$ minutes and over $50$ GB of RAM used (in the case of SEAL).
+However, if this latency can be tolerated, the time per inference is only of about $1.3$ seconds with a batch of $8192$ samples.
+
+Furthermore, the hybrid version has a much smaller footprint and is also much faster, with an amortized time per inference of only $1$ millisecond. When it comes to accuracy, we notice a slight decrease due to the imprecisions in the encrypted computations.
 
 \begin{table}[h!]
   \begin{center}
@@ -785,7 +786,10 @@ However, if a latency of $176$ minutes (in the case of SEAL) can be tolerated, t
   \end{center}
 \end{table}
 
-[TODO analyze]
+
+%\subsection{PDF-split}
+%The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
+%As this problem requires us to make a prediction for each page in a document, pixelwise packing is more appropriate for its ability to batch many inferences.
 
 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -804,7 +808,7 @@ It inspired many other works that attempted to include optimizations to alleviat
 
 For instance, Badawi et al. \cite{badawi_privft_2019, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification).
 
-LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it, and selects an optimal packing method at each layer.
+Similarly to our hybrid model, LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it. It then selects an optimal packing method at each layer.
 
 Lee et al. \cite{lee_privacy-preserving_2021} focus on maximum accuracy by using a deep model (ResNet-20).
 
@@ -833,13 +837,14 @@ The field of homomorphic encryption is still emerging from the academia, and it 
 In particular, machine learning is a resource-intensive process that suffers greatly from the overhead of encryption.
 
 Even simple models like logistic regression are several orders of magnitude slower to train, and require a lot of memory. 
-The same applies for neural networks. Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases like document splitting.
+The same applies for neural networks. Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases involving deep networks and big images.
 
 However, the potential threats that would be solved by these solutions are sufficiently important to justify continuing the efforts in this field.
 Optimizations can be found either at the cryptographic level or at the algorithmic level of machine learning models, by using different packing methods or approximations.
-Parallelization can also considerably improve performance.
+Parallelization can be extremely valuable, and the desired security level also has a high impact on performance.
 
 Another promising paradigm is to delegate some computations to the client and to keep the encrypted parts of the pipeline to a strict minimum while still providing enough security. 
+The appropriate trade-off needs to be found on a case-by-case basis, depending on the capabilities of the client and those of the adversary.
 
 
 \cleardoublepage
