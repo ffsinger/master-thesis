@@ -516,29 +516,37 @@ For the cryptographic parameters, we take a ring dimension of $2^{14}$, a scale 
 The number of gradient descent iterations is $3$, the learning rate at iteration t is the function $f(t) = 10 / (t+1)$ and the degree of the polynomial approximation of the sigmoid is $3$.
 These tests were run on an \emph{AMD Ryzen 5 5600x} with with $12$ vCPUs and $32$ GB of RAM.
 
-The total runtime and memory usage of the different pipelines are summarized in \autoref{table:lr_metrics}. 
-Two pipelines serve as baselines:
-\begin{itemize}
-  \item \texttt{standard}: a simple implementation of a textbook logistic regression, without encryption.
-  \item \texttt{sklearn}: a commonly used ML library.
-\end{itemize}
-
 \begin{table}[h!]
   \begin{center}
-    \caption{Memory footprint and total runtime of the LR pipelines}
-    \label{table:lr_metrics}
+    \caption{Total runtime of the LR pipelines}
+    \label{table:lr_runtime}
     \begin{tabular}{ c c c c c c }
     \hline
      & plaintext & palisade & seal & standard & sklearn \\
     \hline
     Total runtime [s] - small & $0.00281$ & $1.57305$ & $9.34806$ & $0.00027$ & $0.00560$ \\
     Total runtime [s] - big & $0.01043$ & $6.21762$ & $19.03898$ & $0.00199$ & $0.00926$ \\
-    Memory [MB] - small & $369$ & $1040$ & $3710$ & $367$ & $369$ \\
-    Memory [MB] - big & $369$ & $1060$ & $3820$ & $348$ & $349$ \\
+    % Keep this ?
+    % Memory [MB] - small & $369$ & $1040$ & $3710$ & $367$ & $369$ \\
+    % Memory [MB] - big & $369$ & $1060$ & $3820$ & $348$ & $349$ \\
     \hline
     \end{tabular}
   \end{center}
 \end{table}
+
+\begin{figure}[h!]
+  \centering
+  \caption{Memory footprint of the LR pipelines}
+  \includegraphics[width=0.8\textwidth]{figures/lr_mem.pdf}
+  \label{fig:lr_memory}
+\end{figure}
+
+The total runtime and memory usage of the different pipelines are summarized in \autoref{table:lr_runtime} and \autoref{fig:lr_memory}. 
+Two pipelines serve as baselines:
+\begin{itemize}
+  \item \texttt{standard}: a simple implementation of a textbook logistic regression, without encryption.
+  \item \texttt{sklearn}: a commonly used ML library.
+\end{itemize}
 
 Note that the small training dataset can be put entirely in 1 ciphertext, while it takes 10 ciphertexts to encrypt the big dataset.
 
@@ -551,14 +559,14 @@ The model performance metrics (accuracy and area under the curve) are not differ
 The approximate memory usage is almost identical to for the two datasets.
 This indicates that it is dominated by the crypto context, especially the rotation key which can take a few gigabytes if the ring dimension is high. 
 
-\autoref{table:lr_runtime} presents the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
+\autoref{table:lr_steps} presents the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
 PALISADE is faster than SEAL by around a factor $2$ for training and a factor $10$ for the initialization. 
 These are the two most time-consuming steps in this setting.
 
 \begin{table}[h!]
   \begin{center}
     \caption{Runtime of the LR at each step, in seconds}
-    \label{table:lr_runtime}
+    \label{table:lr_steps}
     \pgfplotstabletypeset[
       % multicolumn names,
       col sep=comma,
@@ -599,9 +607,6 @@ These are the two most time-consuming steps in this setting.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural network}\label{sec:eval_cnn}
 
-
-The network architecture used in this evaluation (\autoref{table:poc}) is not designed for maximal accuracy, rather it shows the differences between different layer types.
-
 \begin{table}[h!]
   \begin{center}
     \caption{Architecture of an homomorphically encrypted network as a proof-of-concept}
@@ -620,19 +625,7 @@ The network architecture used in this evaluation (\autoref{table:poc}) is not de
   \end{center}
 \end{table}
 
-The runtime of an encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}. 
-For this setting, we omit the PALISADE pipeline and show only the SEAL and plaintext pipelines with both packing methods, along with a baseline using \texttt{pytorch}.
-
-The other difference with \autoref{sec:eval_lr} is that we simulate a true client-server communication and report the time needed to serialize and deserialize the request and the response.
-These steps are summed in one column \emph{serialize} for readability.
-As introduced in \autoref{sec:private_inference}, the client needs to send the encrypted data, the relinearization key, and the rotation keys if needed.
-The server responds with the encrypted result.
-For this evaluation, these objects are encoded in \texttt{base64} and sent in JSON via HTTP.
-
-We observe that the serialization step takes a considerable amount of time because the data and the keys can be quite big. 
-However, the runtime is still dominated by the prediction step, which takes around 2 minutes for this simple network.
-The channelwise packing method was designed to reduce the latency for non-batched data, but it completely fails in this aspect by being even slower than pixelwise packing, except for the encryption step.
-This result is due to the high number of rotation operations and the higher multiplicative depth.
+The network architecture used in this evaluation (\autoref{table:poc}) is not designed for maximal accuracy, rather it shows the differences between different layer types.
 
 \begin{table}[h!]
   \begin{center}
@@ -670,9 +663,19 @@ This result is due to the high number of rotation operations and the higher mult
   \end{center}
 \end{table}
 
-\autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type. 
-However, it is important to keep in mind that homomorphic computations are slower on the first levels, with fresh ciphertexts. 
-Thus, a layer placed at the beginning of a network will be slower than its equivalent at the end of the network.
+The runtime of an encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}. 
+For this setting, we omit the PALISADE pipeline and show only the SEAL and plaintext pipelines with both packing methods, along with a baseline using \texttt{pytorch}.
+
+The other difference with \autoref{sec:eval_lr} is that we simulate a true client-server communication and report the time needed to serialize and deserialize the request and the response.
+These steps are summed in one column \emph{serialize} for readability.
+As introduced in \autoref{sec:private_inference}, the client needs to send the encrypted data, the relinearization key, and the rotation keys if needed.
+The server responds with the encrypted result.
+For this evaluation, these objects are encoded in \texttt{base64} and sent in JSON via HTTP.
+
+We observe that the serialization step takes a considerable amount of time because the data and the keys can be quite big. 
+However, the runtime is still dominated by the prediction step, which takes around 2 minutes for this simple network.
+The channelwise packing method was designed to reduce the latency for non-batched data, but it completely fails in this aspect by being even slower than pixelwise packing, except for the encryption step.
+This result is due to the high number of rotation operations and the higher multiplicative depth.
 
 \begin{table}[h!]
   \begin{center}
@@ -704,24 +707,36 @@ Thus, a layer placed at the beginning of a network will be slower than its equiv
   \end{center}
 \end{table}
 
-In terms of memory usage, shown in \autoref{table:cnn_memory}, channelwise packing has a clear advantage.
+\autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type. 
+However, it is important to keep in mind that homomorphic computations are slower on the first levels, with fresh ciphertexts. 
+Thus, a layer placed at the beginning of a network will be slower than its equivalent at the end of the network.
+
+% Keep the table ?
+% \begin{table}[h!]
+%   \begin{center}
+%     \caption{Memory footprint of the CNN pipelines, in MB}
+%     \label{table:cnn_memory}
+%     \begin{tabular}{ c c c c c c }
+%     \hline
+%     & plaintext & seal & plaintext & seal & pytorch \\
+%     & channelwise & channelwise & pixelwise & pixelwise & \\
+%     \hline
+%     Memory [MB] & $368$ & $1090$ & $402$ & $2620$ & $371$ \\
+%     \hline
+%     \end{tabular}
+%   \end{center}
+% \end{table}
+
+\begin{figure}[h!]
+  \centering
+  \caption{Memory footprint of the CNN pipelines}
+  \includegraphics[width=0.8\textwidth]{figures/cnn_mem.pdf}
+  \label{fig:cnn_memory}
+\end{figure}
+
+In terms of memory usage, shown in \autoref{fig:cnn_memory}, channelwise packing has a clear advantage.
 It indicates that channelwise packing, even if it is slower, can be useful for systems with limited memory.
 However, it is important to note that both the memory usage and the runtime will grow linearly with channelwise packing, while pixelwise packing will be able to batch multiple data points at no additional cost.
-
-\begin{table}[h!]
-  \begin{center}
-    \caption{Memory footprint of the CNN pipelines, in MB}
-    \label{table:cnn_memory}
-    \begin{tabular}{ c c c c c c }
-    \hline
-    & plaintext & seal & plaintext & seal & pytorch \\
-    & channelwise & channelwise & pixelwise & pixelwise & \\
-    \hline
-    Memory [MB] & $368$ & $1090$ & $402$ & $2620$ & $371$ \\
-    \hline
-    \end{tabular}
-  \end{center}
-\end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
