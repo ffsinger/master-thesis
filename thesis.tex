@@ -84,7 +84,7 @@ Finally, it discusses the trade-off between security and performance in this con
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Logistic regression is a simple and widely used model for classification. 
+Logistic regression (LR) is a simple and widely used model for classification. 
 Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^d$ and the corresponding label $y_i \in \{-1,1\}$, the training phase consists of learning a vector of weights $\mathbf{w} \in \mathbb{R}^{d+1}$ minimizing the loss function:
 \begin{equation}\label{eq:logistic_reg_train}
     \mathcal{L}(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^{n} \log(1 + \exp(-\mathbf{z}_i^T \mathbf{w})) 
@@ -114,7 +114,7 @@ Classifying a new point $\mathbf{x}$ can be done as follows:
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural networks}
 
-Neural networks are defined as a succession of \emph{layers}, each consisting of operations on a set of input neurons, which are typically real numbers.
+Neural networks (NN) are defined as a succession of \emph{layers}, each consisting of operations on a set of input neurons, which are typically real numbers.
 
 Basic networks make use of \emph{fully connected} (or \emph{linear}) layers, which are defined as such for an input vector $\mathbf{x} \in \mathbb{R}^d$, a weights matrix $W \in \mathbb{R}^{k \times d}$ and a bias vector $\mathbf{b} \in \mathbb{R}^k$:
 
@@ -149,7 +149,7 @@ where $b_i$ is the bias, $w_i \in \mathbb{R}^{c \times k_1 \times k_2}$ is the k
 Another important type of layer is the \emph{pooling} layer, that will aggregate a neighborhood of neurons into one value. 
 The type of aggregate is usually a \emph{max} operation or an \emph{average}.
 
-The traditional architecture of a convolutional neural network starts with an alternate of convolutions, activation functions and pooling layers. 
+The traditional architecture of a convolutional neural network (CNN) starts with an alternate of convolutions, activation functions and pooling layers. 
 Then, the input is flatten into one dimension and feeded to a sequence of fully connected layers.
 
 
@@ -472,7 +472,8 @@ The pipelines show an example of a client-server separation and a non-encrypted 
 
 Many problems arise when implementing or using these algorithms. 
 First, the limited number of operations available with homomomorphic encryption forces us to find approximations or workarounds. 
-These approximations are usually only precise in a certain range around zero. If the computations are not kept in this interval, they risk to overflow or become extremely biased.
+These approximations are usually only precise in a certain range around zero. 
+If the computations are not kept in this interval, they risk to overflow or become extremely biased.
 
 Then, we are in practice limited in the number of operations that we can chain. 
 Even if CKKS with bootstrapping does not theoretically have this limitation, the imprecision of each computation, inherent to the scheme, will make the error grow continuously.
