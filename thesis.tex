@@ -195,6 +195,23 @@ During the initialization phase, some parameters need to be set:
 These parameters need to be carefully tuned based on the problem at hand. 
 Other parameters, such as the \emph{error distribution} or the \emph{key distribution}, are often set to the same standard value.
 
+The basic concept of HE, while already powerful, is limited to two entities.
+It is not possible to mix data encrypted with different keys.
+In a scenario where multiple actors want to collaboratively use their data without revealing it to each other, it would be unsafe for all of them to use the same private key.
+To solve this problem, two approaches have been proposed.
+
+The first is \emph{Multi-Key Homomorphic Encryption} (MKHE).
+It was first introduced by López-Alt et al. \cite{lopez-alt_--fly_2012} in 2012, as an extension of the NTRU HE scheme. 
+Then, Chen et al. \cite{chen_efficient_2019} adapted this idea for bootstrappable schemes such as BFV and CKKS.
+In this setting, any party can encrypt data and join the pool of computations.
+There is no need for an initialization step between parties, which means that the participants do not need to be known in advance.
+It is only during the decryption process that every party involved needs to participate.
+
+\emph{Multiparty Homomorphic Encryption} (MHE) is the second approach suggested by Mouchet al. \cite{mouchet_multiparty_2021}.
+In this case, the key generation process must be done collaboratively with every participant in order to create a common public key.
+This provides less flexibility, but the advantage lies in efficiency.
+As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization keys do not grow with the number of parties.
+
 
 %%%%%%%%%%%%%%%%
 \chapter{Design}
@@ -834,9 +851,11 @@ One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which i
 
 It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
 
-For instance, Badawi et al. \cite{badawi_privft_2019, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification).
+For instance, Badawi et al. \cite{badawi_privft_2019, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification). 
+We started with this architecture before moving to a more generic framework.
 
-Similarly to our hybrid model, LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it. It then selects an optimal packing method at each layer.
+Similarly to our hybrid model, LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it. 
+It then selects an optimal packing method at each layer.
 
 Lee et al. \cite{lee_privacy-preserving_2021} focus on maximum accuracy by using a deep model (ResNet-20).
 
@@ -847,7 +866,7 @@ Some works tackle NN training, but this requires either to use bootstrapping or 
 Surveys \cite{pulido-gaytan_privacy-preserving_2021,podschwadt_sok_2022} of privacy-preserving neural networks summarize these works, list the available libraries and explain the challenges.
 
 Regarding logistic regression training, Kim et al. \cite{kim_logistic_2018} heavily inspired this work, with the exception of a few generalizations on the input size and the use of regularization.
-The libraries used are also different.
+The libraries used are also different, as they used HEAAN.
 
 Other solutions include Bonte and Vercauteren \cite{bonte_privacy-preserving_2018} and Chen et al. \cite{chen_logistic_2018}.
 Both are using the BFV encryption scheme.
