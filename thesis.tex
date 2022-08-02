@@ -893,6 +893,14 @@ Parallelization can be extremely valuable, and the desired security level also h
 Another promising paradigm is to delegate some computations to the client and to keep the encrypted parts of the pipeline to a strict minimum while still providing enough security. 
 The appropriate trade-off needs to be found on a case-by-case basis, depending on the capabilities of the client and those of the adversary.
 
+It is also worth noting that future work could be done to extend our system to a multi-party setting by using MHE or MKHE. 
+However, other approaches for multi-party training are also being researched. 
+Instead of collecting all the data to a central server, \emph{Federated Learning} consists of training multiple local models by each data owner, and combining these models into one.
+This way, the data never leaves its owner, even encrypted.
+As only model weights are exchanged, this could remove the need of encryption entirely, but weights can still retain sensitive information.
+Thus, some works such as \textsc{Poseidon} \cite{sav_poseidon_2021} combine this idea with MHE for better security guarantees.
+Once again, the ideal approach highly depends on the use-case. 
+
 
 \cleardoublepage
 \phantomsection
