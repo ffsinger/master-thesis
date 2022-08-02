@@ -323,6 +323,8 @@ For the training step, a regularization term has also been added.
 Apart from its common usage in ML for avoiding overfitting, it has in this case the added advantage of improving the precision of the computations. 
 This is because the learned coefficients are kept small, and the sigmoid approximation that we use is only precise for a certain interval around $0$.
 
+The pseudocode for the training algorithm is given in the appendix (Algorithm \ref{algo:lr_training}).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Private inference}\label{sec:private_inference}
@@ -417,6 +419,7 @@ This chapter covers the lower-level aspects of the solutions. It presents the li
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Backends}
+\label{sec:backends}
 
 There are multiple HE libraries providing the CKKS scheme. Most of them are implemented in \texttt{C++}, such as SEAL \cite{microsoft_corporation_microsoft_2022}, PALISADE \cite{palisade_palisade_2022} or HEAAN \cite{cryptolab_inc_heaan_2022}, but Lattigo \cite{tune_insight_sa_lattigo_2022} is implemented in Golang. 
 A more complete survey and comparison of the different libraries can be found in \cite{viand_sok_2021}.
@@ -912,5 +915,67 @@ Once again, the ideal approach highly depends on the use-case.
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \printbibliography
+
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+\appendix
+\chapter{Algorithms}
+
+Here we describe the main algorithms used in this project. Note that homomorphic operations are abstracted as mentioned in \autoref{sec:backends}, i.e. ciphertexts are automatically rescaled and relinearized after every multiplication when necessary.
+
+\section{Logistic regression training}
+
+\begin{algorithm*}
+  \label{algo:lr_training}
+  \caption{Logistic regression training}
+
+  \LinesNumbered
+  \DontPrintSemicolon
+  \SetAlgoLined
+  \SetKwProg{Fn}{Function}{:}{}
+
+  \KwIn{A matrix of samples $\mathbf{X} \in \mathbb{R}^{n\times (d-1)}$ and labels $\mathbf{y} \in \mathbb{R}^{n}$}
+  \KwOut{The trained weights $\beta \in \mathbb{R}^{d}$}
+  
+  Let $s$ be the number of slots $N / 2$\;
+  \CommentSty{// Encryption}\;
+  Pairwise multiply the points of $\mathbf{X}$ with their corresponding label in $\mathbf{y}$, as $\mathbf{Z}$\;
+  Pad the columns of $\mathbf{Z}$ with zeros to the next power of two $d_{pad}$\;
+  Encrypt the matrix $\mathbf{Z}$ row-wisely into a set of ciphertexts $\{c_{z_i}\}_{i=0}^{L-1}$\;
+  Let $r = \min(n, s / d_{pad})$ be the number of rows in each ciphertext\;
+
+  \CommentSty{// Training}\;
+  Initialize $\beta$ with random Xavier weights and encrypt it into $c_\beta$\;
+  Let $x = [x_0, ..., x_{s-1}]$ a mask vector where $x_u = 1$ if $u \mod d_{pad}=0$, and $x_u=0$ otherwise\;
+  Let $p$ a regularization vector with each non-padded element set to $-2/C$\;
+  \For{$t=0,...,T$}{
+    \For{$i=0,...,L-1$}{
+      $c_i \leftarrow \mathbf{Mult}(c_{z_i}, c_\beta)$\;
+      \For{$j=0,...,\log_2(d_{pad}) - 1$}{
+        $c_i \leftarrow \mathbf{Add}(c_i, \mathbf{Rotate}(c_i, 2^j))$\;
+      }
+      $c_i \leftarrow \mathbf{Mult}(c_i, x)$\;
+      \For{$j=0,...,\log_2(d_{pad}) - 1$}{
+        $c_i \leftarrow \mathbf{Add}(c_i, \mathbf{Rotate}(c_i, -2^j))$\;
+      }
+      $c_i \leftarrow \mathbf{SigmoidApprox}(c_i)$\;
+      $c_i \leftarrow \mathbf{Mult}(c_i, c_{z_i})$\;
+    }
+    $c \leftarrow \mathbf{Sum}(\{c_i\}_{i=0}^{L-1})$\;
+    \For{$j=\log_2(d_{pad}),...,\log_2(d_{pad}) + \log_2(r) - 1$}{
+      $c \leftarrow \mathbf{Add}(c, \mathbf{Rotate}(c, 2^j))$\;
+    }
+    $c \leftarrow \mathbf{Add}(c, \mathbf{Mult}(c_\beta, p))$\;
+    Let $l$ a learning rate vector with each non-padded element set to the learning rate at iteration $t$\;
+    $c_\beta \leftarrow \mathbf{Add}(c_\beta, \mathbf{Mult}(c, l))$\;
+  }
+
+  \CommentSty{// Decryption}\;
+  Decrypt $c_\beta$ into $\beta$ and truncate the vector to the first $d$ elements\;
+
+\end{algorithm*}
+
+
+% \chapter{Other appendix}
 
 \end{document}
