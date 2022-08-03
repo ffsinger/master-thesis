@@ -380,6 +380,8 @@ For our framework to be flexible on the architecture of the model, the same type
 However, it would be possible to optimize a specific architecture by switching between multiple packings, as is done for LoLa in \cite{brutzkus_low_2019}. 
 The authors describe other packing methods optimized for certain tasks.
 
+The pseudocode for a convolutional layer with channelwise packing is given as an example in \autoref{algo:conv2d_channelwise} of the appendix.
+
 \subsection{Hybrid approach}\label{sec:hybrid_cnn}
 
 As will be shown in \autoref{chap:evaluation}, a fully encrypted inference on a deep network can still be very time-consuming.
@@ -919,7 +921,9 @@ Once again, the ideal approach highly depends on the use-case.
 %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%
 \appendix
+%%%%%%%%%%%%%%%%%%%%
 \chapter{Algorithms}
+%%%%%%%%%%%%%%%%%%%%
 
 Here we describe the main algorithms used in this project. 
 It is meant to illustrate the implementation of an algorithm with homomorphic encryption and CKKS, rather than being an exhaustive reference of all the algorithms implemented. 
@@ -932,9 +936,10 @@ This outputs a vector containing the dot product at every element, which can be 
 By doing rotations of successive powers of two, the computational complexity of dot products can be reduced to $O(\log n)$ instead of $O(n)$. 
 This is the reason why vectors are often padded with zeros to the next power of two.
 
+%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression training}
 
-\autoref{algo:lr_training} describes how to train an encrypted LR model.
+\autoref{algo:lr_training} describes how to train an encrypted LR model, from the encryption of the training data to the decryption of the trained weights.
 It is inspired by \cite{kim_logistic_2018} but with less assumptions on the input size, and with the addition of a regularization term. 
 For simplicity, we use traditional gradient descent instead of Nesterov's gradient update.
 
@@ -948,7 +953,7 @@ For simplicity, we use traditional gradient descent instead of Nesterov's gradie
 
   \KwIn{A matrix of samples $\mathbf{X} \in \mathbb{R}^{n\times (d-1)}$, the labels $\mathbf{y} \in \mathbb{R}^{n}$, and the ring degree $N$}
   \KwOut{The trained weights $\beta \in \mathbb{R}^{d}$}
-  \Precondition{$d-1 < N/2$}
+  \Precondition{$d \leq N/2$}
   
   Let $s$ be the number of slots $N / 2$\;
   \CommentSty{// Encryption}\;
@@ -990,6 +995,59 @@ For simplicity, we use traditional gradient descent instead of Nesterov's gradie
 
 \caption{Logistic regression training}
 \label{algo:lr_training}
+
+\end{algorithm}
+
+
+%%%%%%%%%%%%%%%%%%%%
+\section{2D convolution layer}
+
+\autoref{algo:conv2d_channelwise} shows how to evaluate an encrypted 2D convolution layer that is part of a neural network. 
+It uses \emph{channelwise} packing.
+
+For more readability, this version does not support padding. The output channels are thus smaller than the input.
+
+The version for \emph{pixelwise} packing is much simpler, as it only requires one homomorphic multiplication and addition in the inner loop.
+
+\begin{algorithm}
+
+  \LinesNumbered
+  \DontPrintSemicolon
+  \SetAlgoLined
+  \SetKwProg{Fn}{Function}{:}{}
+  \SetKwInOut{Precondition}{Precondition}
+
+  % A collection of ciphertexts $c$ where $c_{bk}$ is the ciphertext for sample $b=1,...,B$ and channel $k=1,...,K$
+  \KwIn{A collection of ciphertexts for $B$ samples and $W_{in}$ input channels where each ciphertext represents a row-wise encoded image of size $R_{in} \times C_{in}$, a collection of kernels and biases, and the ring degree $N$}
+  \KwOut{A collection $d$ of ciphertexts for $B$ samples and $W_{out}$ output channels}
+  \Precondition{$R_{in} \cdot C_{in} \leq N/2$}
+
+  \For{$b=1,...,B$}{
+    \For{$m=1,...,W_{out}$}{
+      \For{$l=1,...,W_{in}$}{
+        Let $k$ be the kernel for input channel $w_{in}$ and output channel $w_{out}$, padded with zeros to a shape of $R_{in} \times C_{in}$ and row-wise encoded\;
+        Let $x$ be the ciphertext for sample $b$ and input channel $w_{in}$\;
+        \For{$i=1,...,R_{out}$}{
+          \For{$j=1,...,C_{out}$}{
+            Let $k_{rot}$ be the kernel $k$ rotated by $i \cdot C_{in} + j$\ positions to the right\;
+            $z \leftarrow \mathbf{Mult}(x, k_{rot})$\;
+            \For{$q=0,...,\log_2(N / 2) - 1$}{
+              $z \leftarrow \mathbf{Add}(z, \mathbf{Rotate}(z, -2^q))$\;
+            }
+            Let $a$ be a zero vector with element $i \cdot C_{out} + j$\ set to $1$\;
+            $z \leftarrow \mathbf{Mult}(z, a)$\;
+            $d_{bl} \leftarrow \mathbf{Add}(d_{bl}, z)$\;
+          }
+        }
+      }
+      Let $y$ be a vector filled with the bias value for channel $m$\;
+      $d_{bl} \leftarrow \mathbf{Add}(d_{bl}, y)$\;
+    }
+  }
+  
+
+\caption{2D convolution layer (channelwise packing)}
+\label{algo:conv2d_channelwise}
 
 \end{algorithm}
 
