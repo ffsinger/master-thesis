@@ -323,7 +323,7 @@ For the training step, a regularization term has also been added.
 Apart from its common usage in ML for avoiding overfitting, it has in this case the added advantage of improving the precision of the computations. 
 This is because the learned coefficients are kept small, and the sigmoid approximation that we use is only precise for a certain interval around $0$.
 
-The pseudocode for the training algorithm is given in the appendix (Algorithm \ref{algo:lr_training}).
+The pseudocode for the training algorithm is given in the appendix (\autoref{algo:lr_training}).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -925,9 +925,7 @@ Here we describe the main algorithms used in this project. Note that homomorphic
 
 \section{Logistic regression training}
 
-\begin{algorithm*}
-  \label{algo:lr_training}
-  \caption{Logistic regression training}
+\begin{algorithm}
 
   \LinesNumbered
   \DontPrintSemicolon
@@ -973,7 +971,10 @@ Here we describe the main algorithms used in this project. Note that homomorphic
   \CommentSty{// Decryption}\;
   Decrypt $c_\beta$ into $\beta$ and truncate the vector to the first $d$ elements\;
 
-\end{algorithm*}
+\caption{Logistic regression training}
+\label{algo:lr_training}
+
+\end{algorithm}
 
 
 % \chapter{Other appendix}
