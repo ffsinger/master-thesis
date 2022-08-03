@@ -921,11 +921,22 @@ Once again, the ideal approach highly depends on the use-case.
 \appendix
 \chapter{Algorithms}
 
-Here we describe the main algorithms used in this project. It is meant to illustrate the implementation of an algorithm with homomorphic encryption and CKKS, rather than being an exhaustive reference of all the algorithms implemented. Note that homomorphic operations ($\mathbf{Mult}$, $\mathbf{Add}$, $\mathbf{Rotate}$) are abstracted as mentioned in \autoref{sec:backends}, i.e. ciphertexts are automatically rescaled and relinearized after every multiplication when necessary.
+Here we describe the main algorithms used in this project. 
+It is meant to illustrate the implementation of an algorithm with homomorphic encryption and CKKS, rather than being an exhaustive reference of all the algorithms implemented. 
+Note that homomorphic operations ($\mathbf{Mult}$, $\mathbf{Add}$, $\mathbf{Rotate}$) are abstracted as mentioned in \autoref{sec:backends}, i.e. ciphertexts are automatically rescaled and relinearized after every multiplication when necessary.
+
+In this type of algorithms, the computation of dot products is very common. 
+It is done by first multiplying the two vectors, and successively adding the result with a rotated copy of the result. 
+This outputs a vector containing the dot product at every element, which can be masked if needed.
+
+By doing rotations of successive powers of two, the computational complexity of dot products can be reduced to $O(\log n)$ instead of $O(n)$. 
+This is the reason why vectors are often padded with zeros to the next power of two.
 
 \section{Logistic regression training}
 
-A training algorithm for encrypted LR models, inspired by \cite{kim_logistic_2018} but with less assumptions on the input size, and with the addition of a regularization term. For simplicity, we use traditional gradient descent instead of Nesterov's gradient update.
+\autoref{algo:lr_training} describes how to train an encrypted LR model.
+It is inspired by \cite{kim_logistic_2018} but with less assumptions on the input size, and with the addition of a regularization term. 
+For simplicity, we use traditional gradient descent instead of Nesterov's gradient update.
 
 \begin{algorithm}
 
