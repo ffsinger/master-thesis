@@ -572,7 +572,8 @@ These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ G
   \begin{center}
     \caption{Total runtime of the LR pipelines}
     \label{table:lr_runtime}
-    \begin{tabular}{ c c c c c c }
+    \vspace*{2mm}
+    \begin{tabular}{ l r r r r r }
     \hline
      & plaintext & palisade & seal & standard & sklearn \\
     \hline
@@ -588,8 +589,8 @@ These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ G
 
 \begin{figure}[h!]
   \centering
-  \caption{Memory footprint of the LR pipelines}
   \includegraphics[width=0.8\textwidth]{figures/lr_mem.pdf}
+  \caption{Memory footprint of the LR pipelines}
   \label{fig:lr_memory}
 \end{figure}
 
@@ -619,6 +620,8 @@ These are the two most time-consuming steps in this setting.
   \begin{center}
     \caption{Runtime of the LR at each step, in seconds}
     \label{table:lr_steps}
+    \vspace*{2mm}
+    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=5, 1000 sep={ }}
     \pgfplotstabletypeset[
       % multicolumn names,
       col sep=comma,
@@ -627,22 +630,22 @@ These are the two most time-consuming steps in this setting.
         column type={l},string type},
       display columns/1/.style={
         column name=Init,
-        column type={l}},
+        column type={r}},
       display columns/2/.style={
         column name=Encrypt train,
-        column type={l}},
+        column type={r}},
       display columns/3/.style={
         column name=Train,
-        column type={l}},
+        column type={r}},
       display columns/4/.style={
         column name=Encrypt test,
-        column type={l}},
+        column type={r}},
       display columns/5/.style={
         column name=Predict,
-        column type={l}},
+        column type={r}},
       display columns/6/.style={
         column name=Decrypt,
-        column type={l}},
+        column type={r}},
       every head row/.style={
           before row={\toprule},
           after row={
@@ -663,6 +666,7 @@ These are the two most time-consuming steps in this setting.
   \begin{center}
     \caption{Architecture of an homomorphically encrypted network as a proof-of-concept}
     \label{table:poc}
+    \vspace*{2mm}
     \begin{tabular}{ c c c c c c c c }
     \hline
     Layer & In chan. & Out chan. & Kernel & In neurons & Out neurons & Padding & Stride \\
@@ -683,6 +687,8 @@ The network architecture used in this evaluation (\autoref{table:poc}) is not de
   \begin{center}
     \caption{Runtime of the CNN at each step, in seconds (pw = pixelwise and cw = channelwise)}
     \label{table:cnn_runtime}
+    \vspace*{2mm}
+    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=5, 1000 sep={ }}
     \pgfplotstabletypeset[
       col sep=comma,
       display columns/0/.style={
@@ -690,22 +696,22 @@ The network architecture used in this evaluation (\autoref{table:poc}) is not de
         column type={l},string type},
       display columns/1/.style={
         column name=Init client,
-        column type={l}},
+        column type={r}},
       display columns/2/.style={
         column name=Encrypt,
-        column type={l}},
+        column type={r}},
       display columns/3/.style={
         column name=Init server,
-        column type={l}},
+        column type={r}},
       display columns/4/.style={
         column name=Predict,
-        column type={l}},
+        column type={r}},
       display columns/5/.style={
         column name=Decrypt,
-        column type={l}},
+        column type={r}},
       display columns/6/.style={
         column name=Serialize,
-        column type={l}},
+        column type={r}},
       every head row/.style={
         before row={\toprule},
         after row={\midrule}
@@ -733,6 +739,8 @@ This result is due to the high number of rotation operations and the higher mult
   \begin{center}
     \caption{Runtime of the CNN prediction at each layer, in seconds}
     \label{table:cnn_layers}
+    \vspace*{2mm}
+    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=5, 1000 sep={ }}
     \pgfplotstabletypeset[
       col sep=comma,
       display columns/0/.style={
@@ -740,16 +748,16 @@ This result is due to the high number of rotation operations and the higher mult
         column type={l},string type},
       display columns/1/.style={
         column name=Convolution,
-        column type={l}},
+        column type={r}},
       display columns/2/.style={
         column name=Average pooling,
-        column type={l}},
+        column type={r}},
       display columns/3/.style={
         column name=Square,
-        column type={l}},
+        column type={r}},
       display columns/4/.style={
         column name=Linear,
-        column type={l}},
+        column type={r}},
       every head row/.style={
         before row={\toprule},
         after row={\midrule}
@@ -781,8 +789,8 @@ Thus, a layer placed at the beginning of a network will be slower than its equiv
 
 \begin{figure}[h!]
   \centering
-  \caption{Memory footprint of the CNN pipelines}
   \includegraphics[width=0.8\textwidth]{figures/cnn_mem.pdf}
+  \caption{Memory footprint of the CNN pipelines}
   \label{fig:cnn_memory}
 \end{figure}
 
@@ -836,18 +844,36 @@ However, if this latency can be tolerated, the time per inference is only of abo
 
 Furthermore, the hybrid version has a much smaller footprint and is also much faster, with an amortized time per inference of only $1$ millisecond. When it comes to accuracy, we notice a slight decrease due to the imprecisions in the encrypted computations.
 
+% \begin{table}[h!]
+%   \begin{center}
+%     \caption{Results for LeNet-5}
+%     \label{table:lenet_results}
+%     \begin{tabular}{ c c c c c }
+%     \hline
+%     & pytorch & plaintext & seal & hybrid seal \\
+%     & & pixelwise & pixelwise & pixelwise \\
+%     \hline
+%     Runtime [min] & $0.00468$ & $0.136$ & $176$ & $8.57$ \\
+%     Memory [MB] & $392$ & $379$ & $51800$ & $2210$ \\
+%     Accuracy & $0.976$ & $0.976$ & $0.953$ & $0.964$ \\
+%     \hline
+%     \end{tabular}
+%   \end{center}
+% \end{table}
+
 \begin{table}[h!]
   \begin{center}
     \caption{Results for LeNet-5}
     \label{table:lenet_results}
-    \begin{tabular}{ c c c c c }
+    \vspace*{2mm}
+    \begin{tabular}{ l r r r }
     \hline
-    & pytorch & plaintext & seal & hybrid seal \\
-    & & pixelwise & pixelwise & pixelwise \\
+    &  Runtime [min] &  Memory [MB] &  Accuracy \\
     \hline
-    Runtime [min] & $0.00468$ & $0.136$ & $176$ & $8.57$ \\
-    Memory [MB] & $392$ & $379$ & $51800$ & $2210$ \\
-    Accuracy & $0.976$ & $0.976$ & $0.953$ & $0.964$ \\
+    pytorch & $0.005$ & $392$ & $0.976$ \\ % &  &  &  \\
+    plaintext-pixelwise & $0.136$ & $379$ & $0.976$ \\ % &  &  &  \\
+    seal-pixelwise & $176.000$ & $51800$ & $0.953$ \\ % &  &  &  \\
+    hybrid-seal-pixelwise & $8.570$ & $2210$ & $0.964$ \\
     \hline
     \end{tabular}
   \end{center}
