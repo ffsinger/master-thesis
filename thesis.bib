@@ -11,35 +11,6 @@
 	keywords = {cryptography, homomorphic-encryption, paillier, python},
 }
 
-@article{podschwadt_sok_2022,
-	title = {{SoK}: Privacy-preserving Deep Learning with Homomorphic Encryption},
-	url = {http://arxiv.org/abs/2112.12855},
-	shorttitle = {{SoK}},
-	abstract = {Outsourced computation for neural networks allows users access to state of the art models without needing to invest in specialized hardware and know-how. The problem is that the users lose control over potentially privacy sensitive data. With homomorphic encryption ({HE}) computation can be performed on encrypted data without revealing its content. In this systematization of knowledge, we take an in-depth look at approaches that combine neural networks with {HE} for privacy preservation. We categorize the changes to neural network models and architectures to make them computable over {HE} and how these changes impact performance. We find numerous challenges to {HE} based privacy-preserving deep learning such as computational overhead, usability, and limitations posed by the encryption schemes.},
-	journaltitle = {{arXiv}:2112.12855 [cs]},
-	author = {Podschwadt, Robert and Takabi, Daniel and Hu, Peizhao},
-	urldate = {2022-02-27},
-	date = {2022-01-01},
-	eprinttype = {arxiv},
-	eprint = {2112.12855},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/AEZKL8UB/Podschwadt et al. - 2022 - SoK Privacy-preserving Deep Learning with Homomor.pdf:application/pdf},
-}
-
-@article{mihara_neural_2020,
-	title = {Neural Network Training With Homomorphic Encryption},
-	url = {http://arxiv.org/abs/2012.13552},
-	abstract = {We introduce a novel method and implementation architecture to train neural networks which preserves the confidentiality of both the model and the data. Our method relies on homomorphic capability of lattice based encryption scheme. Our procedure is optimized for operations on packed ciphertexts in order to achieve efficient updates of the model parameters. Our method achieves a significant reduction of computations due to our way to perform multiplications and rotations on packed ciphertexts from a feedforward network to a back-propagation network. To verify the accuracy of the training model as well as the implementation feasibility, we tested our method on the Iris data set by using the {CKKS} scheme with Microsoft {SEAL} as a back end. Although our test implementation is for simple neural network training, we believe our basic implementation block can help the further applications for more complex neural network based use cases.},
-	journaltitle = {{arXiv}:2012.13552 [cs]},
-	author = {Mihara, Kentaro and Yamaguchi, Ryohei and Mitsuishi, Miguel and Maruyama, Yusuke},
-	urldate = {2022-02-27},
-	date = {2020-12-25},
-	eprinttype = {arxiv},
-	eprint = {2012.13552},
-	keywords = {Computer Science - Cryptography and Security},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/HJKC8LKV/Mihara et al. - 2020 - Neural Network Training With Homomorphic Encryptio.pdf:application/pdf},
-}
-
 @article{pulido-gaytan_privacy-preserving_2021,
 	title = {Privacy-preserving neural networks with Homomorphic encryption: Challenges and opportunities},
 	volume = {14},
@@ -57,21 +28,6 @@
 	date = {2021-05-01},
 	langid = {english},
 	file = {Springer Full Text PDF:/home/ketl1/Zotero/storage/EA95UFXX/Pulido-Gaytan et al. - 2021 - Privacy-preserving neural networks with Homomorphi.pdf:application/pdf},
-}
-
-@article{rahulamathavan_privacy-preserving_2022,
-	title = {Privacy-preserving Similarity Calculation of Speaker Features Using Fully Homomorphic Encryption},
-	url = {http://arxiv.org/abs/2202.07994},
-	abstract = {Recent advances in machine learning techniques are enabling Automated Speech Recognition ({ASR}) more accurate and practical. The evidence of this can be seen in the rising number of smart devices with voice processing capabilities. More and more devices around us are in-built with {ASR} technology. This poses serious privacy threats as speech contains unique biometric characteristics and personal data. However, the privacy concern can be mitigated if the voice features are processed in the encrypted domain. Within this context, this paper proposes an algorithm to redesign the back-end of the speaker verification system using fully homomorphic encryption techniques. The solution exploits the Cheon-Kim-Kim-Song ({CKKS}) fully homomorphic encryption scheme to obtain a real-time and non-interactive solution. The proposed solution contains a novel approach based on Newton Raphson method to overcome the limitation of {CKKS} scheme (i.e., calculating an inverse square-root of an encrypted number). This provides an efficient solution with less multiplicative depths for a negligible loss in accuracy. The proposed algorithm is validated using a well-known speech dataset. The proposed algorithm performs encrypted-domain verification in real-time (with less than 1.3 seconds delay) for a 2.8{\textbackslash}\% equal-error-rate loss compared to plain-domain verification.},
-	journaltitle = {{arXiv}:2202.07994 [cs]},
-	author = {Rahulamathavan, Yogachandran},
-	urldate = {2022-02-27},
-	date = {2022-02-16},
-	eprinttype = {arxiv},
-	eprint = {2202.07994},
-	note = {version: 1},
-	keywords = {Computer Science - Cryptography and Security},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/8TD8A98I/Rahulamathavan - 2022 - Privacy-preserving Similarity Calculation of Speak.pdf:application/pdf},
 }
 
 @online{noauthor_fully_2021,
@@ -115,55 +71,6 @@
 	note = {original-date: 2020-10-09T19:35:04Z},
 }
 
-@report{bourse_fast_2017,
-	title = {Fast Homomorphic Evaluation of Deep Discretized Neural Networks},
-	url = {https://eprint.iacr.org/2017/1114},
-	abstract = {The rise of machine learning as a service multiplies scenarios where one faces a privacy dilemma: either sensitive user data must be revealed to the entity that evaluates the cognitive model (e.g., in the Cloud), or the model itself must be revealed to the user so that the evaluation can take place locally. Fully Homomorphic Encryption ({FHE}) offers an elegant way to reconcile these conflicting interests in the Cloud-based scenario and also preserve non-interactivity. However, due to the inefficiency of existing {FHE} schemes, most applications prefer to use Somewhat Homomorphic Encryption ({SHE}), where the complexity of the computation to be performed has to be known in advance, and the efficiency of the scheme depends on this global complexity.
-
-In this paper, we present a new framework for homomorphic evaluation of neural networks, that we call {FHE}-{DiNN}, whose complexity is strictly linear in the depth of the network and whose parameters can be set beforehand. To obtain this scale-invariance property, we rely heavily on the bootstrapping procedure. We refine the recent {FHE} construction by Chillotti et al. ({ASIACRYPT} 2016) in order to increase the message space and apply the sign function (that we use to activate the neurons in the network) during the bootstrapping. We derive some empirical results, using {TFHE} library as a starting point, and classify encrypted images from the {MNIST} dataset with more than 96\% accuracy in less than 1.7 seconds.
-
-Finally, as a side contribution, we analyze and introduce some variations to the bootstrapping technique of Chillotti et al. that offer an improvement in efficiency at the cost of increasing the storage requirements.},
-	number = {1114},
-	author = {Bourse, Florian and Minelli, Michele and Minihold, Matthias and Paillier, Pascal},
-	urldate = {2022-02-27},
-	date = {2017},
-	keywords = {Bootstrapping, Fully Homomorphic Encryption, {MNIST}, Neural Networks},
-	file = {ePrint IACR Full Text PDF:/home/ketl1/Zotero/storage/JUVBAKLB/Bourse et al. - 2017 - Fast Homomorphic Evaluation of Deep Discretized Ne.pdf:application/pdf},
-}
-
-@report{chen_efficient_2019,
-	title = {Efficient Multi-Key Homomorphic Encryption with Packed Ciphertexts with Application to Oblivious Neural Network Inference},
-	url = {https://eprint.iacr.org/2019/524},
-	abstract = {Homomorphic Encryption ({HE}) is a cryptosystem which supports computation on encrypted data. Löpez-Alt et al. ({STOC} 2012) proposed a generalized notion of {HE}, called Multi-Key Homomorphic Encryption ({MKHE}), which is capable of performing arithmetic operations on ciphertexts encrypted under different keys.
-
-In this paper, we present multi-key variants of two {HE} schemes with packed ciphertexts. We present new relinearization algorithms which are simpler and faster than previous method by Chen et al. ({TCC} 2017). We then generalize the bootstrapping techniques for {HE} to obtain multi-key fully homomorphic encryption schemes. We provide a proof-of-concept implementation of both {MKHE} schemes using Microsoft {SEAL}. For example, when the dimension of base ring is 8192, homomorphic multiplication between multi-key {BFV} (resp. {CKKS}) ciphertexts associated with four parties followed by a relinearization takes about 116 (resp. 67) milliseconds.
-
-Our {MKHE} schemes have a wide range of applications in secure computation between multiple data providers. As a benchmark, we homomorphically classify an image using a pre-trained neural network model, where input data and model are encrypted under different keys. Our implementation takes about 1.8 seconds to evaluate one convolutional layer followed by two fully connected layers on an encrypted image from the {MNIST} dataset.},
-	number = {524},
-	author = {Chen, Hao and Dai, Wei and Kim, Miran and Song, Yongsoo},
-	urldate = {2022-02-24},
-	date = {2019},
-	keywords = {multi-key homomorphic encryption; packed ciphertext; ring learning with errors; neural networks, public-key cryptography},
-	file = {ePrint IACR Full Text PDF:/home/ketl1/Zotero/storage/A6MG3YQ8/Chen et al. - 2019 - Efficient Multi-Key Homomorphic Encryption with Pa.pdf:application/pdf},
-}
-
-@article{mouchet_multiparty_2021,
-	title = {Multiparty Homomorphic Encryption from Ring-Learning-with-Errors},
-	volume = {2021},
-	url = {https://www.sciendo.com/article/10.2478/popets-2021-0071},
-	doi = {10.2478/popets-2021-0071},
-	abstract = {Abstract
-We propose and evaluate a secure-multiparty-computation ({MPC}) solution in the semi-honest model with dishonest majority that is based on multiparty homomorphic encryption ({MHE}). To support our solution, we introduce a multiparty version of the Brakerski-Fan-Vercauteren homomorphic cryptosystem and implement it in an open-source library. {MHE}-based {MPC} solutions have several advantages: Their transcript is public, their o{\textasciitilde}ine phase is compact, and their circuit-evaluation procedure is noninteractive. By exploiting these properties, the communication complexity of {MPC} tasks is reduced from quadratic to linear in the number of parties, thus enabling secure computation among potentially thousands of parties and in a broad variety of computing paradigms, from the traditional peer-to-peer setting to cloud-outsourcing and smart-contract technologies. {MHE}-based approaches can also outperform the state-of-the-art solutions, even for a small number of parties. We demonstrate this for three circuits: private input selection with application to private-information retrieval, component-wise vector multiplication with application to private-set intersection, and Beaver multiplication triples generation. For the first circuit, privately selecting one input among eight thousand parties’ (of 32 {KB} each) requires only 1.31 {MB} of communication per party and completes in 61.7 seconds. For the second circuit with eight parties, our approach is 8.6 times faster and requires 39.3},
-	pages = {291--311},
-	number = {4},
-	journaltitle = {Proceedings on Privacy Enhancing Technologies},
-	author = {Mouchet, Christian and Troncoso-Pastoriza, Juan and Bossuat, Jean-Philippe and Hubaux, Jean-Pierre},
-	urldate = {2022-02-24},
-	date = {2021-10-01},
-	langid = {english},
-	file = {Full Text PDF:/home/ketl1/Zotero/storage/IDTVVD2Y/Mouchet et al. - 2021 - Multiparty Homomorphic Encryption from Ring-Learni.pdf:application/pdf},
-}
-
 @article{mouchet_lattigo_2020,
 	title = {Lattigo: a Multiparty Homomorphic Encryption Library in Go},
 	pages = {6},
@@ -187,25 +94,6 @@ We propose and evaluate a secure-multiparty-computation ({MPC}) solution in the 
 	keywords = {lattice-based-crypto, secure-multi-party-computation},
 }
 
-@report{ananth_multiparty_2020,
-	title = {Multiparty Homomorphic Encryption (or: On Removing Setup in Multi-Key {FHE})},
-	url = {https://eprint.iacr.org/2020/169},
-	shorttitle = {Multiparty Homomorphic Encryption (or},
-	abstract = {The notion of threshold multi-key fully homomorphic encryption ({TMK}-{FHE}) [Lopez-Alt, Tromer, Vaikuntanathan, {STOC}'12] was proposed as a generalization of fully homomorphic encryption to the multiparty setting. In a {TMK}-{FHE} scheme forparties, each party can individually choose a key pair and use it to encrypt its own private input. Givenciphertexts computed in this manner, the parties can homomorphically evaluate a circuitover them to obtain a new ciphertext containing the output of, which can then be decrypted via a threshold decryption protocol. The key efficiency property is that the size of the (evaluated) ciphertext is independent of the size of the circuit.
-
-{TMK}-{FHE} with one-round threshold decryption, first constructed by Mukherjee and Wichs [Eurocrypt'16], has found several powerful applications in cryptography over the past few years. However, an important drawback of all such {TMK}-{FHE} schemes is that they require a common setup which results in applications in the common random string model.
-
-To address this concern, we propose a notion of multiparty homomorphic encryption ({MHE}) that retains the communication efficiency property of {TMK}-{FHE}, but sacrifices on the efficiency of final decryption. Specifically, {MHE} is defined in a similar manner as {TMK}-{FHE}, except that the final output computation process performed locally by each party is ``non-compact'' in that we allow its computational complexity to depend on the size of the circuit. We observe that this relaxation does not have a significant bearing in many important applications of {TMK}-{FHE}.
-
-Our main contribution is a construction of {MHE} from the learning with errors assumption in the plain model. Our scheme can be used to remove the setup in many applications of {TMK}-{FHE}. For example, it yields the first construction of low-communication reusable non-interactive {MPC} in the plain model. To obtain our result, we devise a recursive self-synthesis procedure to transform any ``delayed-function'' two-round {MPC} protocol into an {MHE} scheme.},
-	number = {169},
-	author = {Ananth, Prabhanjan and Jain, Abhishek and Jin, Zhengzhong},
-	urldate = {2022-02-24},
-	date = {2020},
-	keywords = {{FHE}, foundations, Multi-Key {FHE}, Multiparty Computation},
-	file = {ePrint IACR Full Text PDF:/home/ketl1/Zotero/storage/3MGTR29U/Ananth et al. - 2020 - Multiparty Homomorphic Encryption (or On Removing.pdf:application/pdf},
-}
-
 @software{noauthor_tenseal_2022,
 	title = {{TenSEAL}},
 	rights = {Apache-2.0},
@@ -216,20 +104,6 @@ Our main contribution is a construction of {MHE} from the learning with errors a
 	date = {2022-02-23},
 	note = {original-date: 2020-01-25T14:36:55Z},
 	keywords = {cryptography, homomorphic-encryption, python, encryption, cpp, deep-learning, docker-image, hacktoberfest, microsoft-seal, tensor},
-}
-
-@article{bellafqira_secure_2018,
-	title = {Secure Multilayer Perceptron Based On Homomorphic Encryption},
-	url = {http://arxiv.org/abs/1806.02709},
-	abstract = {In this work, we propose an outsourced Secure Multilayer Perceptron ({SMLP}) scheme where privacy and confidentiality of both the data and the model are ensured during the training and the classification phases. More clearly, this {SMLP} : i) can be trained by a cloud server based on data previously outsourced by a user in an homomorphically encrypted form; ii) its parameters are homomorphically encrypted giving thus no clues to the cloud; and iii) it can also be used for classifying new encrypted data sent by the user returning him the encrypted classification result encrypted. The originality of this scheme is threefold. To the best of our knowledge, it is the first multilayer perceptron ({MLP}) secured in its training phase over homomorphically encrypted data with no problem of convergence. And It does not require extra-communications between the server and the user. It is based on the Rectified Linear Unit ({ReLU}) activation function that we secure with no approximation contrarily to actual {SMLP} solutions. To do so, we take advantage of two semi-honest non-colluding servers. Experimental results carried out on a binary database encrypted with the Paillier cryptosystem demonstrate the overall performance of our scheme and its convergence.},
-	journaltitle = {{arXiv}:1806.02709 [cs]},
-	author = {Bellafqira, Reda and Coatrieux, Gouenou and Genin, Emmanuelle and Cozic, Michel},
-	urldate = {2022-02-24},
-	date = {2018-06-07},
-	eprinttype = {arxiv},
-	eprint = {1806.02709},
-	keywords = {Computer Science - Cryptography and Security},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/NAI9I6RZ/Bellafqira et al. - 2018 - Secure Multilayer Perceptron Based On Homomorphic .pdf:application/pdf},
 }
 
 @software{noauthor_concrete_2022,
@@ -255,16 +129,6 @@ Our main contribution is a construction of {MHE} from the learning with errors a
 	keywords = {cryptography, python, deep-learning, hacktoberfest, privacy, federated-learning, pytorch, secure-computation, syft},
 }
 
-@article{brutzkus_low_2019,
-	title = {Low Latency Privacy Preserving Inference},
-	abstract = {When applying machine learning to sensitive data, one has to ﬁnd a balance between accuracy, information security, and computationalcomplexity. Recent studies combined Homomorphic Encryption with neural networks to make inferences while protecting against information leakage. However, these methods are limited by the width and depth of neural networks that can be used (and hence the accuracy) and exhibit high latency even for relatively simple networks. In this study we provide two solutions that address these limitations. In the ﬁrst solution, we present more than 10× improvement in latency and enable inference on wider networks compared to prior attempts with the same level of security. The improved performance is achieved by novel methods to represent the data during the computation. In the second solution, we apply the method of transfer learning to provide private inference services using deep networks with latency of ∼ 0.16 seconds. We demonstrate the efﬁcacy of our methods on several computer vision tasks.},
-	pages = {10},
-	author = {Brutzkus, Alon and Elisha, Oren and Gilad-Bachrach, Ran},
-	date = {2019},
-	langid = {english},
-	file = {Brutzkus et al. - Low Latency Privacy Preserving Inference.pdf:/home/ketl1/Zotero/storage/AHK3P6P2/Brutzkus et al. - Low Latency Privacy Preserving Inference.pdf:application/pdf},
-}
-
 @inproceedings{juvekar_gazelle_2018,
 	title = {\{{GAZELLE}\}: A Low Latency Framework for Secure Neural Network Inference},
 	isbn = {978-1-939133-04-5},
@@ -288,21 +152,6 @@ Our main contribution is a construction of {MHE} from the learning with errors a
 	urldate = {2022-03-02},
 	date = {2022-03-01},
 	note = {original-date: 2020-01-25T14:36:55Z},
-}
-
-@article{peng_danger_2019,
-	title = {Danger of using fully homomorphic encryption: A look at Microsoft {SEAL}},
-	url = {http://arxiv.org/abs/1906.07127},
-	shorttitle = {Danger of using fully homomorphic encryption},
-	abstract = {Fully homomorphic encryption is a promising crypto primitive to encrypt your data while allowing others to compute on the encrypted data. But there are many well-known problems with fully homomorphic encryption such as {CCA} security and circuit privacy problem. Despite these problems, there are still many companies are currently using or preparing to use fully homomorphic encryption to build data security applications. It seems that the full homomorphic encryption is very close to practicality and these problems can be easily mitigated in implementation. Although the those problems are well known in theory, there is no public discussion of their actual impact on real application. Our research shows that there are many security pitfalls in fully homomorphic encryption from the perspective of practical application. The security problems of a fully homomorphic encryption in a real application is more severe than imagined. In this paper, we will take Microsoft {SEAL} as an examples to introduce the security pitfalls of fully homomorphic encryption from the perspective of implementation and practical application},
-	journaltitle = {{arXiv}:1906.07127 [cs]},
-	author = {Peng, Zhiniang},
-	urldate = {2022-03-02},
-	date = {2019-06-17},
-	eprinttype = {arxiv},
-	eprint = {1906.07127},
-	keywords = {Computer Science - Cryptography and Security},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/Y8VYXEJ8/Peng - 2019 - Danger of using fully homomorphic encryption A lo.pdf:application/pdf},
 }
 
 @article{laine_simple_nodate,
@@ -432,32 +281,6 @@ Our main contribution is a construction of {MHE} from the learning with errors a
 	file = {Full Text PDF:/home/ketl1/Zotero/storage/4AG6FUPG/Kim et al. - 2018 - Logistic regression model training based on the ap.pdf:application/pdf},
 }
 
-@article{kim_secure_2017,
-	title = {Secure Logistic Regression Based on Homomorphic Encryption: Design and Evaluation},
-	volume = {6},
-	doi = {10.2196/medinform.8805},
-	shorttitle = {Secure Logistic Regression Based on Homomorphic Encryption},
-	abstract = {Background: 
-Learning a model without accessing raw data has been an intriguing idea to security and machine learning researchers for years. In an ideal setting, we want to encrypt sensitive data to store them on a commercial cloud and run certain analyses without ever decrypting the data to preserve privacy. Homomorphic encryption technique is a promising candidate for secure data outsourcing, but it is a very challenging task to support real-world machine learning tasks. Existing frameworks can only handle simplified cases with low-degree polynomials such as linear means classifier and linear discriminative analysis.
-
-Objective:
-The goal of this study is to provide a practical support to the mainstream learning models (eg, logistic regression).
-
-Methods:
-We adapted a novel homomorphic encryption scheme optimized for real numbers computation. We devised (1) the least squares approximation of the logistic function for accuracy and efficiency (ie, reduce computation cost) and (2) new packing and parallelization techniques.
-
-Results:
-Using real-world datasets, we evaluated the performance of our model and demonstrated its feasibility in speed and memory consumption. For example, it took approximately 116 minutes to obtain the training model from the homomorphically encrypted Edinburgh dataset. In addition, it gives fairly accurate predictions on the testing dataset.
-
-Conclusions:
-We present the first homomorphically encrypted logistic regression outsourcing model based on the critical observation that the precision loss of classification models is sufficiently small so that the decision plan stays still.},
-	journaltitle = {{JMIR} Medical Informatics},
-	shortjournal = {{JMIR} Medical Informatics},
-	author = {Kim, Miran and Song, Yongsoo and Wang, Shuang and Yuhou, Xia and Jiang, Xiaoqian},
-	date = {2017-08-22},
-	file = {Full Text PDF:/home/ketl1/Zotero/storage/DNA4Z8IE/Kim et al. - 2017 - Secure Logistic Regression Based on Homomorphic En.pdf:application/pdf},
-}
-
 @software{noauthor_pyheaan_2022,
 	title = {{PYHEAAN}},
 	rights = {{MIT}},
@@ -502,72 +325,6 @@ We present the first homomorphically encrypted logistic regression outsourcing m
 	date = {2022-03-02},
 	note = {original-date: 2017-06-12T04:15:07Z},
 	keywords = {homomorphic-encryption, python, homomorphic-encryption-library, helib, seal, cython, encrypted-computation, encrypted-data, palisade},
-}
-
-@report{jiang_secure_2018,
-	title = {Secure Outsourced Matrix Computation and Application to Neural Networks},
-	url = {https://eprint.iacr.org/2018/1041},
-	abstract = {Homomorphic Encryption ({HE}) is a powerful cryptographic primitive to address privacy and security issues in outsourcing computation on sensitive data to an untrusted computation environment. Comparing to secure Multi-Party Computation ({MPC}), {HE} has advantages in supporting non-interactive operations and saving on communication costs. However, it has not come up with an optimal solution for modern learning frameworks, partially due to a lack of efficient matrix computation mechanisms.
-
-In this work, we present a practical solution to encrypt a matrix homomorphically and perform arithmetic operations on encrypted matrices. Our solution includes a novel matrix encoding method and an efficient evaluation strategy for basic matrix operations such as addition, multiplication, and transposition. We also explain how to encrypt more than one matrix in a single ciphertext, yielding better amortized performance.
-
-Our solution is generic in the sense that it can be applied to most of the existing {HE} schemes. It also achieves reasonable performance for practical use; for example, our implementation takes 0.6 seconds to multiply two encrypted square matrices of order 64 and 0.09 seconds to transpose a square matrix of order 64.
-
-Our secure matrix computation mechanism has a wide applicability to our new framework E2DM, which stands for encrypted data and encrypted model. To the best of our knowledge, this is the first work that supports secure evaluation of the prediction phase based on both encrypted data and encrypted model, whereas previous work only supported applying a plain model to encrypted data. As a benchmark, we report an experimental result to classify handwritten images using convolutional neural networks ({CNN}). Our implementation on the {MNIST} dataset takes 1.69 seconds to compute ten likelihoods of 64 input images simultaneously, yielding an amortized rate of 26 milliseconds per image.},
-	number = {1041},
-	author = {Jiang, Xiaoqian and Kim, Miran and Lauter, Kristin and Song, Yongsoo},
-	urldate = {2022-03-03},
-	date = {2018},
-	keywords = {Homomorphic encryption; matrix computation; machine learning; neural networks},
-	file = {ePrint IACR Full Text PDF:/home/ketl1/Zotero/storage/FG8QIIH6/Jiang et al. - 2018 - Secure Outsourced Matrix Computation and Applicati.pdf:application/pdf},
-}
-
-@article{liu_oblivious_2017,
-	title = {Oblivious Neural Network Predictions via {MiniONN} Transformations},
-	doi = {10.1145/3133956.3134056},
-	abstract = {{MiniONN} is presented, the first approach for transforming an existing neural network to an oblivious neural network supporting privacy-preserving predictions with reasonable efficiency and it is shown that {MiniONN} outperforms existing work in terms of response latency and message sizes. Machine learning models hosted in a cloud service are increasingly popular but risk privacy: clients sending prediction requests to the service need to disclose potentially sensitive information. In this paper, we explore the problem of privacy-preserving predictions: after each prediction, the server learns nothing about clients' input and clients learn nothing about the model. We present {MiniONN}, the first approach for transforming an existing neural network to an oblivious neural network supporting privacy-preserving predictions with reasonable efficiency. Unlike prior work, {MiniONN} requires no change to how models are trained. To this end, we design oblivious protocols for commonly used operations in neural network prediction models. We show that {MiniONN} outperforms existing work in terms of response latency and message sizes. We demonstrate the wide applicability of {MiniONN} by transforming several typical neural network models trained from standard datasets.},
-	journaltitle = {{IACR} Cryptol. {ePrint} Arch.},
-	author = {Liu, Jian and Juuti, Mika and Lu, Yao and Asokan, N.},
-	date = {2017},
-}
-
-@article{bonte_privacy-preserving_2018,
-	title = {Privacy-preserving logistic regression training},
-	doi = {10.1186/s12920-018-0398-y},
-	abstract = {A new simple iterative algorithm to train a logistic regression model that is tailored to be applied on a homomorphically encrypted dataset that can be used as a privacy-preserving technique to build a binary classification model. {BackgroundLogistic} regression is a popular technique used in machine learning to construct classification models. Since the construction of such models is based on computing with large datasets, it is an appealing idea to outsource this computation to a cloud service. The privacy-sensitive nature of the input data requires appropriate privacy preserving measures before outsourcing it. Homomorphic encryption enables one to compute on encrypted data directly, without decryption and can be used to mitigate the privacy concerns raised by using a cloud service.{MethodsIn} this paper, we propose an algorithm (and its implementation) to train a logistic regression model on a homomorphically encrypted dataset. The core of our algorithm consists of a new iterative method that can be seen as a simplified form of the fixed Hessian method, but with a much lower multiplicative complexity.{ResultsWe} test the new method on two interesting real life applications: the first application is in medicine and constructs a model to predict the probability for a patient to have cancer, given genomic data as input; the second application is in finance and the model predicts the probability of a credit card transaction to be fraudulent. The method produces accurate results for both applications, comparable to running standard algorithms on plaintext data.{ConclusionsThis} article introduces a new simple iterative algorithm to train a logistic regression model that is tailored to be applied on a homomorphically encrypted dataset. This algorithm can be used as a privacy-preserving technique to build a binary classification model and can be applied in a wide range of problems that can be modelled with logistic regression. Our implementation results show that our method can handle the large datasets used in logistic regression training.},
-	journaltitle = {{BMC} Medical Genomics},
-	author = {Bonte, Charlotte and Vercauteren, F.},
-	date = {2018},
-	file = {Full Text:/home/ketl1/Zotero/storage/UYJQWUDS/Bonte and Vercauteren - 2018 - Privacy-preserving logistic regression training.pdf:application/pdf},
-}
-
-@article{chiang_privacy-preserving_2022,
-	title = {Privacy-Preserving Logistic Regression Training with a Faster Gradient Variant},
-	url = {http://arxiv.org/abs/2201.10838},
-	abstract = {Logistic regression training on an encrypted dataset has been an attractive idea to security concerns for years. In this paper, we propose a faster gradient variant called Quadratic Gradient for logistic regression and implement it via a special homomorphic encryption scheme. The core of this gradient variant can be seen as an extension of the simplified fixed Hessian from Newton's method, which extracts information from the Hessian matrix into the naive gradient, and thus can be used to enhance Nesterov's accelerated gradient ({NAG}), Adagrad, etc. We evaluate various gradient \$ascent\$ methods with this gradient variant on the gene dataset provided by the 2017 {iDASH} competition and the image dataset from the {MNIST} database. Experimental results show that the enhanced methods converge faster and sometimes even to a better convergence result. We also implement the gradient variant in full batch {NAG} and mini-batch {NAG} for training a logistic regression model on a large dataset in the encrypted domain. Equipped with this gradient variant, full batch {NAG} and mini-batch {NAG} are both faster than the original ones.},
-	journaltitle = {{arXiv}:2201.10838 [cs]},
-	author = {Chiang, John},
-	urldate = {2022-03-03},
-	date = {2022-01-26},
-	eprinttype = {arxiv},
-	eprint = {2201.10838},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/3NNFK7Y4/Chiang - 2022 - Privacy-Preserving Logistic Regression Training wi.pdf:application/pdf},
-}
-
-@article{chen_when_2021,
-	title = {When Homomorphic Encryption Marries Secret Sharing: Secure Large-Scale Sparse Logistic Regression and Applications in Risk Control},
-	url = {http://arxiv.org/abs/2008.08753},
-	shorttitle = {When Homomorphic Encryption Marries Secret Sharing},
-	abstract = {Logistic Regression ({LR}) is the most widely used machine learning model in industry for its efficiency, robustness, and interpretability. Due to the problem of data isolation and the requirement of high model performance, many applications in industry call for building a secure and efficient {LR} model for multiple parties. Most existing work uses either Homomorphic Encryption ({HE}) or Secret Sharing ({SS}) to build secure {LR}. {HE} based methods can deal with high-dimensional sparse features, but they incur potential security risks. {SS} based methods have provable security, but they have efficiency issue under high-dimensional sparse features. In this paper, we first present {CAESAR}, which combines {HE} and {SS} to build secure large-scale sparse logistic regression model and achieves both efficiency and security. We then present the distributed implementation of {CAESAR} for scalability requirement. We have deployed {CAESAR} in a risk control task and conducted comprehensive experiments. Our experimental results show that {CAESAR} improves the state-of-the-art model by around 130 times.},
-	journaltitle = {{arXiv}:2008.08753 [cs]},
-	author = {Chen, Chaochao and Zhou, Jun and Wang, Li and Wu, Xibin and Fang, Wenjing and Tan, Jin and Wang, Lei and Liu, Alex X. and Wang, Hao and Hong, Cheng},
-	urldate = {2022-03-03},
-	date = {2021-05-31},
-	eprinttype = {arxiv},
-	eprint = {2008.08753},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/N3GLSMC7/Chen et al. - 2021 - When Homomorphic Encryption Marries Secret Sharing.pdf:application/pdf},
 }
 
 @inproceedings{han_logistic_2019,
@@ -643,65 +400,10 @@ The core of our work consists of two technical contributions. First, a new low-d
 	file = {Albrecht et al. - 2021 - Homomorphic Encryption Standard.pdf:/home/ketl1/Zotero/storage/RGAFC54U/Albrecht et al. - 2021 - Homomorphic Encryption Standard.pdf:application/pdf},
 }
 
-@report{chen_logistic_2018,
-	title = {Logistic regression over encrypted data from fully homomorphic encryption},
-	url = {https://eprint.iacr.org/2018/462},
-	abstract = {One of the tasks in {theiDASH} secure genome analysis competition was to enable training of logistic regression models over encrypted genomic data. More precisely, given a list of approximatelypatient records, each withbinary features containing information on specific mutations, the idea was for the data holder to encrypt the records using homomorphic encryption, and send them to an untrusted cloud for storage. The cloud could then apply a training algorithm on the encrypted data to obtain an encrypted logistic regression model, which can be sent to the data holder for decryption. In this way, the data holder could successfully outsource the training process without revealing either her sensitive data, or the trained model, to the cloud. Our solution to this problem has several novelties: we use a multi-bit plaintext space in fully homomorphic encryption together with fixed point number encoding; we combine bootstrapping in fully homomorphic encryption with a scaling operation in fixed point arithmetic; we use a minimax polynomial approximation to the sigmoid function and the-bit gradient descent method to reduce the plaintext growth in the training process. As a result, our training over encrypted data takes--hours per iteration of gradient descent.},
-	number = {462},
-	author = {Chen, Hao and Gilad-Bachrach, Ran and Han, Kyoohyung and Huang, Zhicong and Jalali, Amir and Laine, Kim and Lauter, Kristin},
-	urldate = {2022-03-03},
-	date = {2018},
-	keywords = {homomorphic encryption, logistic regression, applications},
-	file = {ePrint IACR Full Text PDF:/home/ketl1/Zotero/storage/2LTQE3HW/Chen et al. - 2018 - Logistic regression over encrypted data from fully.pdf:application/pdf},
-}
-
-@article{badawi_privft_2019,
-	title = {{PrivFT}: Private and Fast Text Classification with Homomorphic Encryption},
-	url = {http://arxiv.org/abs/1908.06972},
-	doi = {10.1109/ACCESS.2020.3045465},
-	shorttitle = {{PrivFT}},
-	abstract = {The need for privacy-preserving analytics is higher than ever due to the severity of privacy risks and to comply with new privacy regulations leading to an ampliﬁed interest in privacy-preserving techniques that try to balance between privacy and utility. In this work, we present an efﬁcient method for Text Classiﬁcation while preserving the privacy of the content using Fully Homomorphic Encryption ({FHE}). Our system (named Private Fast Text ({PrivFT})) performs two tasks: 1) making inference of encrypted user inputs using a plaintext model and 2) training an effective model using an encrypted dataset. For inference, we train a supervised model and outline a system for homomorphic inference on encrypted user inputs with zero loss to prediction accuracy. In the second part, we show how to train a model using fully encrypted data to generate an encrypted model. We provide a {GPU} implementation of the Cheon-Kim-Kim-Song ({CKKS}) {FHE} scheme and compare it with existing {CPU} implementations to achieve 1 to 2 orders of magnitude speedup at various parameter settings. We implement {PrivFT} in {GPUs} to achieve a run time per inference of less than 0.66 seconds. Training on a relatively large encrypted dataset is more computationally intensive requiring 5.04 days.},
-	journaltitle = {{arXiv}:1908.06972 [cs]},
-	author = {Badawi, Ahmad Al and Hoang, Luong and Mun, Chan Fook and Laine, Kim and Aung, Khin Mi Mi},
-	urldate = {2022-03-03},
-	date = {2019-11-18},
-	langid = {english},
-	eprinttype = {arxiv},
-	eprint = {1908.06972},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {Badawi et al. - 2019 - PrivFT Private and Fast Text Classification with .pdf:/home/ketl1/Zotero/storage/WREDQJV5/Badawi et al. - 2019 - PrivFT Private and Fast Text Classification with .pdf:application/pdf},
-}
-
 @online{noauthor_malb_nodate,
 	title = {malb / lwe-estimator — Bitbucket},
 	url = {https://bitbucket.org/malb/lwe-estimator/src/master/},
 	urldate = {2022-03-04},
-}
-
-@article{lee_privacy-preserving_2021,
-	title = {Privacy-Preserving Machine Learning with Fully Homomorphic Encryption for Deep Neural Network},
-	url = {http://arxiv.org/abs/2106.07229},
-	abstract = {Fully homomorphic encryption ({FHE}) is one of the prospective tools for privacypreserving machine learning ({PPML}), and several {PPML} models have been proposed based on various {FHE} schemes and approaches. Although the {FHE} schemes are known as suitable tools to implement {PPML} models, previous {PPML} models on {FHE} encrypted data are limited to only simple and non-standard types of machine learning models. These non-standard machine learning models are not proven efficient and accurate with more practical and advanced datasets. Previous {PPML} schemes replace non-arithmetic activation functions with simple arithmetic functions instead of adopting approximation methods and do not use bootstrapping, which enables continuous homomorphic evaluations. Thus, they could not use standard activation functions and could not employ a large number of layers. The maximum classification accuracy of the existing {PPML} model with the {FHE} for the {CIFAR}-10 dataset was only 77\% until now. In this work, we firstly implement the standard {ResNet}-20 model with the {RNS}-{CKKS} {FHE} with bootstrapping and verify the implemented model with the {CIFAR}-10 dataset and the plaintext model parameters. Instead of replacing the non-arithmetic functions with the simple arithmetic function, we use state-of-the-art approximation methods to evaluate these non-arithmetic functions, such as the {ReLU}, with sufficient precision [1]. Further, for the first time, we use the bootstrapping technique of the {RNS}-{CKKS} scheme in the proposed model, which enables us to evaluate a deep learning model on the encrypted data. We numerically verify that the proposed model with the {CIFAR}-10 dataset shows 98.67\% identical results to the original {ResNet}-20 model with non-encrypted data. The classification accuracy of the proposed model is 90.67\%, which is pretty close to that of the original {ResNet}-20 {CNN} model...},
-	journaltitle = {{arXiv}:2106.07229 [cs]},
-	author = {Lee, Joon-Woo and Kang, {HyungChul} and Lee, Yongwoo and Choi, Woosuk and Eom, Jieun and Deryabin, Maxim and Lee, Eunsang and Lee, Junghyun and Yoo, Donghoon and Kim, Young-Sik and No, Jong-Seon},
-	urldate = {2022-03-04},
-	date = {2021-06-14},
-	eprinttype = {arxiv},
-	eprint = {2106.07229},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/C2QM6S2J/Lee et al. - 2021 - Privacy-Preserving Machine Learning with Fully Hom.pdf:application/pdf},
-}
-
-@article{dowlin_cryptonets_2016,
-	title = {{CryptoNets}: Applying Neural Networks to Encrypted Data with High Throughput and Accuracy},
-	url = {https://www.microsoft.com/en-us/research/publication/cryptonets-applying-neural-networks-to-encrypted-data-with-high-throughput-and-accuracy/},
-	shorttitle = {{CryptoNets}},
-	abstract = {Applying machine learning to a problem which involves medical, financial, or other types of sensitive data, not only requires accurate predictions but also careful attention to maintaining data privacy and security. Legal and ethical requirements may prevent the use of cloud-based machine learning solutions for such tasks. In this work, we will present a method […]},
-	author = {Dowlin, Nathan and Gilad-Bachrach, Ran and Laine, Kim and Lauter, Kristin and Naehrig, Michael and Wernsing, John},
-	urldate = {2022-03-04},
-	date = {2016-02-08},
-	langid = {american},
-	file = {Full Text PDF:/home/ketl1/Zotero/storage/GQAWW7VL/Dowlin et al. - 2016 - CryptoNets Applying Neural Networks to Encrypted .pdf:application/pdf},
 }
 
 @article{duboue_machine_nodate,
@@ -732,19 +434,6 @@ The core of our work consists of two technical contributions. First, a new low-d
 	date = {2021-02-02},
 	note = {original-date: 2021-01-07T22:21:41Z},
 	keywords = {homomorphic-encryption, encryption, palisade, cpp11, machine-learning, privacy-preserving-machine-learning},
-}
-
-@article{boemer_ngraph-he_2018,
-	title = {{nGraph}-{HE}: A Graph Compiler for Deep Learning on Homomorphically Encrypted Data},
-	url = {https://arxiv.org/abs/1810.10121v3},
-	doi = {10.48550/arXiv.1810.10121},
-	shorttitle = {{nGraph}-{HE}},
-	abstract = {Homomorphic encryption ({HE})---the ability to perform computation on encrypted data---is an attractive remedy to increasing concerns about data privacy in deep learning ({DL}). However, building {DL} models that operate on ciphertext is currently labor-intensive and requires simultaneous expertise in {DL}, cryptography, and software engineering. {DL} frameworks and recent advances in graph compilers have greatly accelerated the training and deployment of {DL} models to various computing platforms. We introduce {nGraph}-{HE}, an extension of {nGraph}, Intel's {DL} graph compiler, which enables deployment of trained models with popular frameworks such as {TensorFlow} while simply treating {HE} as another hardware target. Our graph-compiler approach enables {HE}-aware optimizations-- implemented at compile-time, such as constant folding and {HE}-{SIMD} packing, and at run-time, such as special value plaintext bypass. Furthermore, {nGraph}-{HE} integrates with {DL} frameworks such as {TensorFlow}, enabling data scientists to benchmark {DL} models with minimal overhead.},
-	author = {Boemer, Fabian and Lao, Yixing and Cammarota, Rosario and Wierzynski, Casimir},
-	urldate = {2022-03-07},
-	date = {2018-10-23},
-	langid = {english},
-	file = {Full Text PDF:/home/ketl1/Zotero/storage/T8AEI6ME/Boemer et al. - 2018 - nGraph-HE A Graph Compiler for Deep Learning on H.pdf:application/pdf},
 }
 
 @software{noauthor_he_2022,
@@ -873,34 +562,6 @@ The core of our work consists of two technical contributions. First, a new low-d
 	file = {Mohan and Elayidon - 2018 - Secure and Privacy Preserving Mail Servers using M.pdf:/home/ketl1/Zotero/storage/IVZJ8FYJ/Mohan and Elayidon - 2018 - Secure and Privacy Preserving Mail Servers using M.pdf:application/pdf},
 }
 
-@article{rigaki_survey_2021,
-	title = {A Survey of Privacy Attacks in Machine Learning},
-	url = {http://arxiv.org/abs/2007.07646},
-	abstract = {As machine learning becomes more widely used, the need to study its implications in security and privacy becomes more urgent. Although the body of work in privacy has been steadily growing over the past few years, research on the privacy aspects of machine learning has received less focus than the security aspects. Our contribution in this research is an analysis of more than 40 papers related to privacy attacks against machine learning that have been published during the past seven years. We propose an attack taxonomy, together with a threat model that allows the categorization of different attacks based on the adversarial knowledge, and the assets under attack. An initial exploration of the causes of privacy leaks is presented, as well as a detailed analysis of the different attacks. Finally, we present an overview of the most commonly proposed defenses and a discussion of the open problems and future directions identified during our analysis.},
-	journaltitle = {{arXiv}:2007.07646 [cs]},
-	author = {Rigaki, Maria and Garcia, Sebastian},
-	urldate = {2022-03-29},
-	date = {2021-04-01},
-	eprinttype = {arxiv},
-	eprint = {2007.07646},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/9NLPNIPG/Rigaki and Garcia - 2021 - A Survey of Privacy Attacks in Machine Learning.pdf:application/pdf},
-}
-
-@article{wang_variational_2022,
-	title = {Variational Model Inversion Attacks},
-	url = {http://arxiv.org/abs/2201.10787},
-	abstract = {Given the ubiquity of deep neural networks, it is important that these models do not reveal information about sensitive data that they have been trained on. In model inversion attacks, a malicious user attempts to recover the private dataset used to train a supervised neural network. A successful model inversion attack should generate realistic and diverse samples that accurately describe each of the classes in the private dataset. In this work, we provide a probabilistic interpretation of model inversion attacks, and formulate a variational objective that accounts for both diversity and accuracy. In order to optimize this variational objective, we choose a variational family defined in the code space of a deep generative model, trained on a public auxiliary dataset that shares some structural similarity with the target dataset. Empirically, our method substantially improves performance in terms of target attack accuracy, sample realism, and diversity on datasets of faces and chest X-ray images.},
-	journaltitle = {{arXiv}:2201.10787 [cs]},
-	author = {Wang, Kuan-Chieh and Fu, Yan and Li, Ke and Khisti, Ashish and Zemel, Richard and Makhzani, Alireza},
-	urldate = {2022-03-29},
-	date = {2022-01-26},
-	eprinttype = {arxiv},
-	eprint = {2201.10787},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/N2MNFNNX/Wang et al. - 2022 - Variational Model Inversion Attacks.pdf:application/pdf},
-}
-
 @inproceedings{hidano_model_2017,
 	location = {Calgary, {AB}},
 	title = {Model Inversion Attacks for Prediction Systems: Without Knowledge of Non-Sensitive Attributes},
@@ -918,22 +579,6 @@ The core of our work consists of two technical contributions. First, a new low-d
 	date = {2017-08},
 	langid = {english},
 	file = {Hidano et al. - 2017 - Model Inversion Attacks for Prediction Systems Wi.pdf:/home/ketl1/Zotero/storage/WYH5PDHL/Hidano et al. - 2017 - Model Inversion Attacks for Prediction Systems Wi.pdf:application/pdf},
-}
-
-@article{badawi_towards_2020,
-	title = {Towards the {AlexNet} Moment for Homomorphic Encryption: {HCNN}, {theFirst} Homomorphic {CNN} on Encrypted Data with {GPUs}},
-	url = {http://arxiv.org/abs/1811.00778},
-	shorttitle = {Towards the {AlexNet} Moment for Homomorphic Encryption},
-	abstract = {Deep Learning as a Service ({DLaaS}) stands as a promising solution for cloud-based inference applications. In this setting, the cloud has a pre-learned model whereas the user has samples on which she wants to run the model. The biggest concern with {DLaaS} is the user privacy if the input samples are sensitive data. We provide here an eﬃcient privacypreserving system by employing high-end technologies such as Fully Homomorphic Encryption ({FHE}), Convolutional Neural Networks ({CNNs}) and Graphics Processing Units ({GPUs}). {FHE}, with its widely-known feature of computing on encrypted data, empowers a wide range of privacy-concerned applications. This comes at high cost as it requires enormous computing power. In this paper, we show how to accelerate the performance of running {CNNs} on encrypted data with {GPUs}. We evaluated two {CNNs} to classify homomorphically the {MNIST} and {CIFAR}-10 datasets. Our solution achieved suﬃcient security level ({\textgreater} 80 bit) and reasonable classiﬁcation accuracy (99\%) and (77.55\%) for {MNIST} and {CIFAR}-10, respectively. In terms of latency, we could classify an image in 5.16 seconds and 304.43 seconds for {MNIST} and {CIFAR}-10, respectively. Our system can also classify a batch of images ({\textgreater} 8,000) without extra overhead.},
-	journaltitle = {{arXiv}:1811.00778 [cs]},
-	author = {Badawi, Ahmad Al and Chao, Jin and Lin, Jie and Mun, Chan Fook and Sim, Jun Jie and Tan, Benjamin Hong Meng and Nan, Xiao and Aung, Khin Mi Mi and Chandrasekhar, Vijay Ramaseshan},
-	urldate = {2022-04-11},
-	date = {2020-08-18},
-	langid = {english},
-	eprinttype = {arxiv},
-	eprint = {1811.00778},
-	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
-	file = {Badawi et al. - 2020 - Towards the AlexNet Moment for Homomorphic Encrypt.pdf:/home/ketl1/Zotero/storage/WKL6QC56/Badawi et al. - 2020 - Towards the AlexNet Moment for Homomorphic Encrypt.pdf:application/pdf},
 }
 
 @article{podschwadt_classification_2020,
@@ -1306,4 +951,410 @@ Convolutional neural networks, which are specifically designed to deal with the 
 	date = {2022},
 	langid = {english},
 	file = {Full Text PDF:/home/ketl1/Zotero/storage/93Q47666/Costache et al. - 2022 - On the precision loss in approximate homomorphic e.pdf:application/pdf},
+}
+
+@article{kim_secure_2018,
+	title = {Secure Logistic Regression Based on Homomorphic Encryption: Design and Evaluation},
+	volume = {6},
+	issn = {2291-9694},
+	url = {http://medinform.jmir.org/2018/2/e19/},
+	doi = {10.2196/medinform.8805},
+	shorttitle = {Secure Logistic Regression Based on Homomorphic Encryption},
+	abstract = {Learning a model without accessing raw data has been an intriguing idea to the security and machine learning researchers for years. In an ideal setting, we want to encrypt sensitive data to store them on a commercial cloud and run certain analysis without ever decrypting the data to preserve the privacy. Homomorphic encryption technique is a promising candidate for secure data outsourcing but it is a very challenging task to support real-world machine learning tasks. Existing frameworks can only handle simpliﬁed cases with low-degree polynomials such as linear means classiﬁer and linear discriminative analysis.},
+	pages = {e19},
+	number = {2},
+	journaltitle = {{JMIR} Medical Informatics},
+	shortjournal = {{JMIR} Med Inform},
+	author = {Kim, Miran and Song, Yongsoo and Wang, Shuang and Xia, Yuhou and Jiang, Xiaoqian},
+	urldate = {2022-08-09},
+	date = {2018-04-17},
+	langid = {english},
+	file = {Kim et al. - 2018 - Secure Logistic Regression Based on Homomorphic En.pdf:/home/ketl1/Zotero/storage/HVFPEFKW/Kim et al. - 2018 - Secure Logistic Regression Based on Homomorphic En.pdf:application/pdf},
+}
+
+@misc{chiang_privacy-preserving_2022,
+	title = {Privacy-Preserving Logistic Regression Training with a Faster Gradient Variant},
+	url = {http://arxiv.org/abs/2201.10838},
+	abstract = {Logistic regression training on an encrypted dataset has been an attractive idea to security concerns for years. In this paper, we propose a faster gradient variant called Quadratic Gradient for logistic regression and implement it via a special homomorphic encryption scheme. The core of this gradient variant can be seen as an extension of the simpliﬁed ﬁxed Hessian from Newton’s method, which extracts information from the Hessian matrix into the naive gradient, and thus can be used to enhance Nesterov’s accelerated gradient ({NAG}), Adagrad, etc. We evaluate various gradient ascent methods with this gradient variant on the gene dataset provided by the 2017 {iDASH} competition and the image dataset from the {MNIST} database. Experimental results show that the enhanced methods converge faster and sometimes even to a better convergence result. We also implement the gradient variant in full batch {NAG} and mini-batch {NAG} for training a logistic regression model on a large dataset in the encrypted domain. Equipped with this gradient variant, full batch {NAG} and mini-batch {NAG} are both faster than the original ones.},
+	number = {{arXiv}:2201.10838},
+	publisher = {{arXiv}},
+	author = {Chiang, John},
+	urldate = {2022-08-09},
+	date = {2022-01-26},
+	langid = {english},
+	eprinttype = {arxiv},
+	eprint = {2201.10838 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {Chiang - 2022 - Privacy-Preserving Logistic Regression Training wi.pdf:/home/ketl1/Zotero/storage/LU66GPN6/Chiang - 2022 - Privacy-Preserving Logistic Regression Training wi.pdf:application/pdf},
+}
+
+@article{bonte_privacy-preserving_2018,
+	title = {Privacy-preserving logistic regression training},
+	volume = {11},
+	issn = {1755-8794},
+	url = {https://bmcmedgenomics.biomedcentral.com/articles/10.1186/s12920-018-0398-y},
+	doi = {10.1186/s12920-018-0398-y},
+	abstract = {Background: Logistic regression is a popular technique used in machine learning to construct classification models. Since the construction of such models is based on computing with large datasets, it is an appealing idea to outsource this computation to a cloud service. The privacy-sensitive nature of the input data requires appropriate privacy preserving measures before outsourcing it. Homomorphic encryption enables one to compute on encrypted data directly, without decryption and can be used to mitigate the privacy concerns raised by using a cloud service.
+Methods: In this paper, we propose an algorithm (and its implementation) to train a logistic regression model on a homomorphically encrypted dataset. The core of our algorithm consists of a new iterative method that can be seen as a simplified form of the fixed Hessian method, but with a much lower multiplicative complexity.
+Results: We test the new method on two interesting real life applications: the first application is in medicine and constructs a model to predict the probability for a patient to have cancer, given genomic data as input; the second application is in finance and the model predicts the probability of a credit card transaction to be fraudulent. The method produces accurate results for both applications, comparable to running standard algorithms on plaintext data.
+Conclusions: This article introduces a new simple iterative algorithm to train a logistic regression model that is tailored to be applied on a homomorphically encrypted dataset. This algorithm can be used as a privacy-preserving technique to build a binary classification model and can be applied in a wide range of problems that can be modelled with logistic regression. Our implementation results show that our method can handle the large datasets used in logistic regression training.},
+	pages = {86},
+	issue = {S4},
+	journaltitle = {{BMC} Medical Genomics},
+	shortjournal = {{BMC} Med Genomics},
+	author = {Bonte, Charlotte and Vercauteren, Frederik},
+	urldate = {2022-08-09},
+	date = {2018-10},
+	langid = {english},
+	file = {Bonte and Vercauteren - 2018 - Privacy-preserving logistic regression training.pdf:/home/ketl1/Zotero/storage/AE9VCR3G/Bonte and Vercauteren - 2018 - Privacy-preserving logistic regression training.pdf:application/pdf},
+}
+
+@article{chen_logistic_2018,
+	title = {Logistic regression over encrypted data from fully homomorphic encryption},
+	volume = {11},
+	issn = {1755-8794},
+	url = {https://bmcmedgenomics.biomedcentral.com/articles/10.1186/s12920-018-0397-z},
+	doi = {10.1186/s12920-018-0397-z},
+	abstract = {One of the tasks in the 2017 {iDASH} secure genome analysis competition was to enable training of logistic regression models over encrypted genomic data. More precisely, given a list of approximately 1500 patient records, each with 18 binary features containing information on speciﬁc mutations, the idea was for the data holder to encrypt the records using homomorphic encryption, and send them to an untrusted cloud for storage. The cloud could then apply a training algorithm on the encrypted data to obtain an encrypted logistic regression model, which can be sent to the data holder for decryption. In this way, the data holder could successfully outsource the training process without revealing either her sensitive data, or the trained model, to the cloud. Our solution to this problem has several novelties: we use a multi-bit plaintext space in fully homomorphic encryption together with ﬁxed point number encoding; we combine bootstrapping in fully homomorphic encryption with a scaling operation in ﬁxed point arithmetic; we use a minimax polynomial approximation to the sigmoid function and the 1-bit gradient descent method to reduce the plaintext growth in the training process. As a result, our training over encrypted data takes 0.4–3.2 hours per iteration of gradient descent.},
+	pages = {81},
+	issue = {S4},
+	journaltitle = {{BMC} Medical Genomics},
+	shortjournal = {{BMC} Med Genomics},
+	author = {Chen, Hao and Gilad-Bachrach, Ran and Han, Kyoohyung and Huang, Zhicong and Jalali, Amir and Laine, Kim and Lauter, Kristin},
+	urldate = {2022-08-09},
+	date = {2018-10},
+	langid = {english},
+	file = {Chen et al. - 2018 - Logistic regression over encrypted data from fully.pdf:/home/ketl1/Zotero/storage/B9FU2FL7/Chen et al. - 2018 - Logistic regression over encrypted data from fully.pdf:application/pdf},
+}
+
+@misc{chen_when_2021,
+	title = {When Homomorphic Encryption Marries Secret Sharing: Secure Large-Scale Sparse Logistic Regression and Applications in Risk Control},
+	url = {http://arxiv.org/abs/2008.08753},
+	shorttitle = {When Homomorphic Encryption Marries Secret Sharing},
+	abstract = {Logistic Regression ({LR}) is the most widely used machine learning model in industry for its efficiency, robustness, and interpretability. Due to the problem of data isolation and the requirement of high model performance, many applications in industry call for building a secure and efficient {LR} model for multiple parties. Most existing work uses either Homomorphic Encryption ({HE}) or Secret Sharing ({SS}) to build secure {LR}. {HE} based methods can deal with highdimensional sparse features, but they incur potential security risks. {SS} based methods have provable security, but they have efficiency issue under high-dimensional sparse features. In this paper, we first present {CAESAR}, which combines {HE} and {SS} to build secure largescale sparse logistic regression model and achieves both efficiency and security. We then present the distributed implementation of {CAESAR} for scalability requirement. We have deployed {CAESAR} in a risk control task and conducted comprehensive experiments. Our experimental results show that {CAESAR} improves the state-of-theart model by around 130 times.},
+	number = {{arXiv}:2008.08753},
+	publisher = {{arXiv}},
+	author = {Chen, Chaochao and Zhou, Jun and Wang, Li and Wu, Xibin and Fang, Wenjing and Tan, Jin and Wang, Lei and Liu, Alex X. and Wang, Hao and Hong, Cheng},
+	urldate = {2022-08-09},
+	date = {2021-05-31},
+	langid = {english},
+	eprinttype = {arxiv},
+	eprint = {2008.08753 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {Chen et al. - 2021 - When Homomorphic Encryption Marries Secret Sharing.pdf:/home/ketl1/Zotero/storage/YQ267RJK/Chen et al. - 2021 - When Homomorphic Encryption Marries Secret Sharing.pdf:application/pdf},
+}
+
+@article{mouchet_multiparty_2021,
+	title = {Multiparty Homomorphic Encryption from Ring-Learning-with-Errors},
+	volume = {2021},
+	issn = {2299-0984},
+	url = {https://petsymposium.org/popets/2021/popets-2021-0071.php},
+	doi = {10.2478/popets-2021-0071},
+	abstract = {We propose and evaluate a securemultiparty-computation ({MPC}) solution in the semihonest model with dishonest majority that is based on multiparty homomorphic encryption ({MHE}). To support our solution, we introduce a multiparty version of the Brakerski-Fan-Vercauteren homomorphic cryptosystem and implement it in an open-source library. {MHE}-based {MPC} solutions have several advantages: Their transcript is public, their oﬄine phase is compact, and their circuit-evaluation procedure is noninteractive. By exploiting these properties, the communication complexity of {MPC} tasks is reduced from quadratic to linear in the number of parties, thus enabling secure computation among potentially thousands of parties and in a broad variety of computing paradigms, from the traditional peer-to-peer setting to cloud-outsourcing and smart-contract technologies. {MHE}-based approaches can also outperform the state-of-the-art solutions, even for a small number of parties. We demonstrate this for three circuits: private input selection with application to private-information retrieval, component-wise vector multiplication with application to private-set intersection, and Beaver multiplication triples generation. For the ﬁrst circuit, privately selecting one input among eight thousand parties’ (of 32 {KB} each) requires only 1.31 {MB} of communication per party and completes in 61.7 seconds. For the second circuit with eight parties, our approach is 8.6 times faster and requires 39.3 times less communication than the current methods. For the third circuit and ten parties, our approach generates 20 times more triples per second while requiring 136 times less communication per-triple than an approach based on oblivious transfer. We implemented our scheme in the Lattigo library and open-sourced the code at github.com/ldsec/lattigo.},
+	pages = {291--311},
+	number = {4},
+	journaltitle = {Proceedings on Privacy Enhancing Technologies},
+	author = {Mouchet, Christian and Troncoso-Pastoriza, Juan and Bossuat, Jean-Philippe and Hubaux, Jean-Pierre},
+	urldate = {2022-08-09},
+	date = {2021-10-01},
+	langid = {english},
+	file = {Mouchet et al. - 2021 - Multiparty Homomorphic Encryption from Ring-Learni.pdf:/home/ketl1/Zotero/storage/QIGP5SKW/Mouchet et al. - 2021 - Multiparty Homomorphic Encryption from Ring-Learni.pdf:application/pdf},
+}
+
+@article{ananth_multiparty_2020,
+	title = {Multiparty Homomorphic Encryption (or: On Removing Setup in Multi-Key {FHE})},
+	url = {https://eprint.iacr.org/2020/169},
+	shorttitle = {Multiparty Homomorphic Encryption (or},
+	journaltitle = {Cryptology {ePrint} Archive},
+	author = {Ananth, Prabhanjan and Jain, Abhishek and Jin, Zhengzhong},
+	urldate = {2022-08-09},
+	date = {2020},
+	langid = {english},
+	file = {Full Text PDF:/home/ketl1/Zotero/storage/76SJI56B/Ananth et al. - 2020 - Multiparty Homomorphic Encryption (or On Removing.pdf:application/pdf},
+}
+
+@inproceedings{chen_efficient_2019,
+	location = {London United Kingdom},
+	title = {Efficient Multi-Key Homomorphic Encryption with Packed Ciphertexts with Application to Oblivious Neural Network Inference},
+	isbn = {978-1-4503-6747-9},
+	url = {https://dl.acm.org/doi/10.1145/3319535.3363207},
+	doi = {10.1145/3319535.3363207},
+	abstract = {Homomorphic Encryption ({HE}) is a cryptosystem which supports computation on encrypted data. Lo´pez-Alt et al. ({STOC} 2012) proposed a generalized notion of {HE}, called Multi-Key Homomorphic Encryption ({MKHE}), which is capable of performing arithmetic operations on ciphertexts encrypted under diﬀerent keys.},
+	eventtitle = {{CCS} '19: 2019 {ACM} {SIGSAC} Conference on Computer and Communications Security},
+	pages = {395--412},
+	booktitle = {Proceedings of the 2019 {ACM} {SIGSAC} Conference on Computer and Communications Security},
+	publisher = {{ACM}},
+	author = {Chen, Hao and Dai, Wei and Kim, Miran and Song, Yongsoo},
+	urldate = {2022-08-09},
+	date = {2019-11-06},
+	langid = {english},
+	file = {Chen et al. - 2019 - Efficient Multi-Key Homomorphic Encryption with Pa.pdf:/home/ketl1/Zotero/storage/JVDIJDQH/Chen et al. - 2019 - Efficient Multi-Key Homomorphic Encryption with Pa.pdf:application/pdf},
+}
+
+@misc{badawi_towards_2020,
+	title = {Towards the {AlexNet} Moment for Homomorphic Encryption: {HCNN}, {theFirst} Homomorphic {CNN} on Encrypted Data with {GPUs}},
+	url = {http://arxiv.org/abs/1811.00778},
+	doi = {10.48550/arXiv.1811.00778},
+	shorttitle = {Towards the {AlexNet} Moment for Homomorphic Encryption},
+	abstract = {Deep Learning as a Service ({DLaaS}) stands as a promising solution for cloud-based inference applications. In this setting, the cloud has a pre-learned model whereas the user has samples on which she wants to run the model. The biggest concern with {DLaaS} is user privacy if the input samples are sensitive data. We provide here an efficient privacy-preserving system by employing high-end technologies such as Fully Homomorphic Encryption ({FHE}), Convolutional Neural Networks ({CNNs}) and Graphics Processing Units ({GPUs}). {FHE}, with its widely-known feature of computing on encrypted data, empowers a wide range of privacy-concerned applications. This comes at high cost as it requires enormous computing power. In this paper, we show how to accelerate the performance of running {CNNs} on encrypted data with {GPUs}. We evaluated two {CNNs} to classify homomorphically the {MNIST} and {CIFAR}-10 datasets. Our solution achieved a sufficient security level ({\textgreater} 80 bit) and reasonable classification accuracy (99\%) and (77.55\%) for {MNIST} and {CIFAR}-10, respectively. In terms of latency, we could classify an image in 5.16 seconds and 304.43 seconds for {MNIST} and {CIFAR}-10, respectively. Our system can also classify a batch of images ({\textgreater} 8,000) without extra overhead.},
+	number = {{arXiv}:1811.00778},
+	publisher = {{arXiv}},
+	author = {Badawi, Ahmad Al and Chao, Jin and Lin, Jie and Mun, Chan Fook and Sim, Jun Jie and Tan, Benjamin Hong Meng and Nan, Xiao and Aung, Khin Mi Mi and Chandrasekhar, Vijay Ramaseshan},
+	urldate = {2022-08-09},
+	date = {2020-08-18},
+	eprinttype = {arxiv},
+	eprint = {1811.00778 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/96LW5JAC/Badawi et al. - 2020 - Towards the AlexNet Moment for Homomorphic Encrypt.pdf:application/pdf},
+}
+
+@misc{podschwadt_sok_2022,
+	title = {{SoK}: Privacy-preserving Deep Learning with Homomorphic Encryption},
+	url = {http://arxiv.org/abs/2112.12855},
+	doi = {10.48550/arXiv.2112.12855},
+	shorttitle = {{SoK}},
+	abstract = {Outsourced computation for neural networks allows users access to state of the art models without needing to invest in specialized hardware and know-how. The problem is that the users lose control over potentially privacy sensitive data. With homomorphic encryption ({HE}) computation can be performed on encrypted data without revealing its content. In this systematization of knowledge, we take an in-depth look at approaches that combine neural networks with {HE} for privacy preservation. We categorize the changes to neural network models and architectures to make them computable over {HE} and how these changes impact performance. We find numerous challenges to {HE} based privacy-preserving deep learning such as computational overhead, usability, and limitations posed by the encryption schemes.},
+	number = {{arXiv}:2112.12855},
+	publisher = {{arXiv}},
+	author = {Podschwadt, Robert and Takabi, Daniel and Hu, Peizhao},
+	urldate = {2022-08-09},
+	date = {2022-01-01},
+	eprinttype = {arxiv},
+	eprint = {2112.12855 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/CZ68YDC4/Podschwadt et al. - 2022 - SoK Privacy-preserving Deep Learning with Homomor.pdf:application/pdf},
+}
+
+@inproceedings{jiang_secure_2018,
+	location = {Toronto Canada},
+	title = {Secure Outsourced Matrix Computation and Application to Neural Networks},
+	isbn = {978-1-4503-5693-0},
+	url = {https://dl.acm.org/doi/10.1145/3243734.3243837},
+	doi = {10.1145/3243734.3243837},
+	abstract = {Homomorphic Encryption ({HE}) is a powerful cryptographic primitive to address privacy and security issues in outsourcing computation on sensitive data to an untrusted computation environment. Comparing to secure Multi-Party Computation ({MPC}), {HE} has advantages in supporting non-interactive operations and saving on communication costs. However, it has not come up with an optimal solution for modern learning frameworks, partially due to a lack of eﬃcient matrix computation mechanisms.},
+	eventtitle = {{CCS} '18: 2018 {ACM} {SIGSAC} Conference on Computer and Communications Security},
+	pages = {1209--1222},
+	booktitle = {Proceedings of the 2018 {ACM} {SIGSAC} Conference on Computer and Communications Security},
+	publisher = {{ACM}},
+	author = {Jiang, Xiaoqian and Kim, Miran and Lauter, Kristin and Song, Yongsoo},
+	urldate = {2022-08-09},
+	date = {2018-10-15},
+	langid = {english},
+	file = {Jiang et al. - 2018 - Secure Outsourced Matrix Computation and Applicati.pdf:/home/ketl1/Zotero/storage/MWAYTXQ4/Jiang et al. - 2018 - Secure Outsourced Matrix Computation and Applicati.pdf:application/pdf},
+}
+
+@misc{bellafqira_secure_2018,
+	title = {Secure Multilayer Perceptron Based On Homomorphic Encryption},
+	url = {http://arxiv.org/abs/1806.02709},
+	doi = {10.48550/arXiv.1806.02709},
+	abstract = {In this work, we propose an outsourced Secure Multilayer Perceptron ({SMLP}) scheme where privacy and confidentiality of both the data and the model are ensured during the training and the classification phases. More clearly, this {SMLP} : i) can be trained by a cloud server based on data previously outsourced by a user in an homomorphically encrypted form; ii) its parameters are homomorphically encrypted giving thus no clues to the cloud; and iii) it can also be used for classifying new encrypted data sent by the user returning him the encrypted classification result encrypted. The originality of this scheme is threefold. To the best of our knowledge, it is the first multilayer perceptron ({MLP}) secured in its training phase over homomorphically encrypted data with no problem of convergence. And It does not require extra-communications between the server and the user. It is based on the Rectified Linear Unit ({ReLU}) activation function that we secure with no approximation contrarily to actual {SMLP} solutions. To do so, we take advantage of two semi-honest non-colluding servers. Experimental results carried out on a binary database encrypted with the Paillier cryptosystem demonstrate the overall performance of our scheme and its convergence.},
+	number = {{arXiv}:1806.02709},
+	publisher = {{arXiv}},
+	author = {Bellafqira, Reda and Coatrieux, Gouenou and Genin, Emmanuelle and Cozic, Michel},
+	urldate = {2022-08-09},
+	date = {2018-06-07},
+	eprinttype = {arxiv},
+	eprint = {1806.02709 [cs]},
+	keywords = {Computer Science - Cryptography and Security},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/VYNNW66H/Bellafqira et al. - 2018 - Secure Multilayer Perceptron Based On Homomorphic .pdf:application/pdf},
+}
+
+@misc{rahulamathavan_privacy-preserving_2022,
+	title = {Privacy-preserving Similarity Calculation of Speaker Features Using Fully Homomorphic Encryption},
+	url = {http://arxiv.org/abs/2202.07994},
+	doi = {10.48550/arXiv.2202.07994},
+	abstract = {Recent advances in machine learning techniques are enabling Automated Speech Recognition ({ASR}) more accurate and practical. The evidence of this can be seen in the rising number of smart devices with voice processing capabilities. More and more devices around us are in-built with {ASR} technology. This poses serious privacy threats as speech contains unique biometric characteristics and personal data. However, the privacy concern can be mitigated if the voice features are processed in the encrypted domain. Within this context, this paper proposes an algorithm to redesign the back-end of the speaker verification system using fully homomorphic encryption techniques. The solution exploits the Cheon-Kim-Kim-Song ({CKKS}) fully homomorphic encryption scheme to obtain a real-time and non-interactive solution. The proposed solution contains a novel approach based on Newton Raphson method to overcome the limitation of {CKKS} scheme (i.e., calculating an inverse square-root of an encrypted number). This provides an efficient solution with less multiplicative depths for a negligible loss in accuracy. The proposed algorithm is validated using a well-known speech dataset. The proposed algorithm performs encrypted-domain verification in real-time (with less than 1.3 seconds delay) for a 2.8{\textbackslash}\% equal-error-rate loss compared to plain-domain verification.},
+	number = {{arXiv}:2202.07994},
+	publisher = {{arXiv}},
+	author = {Rahulamathavan, Yogachandran},
+	urldate = {2022-08-09},
+	date = {2022-03-14},
+	eprinttype = {arxiv},
+	eprint = {2202.07994 [cs]},
+	keywords = {Computer Science - Cryptography and Security},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/RFU5ZKLJ/Rahulamathavan - 2022 - Privacy-preserving Similarity Calculation of Speak.pdf:application/pdf},
+}
+
+@misc{lee_privacy-preserving_2021,
+	title = {Privacy-Preserving Machine Learning with Fully Homomorphic Encryption for Deep Neural Network},
+	url = {http://arxiv.org/abs/2106.07229},
+	doi = {10.48550/arXiv.2106.07229},
+	abstract = {Fully homomorphic encryption ({FHE}) is one of the prospective tools for privacypreserving machine learning ({PPML}), and several {PPML} models have been proposed based on various {FHE} schemes and approaches. Although the {FHE} schemes are known as suitable tools to implement {PPML} models, previous {PPML} models on {FHE} encrypted data are limited to only simple and non-standard types of machine learning models. These non-standard machine learning models are not proven efficient and accurate with more practical and advanced datasets. Previous {PPML} schemes replace non-arithmetic activation functions with simple arithmetic functions instead of adopting approximation methods and do not use bootstrapping, which enables continuous homomorphic evaluations. Thus, they could not use standard activation functions and could not employ a large number of layers. The maximum classification accuracy of the existing {PPML} model with the {FHE} for the {CIFAR}-10 dataset was only 77\% until now. In this work, we firstly implement the standard {ResNet}-20 model with the {RNS}-{CKKS} {FHE} with bootstrapping and verify the implemented model with the {CIFAR}-10 dataset and the plaintext model parameters. Instead of replacing the non-arithmetic functions with the simple arithmetic function, we use state-of-the-art approximation methods to evaluate these non-arithmetic functions, such as the {ReLU}, with sufficient precision [1]. Further, for the first time, we use the bootstrapping technique of the {RNS}-{CKKS} scheme in the proposed model, which enables us to evaluate a deep learning model on the encrypted data. We numerically verify that the proposed model with the {CIFAR}-10 dataset shows 98.67\% identical results to the original {ResNet}-20 model with non-encrypted data. The classification accuracy of the proposed model is 90.67\%, which is pretty close to that of the original {ResNet}-20 {CNN} model...},
+	number = {{arXiv}:2106.07229},
+	publisher = {{arXiv}},
+	author = {Lee, Joon-Woo and Kang, {HyungChul} and Lee, Yongwoo and Choi, Woosuk and Eom, Jieun and Deryabin, Maxim and Lee, Eunsang and Lee, Junghyun and Yoo, Donghoon and Kim, Young-Sik and No, Jong-Seon},
+	urldate = {2022-08-09},
+	date = {2021-06-14},
+	eprinttype = {arxiv},
+	eprint = {2106.07229 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/MABY2425/Lee et al. - 2021 - Privacy-Preserving Machine Learning with Fully Hom.pdf:application/pdf},
+}
+
+@inproceedings{liu_oblivious_2017,
+	location = {Dallas Texas {USA}},
+	title = {Oblivious Neural Network Predictions via {MiniONN} Transformations},
+	isbn = {978-1-4503-4946-8},
+	url = {https://dl.acm.org/doi/10.1145/3133956.3134056},
+	doi = {10.1145/3133956.3134056},
+	abstract = {Machine learning models hosted in a cloud service are increasingly popular but risk privacy: clients sending prediction requests to the service need to disclose potentially sensitive information. In this paper, we explore the problem of privacy-preserving predictions: after each prediction, the server learns nothing about clients’ input and clients learn nothing about the model. We present {MiniONN}, the first approach for transforming an existing neural network to an oblivious neural network supporting privacy-preserving predictions with reasonable efficiency. Unlike prior work, {MiniONN} requires no change to how models are trained. To this end, we design oblivious protocols for commonly used operations in neural network prediction models. We show that {MiniONN} outperforms existing work in terms of response latency and message sizes. We demonstrate the wide applicability of {MiniONN} by transforming several typical neural network models trained from standard datasets.},
+	eventtitle = {{CCS} '17: 2017 {ACM} {SIGSAC} Conference on Computer and Communications Security},
+	pages = {619--631},
+	booktitle = {Proceedings of the 2017 {ACM} {SIGSAC} Conference on Computer and Communications Security},
+	publisher = {{ACM}},
+	author = {Liu, Jian and Juuti, Mika and Lu, Yao and Asokan, N.},
+	urldate = {2022-08-09},
+	date = {2017-10-30},
+	langid = {english},
+	file = {Liu et al. - 2017 - Oblivious Neural Network Predictions via MiniONN T.pdf:/home/ketl1/Zotero/storage/WUEYDXKN/Liu et al. - 2017 - Oblivious Neural Network Predictions via MiniONN T.pdf:application/pdf},
+}
+
+@misc{mihara_neural_2020,
+	title = {Neural Network Training With Homomorphic Encryption},
+	url = {http://arxiv.org/abs/2012.13552},
+	doi = {10.48550/arXiv.2012.13552},
+	abstract = {We introduce a novel method and implementation architecture to train neural networks which preserves the confidentiality of both the model and the data. Our method relies on homomorphic capability of lattice based encryption scheme. Our procedure is optimized for operations on packed ciphertexts in order to achieve efficient updates of the model parameters. Our method achieves a significant reduction of computations due to our way to perform multiplications and rotations on packed ciphertexts from a feedforward network to a back-propagation network. To verify the accuracy of the training model as well as the implementation feasibility, we tested our method on the Iris data set by using the {CKKS} scheme with Microsoft {SEAL} as a back end. Although our test implementation is for simple neural network training, we believe our basic implementation block can help the further applications for more complex neural network based use cases.},
+	number = {{arXiv}:2012.13552},
+	publisher = {{arXiv}},
+	author = {Mihara, Kentaro and Yamaguchi, Ryohei and Mitsuishi, Miguel and Maruyama, Yusuke},
+	urldate = {2022-08-09},
+	date = {2020-12-25},
+	eprinttype = {arxiv},
+	eprint = {2012.13552 [cs]},
+	keywords = {Computer Science - Cryptography and Security},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/RJDJVPE9/Mihara et al. - 2020 - Neural Network Training With Homomorphic Encryptio.pdf:application/pdf},
+}
+
+@misc{brutzkus_low_2019,
+	title = {Low Latency Privacy Preserving Inference},
+	url = {http://arxiv.org/abs/1812.10659},
+	doi = {10.48550/arXiv.1812.10659},
+	abstract = {When applying machine learning to sensitive data, one has to find a balance between accuracy, information security, and computational-complexity. Recent studies combined Homomorphic Encryption with neural networks to make inferences while protecting against information leakage. However, these methods are limited by the width and depth of neural networks that can be used (and hence the accuracy) and exhibit high latency even for relatively simple networks. In this study we provide two solutions that address these limitations. In the first solution, we present more than \$10{\textbackslash}times\$ improvement in latency and enable inference on wider networks compared to prior attempts with the same level of security. The improved performance is achieved by novel methods to represent the data during the computation. In the second solution, we apply the method of transfer learning to provide private inference services using deep networks with latency of \${\textbackslash}sim0.16\$ seconds. We demonstrate the efficacy of our methods on several computer vision tasks.},
+	number = {{arXiv}:1812.10659},
+	publisher = {{arXiv}},
+	author = {Brutzkus, Alon and Elisha, Oren and Gilad-Bachrach, Ran},
+	urldate = {2022-08-09},
+	date = {2019-06-06},
+	eprinttype = {arxiv},
+	eprint = {1812.10659 [cs, stat]},
+	keywords = {Computer Science - Machine Learning, Statistics - Machine Learning},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/LGY523EX/Brutzkus et al. - 2019 - Low Latency Privacy Preserving Inference.pdf:application/pdf},
+}
+
+@incollection{bourse_fast_2018,
+	location = {Cham},
+	title = {Fast Homomorphic Evaluation of Deep Discretized Neural Networks},
+	volume = {10993},
+	isbn = {978-3-319-96877-3 978-3-319-96878-0},
+	url = {https://link.springer.com/10.1007/978-3-319-96878-0_17},
+	abstract = {The rise of machine learning as a service multiplies scenarios where one faces a privacy dilemma: either sensitive user data must be revealed to the entity that evaluates the cognitive model (e.g., in the Cloud), or the model itself must be revealed to the user so that the evaluation can take place locally. Fully Homomorphic Encryption ({FHE}) oﬀers an elegant way to reconcile these conﬂicting interests in the Cloudbased scenario and also preserve non-interactivity. However, due to the ineﬃciency of existing {FHE} schemes, most applications prefer to use Somewhat Homomorphic Encryption ({SHE}), where the complexity of the computation to be performed has to be known in advance, and the eﬃciency of the scheme depends on this global complexity.},
+	pages = {483--512},
+	booktitle = {Advances in Cryptology – {CRYPTO} 2018},
+	publisher = {Springer International Publishing},
+	author = {Bourse, Florian and Minelli, Michele and Minihold, Matthias and Paillier, Pascal},
+	editor = {Shacham, Hovav and Boldyreva, Alexandra},
+	urldate = {2022-08-09},
+	date = {2018},
+	langid = {english},
+	doi = {10.1007/978-3-319-96878-0_17},
+	note = {Series Title: Lecture Notes in Computer Science},
+	file = {Bourse et al. - 2018 - Fast Homomorphic Evaluation of Deep Discretized Ne.pdf:/home/ketl1/Zotero/storage/Z622HQAR/Bourse et al. - 2018 - Fast Homomorphic Evaluation of Deep Discretized Ne.pdf:application/pdf},
+}
+
+@article{badawi_privft_2020,
+	title = {{PrivFT}: Private and Fast Text Classification With Homomorphic Encryption},
+	volume = {8},
+	issn = {2169-3536},
+	doi = {10.1109/ACCESS.2020.3045465},
+	shorttitle = {{PrivFT}},
+	abstract = {We present an efficient and non-interactive method for Text Classification while preserving the privacy of the content using Fully Homomorphic Encryption ({FHE}). Our solution (named Private Fast Text ({PrivFT})) provides two services: 1) making inference of encrypted user inputs using a plaintext model and 2) training an effective model using an encrypted dataset. For inference, we use a pre-trained plaintext model and outline a system for homomorphic inference on encrypted user inputs with zero loss to prediction accuracy compared to the non-encrypted version. In the second part, we show how to train a supervised model using fully encrypted data to generate an encrypted model. For improved performance, we provide a {GPU} implementation of the Cheon-Kim-Kim-Song ({CKKS}) {FHE} scheme that shows 1 to 2 orders of magnitude speedup against existing implementations. We build {PrivFT} on top of our {FHE} engine in {GPUs} to achieve a run time per inference of 0.17 seconds for various Natural Language Processing ({NLP}) public datasets. Training on a relatively large encrypted dataset is more computationally intensive requiring 5.04 days.},
+	pages = {226544--226556},
+	journaltitle = {{IEEE} Access},
+	author = {Badawi, Ahmad Al and Hoang, Louie and Mun, Chan Fook and Laine, Kim and Aung, Khin Mi Mi},
+	date = {2020},
+	note = {Conference Name: {IEEE} Access},
+	keywords = {Cloud computing, Computational modeling, Cryptography, Data models, data privacy, data security, Electronic mail, Encryption, graphics processors, homomorphic encryption, natural language processing, Training},
+	file = {IEEE Xplore Full Text PDF:/home/ketl1/Zotero/storage/JK2T4AYI/Badawi et al. - 2020 - PrivFT Private and Fast Text Classification With .pdf:application/pdf},
+}
+
+@misc{peng_danger_2019,
+	title = {Danger of using fully homomorphic encryption: A look at Microsoft {SEAL}},
+	url = {http://arxiv.org/abs/1906.07127},
+	doi = {10.48550/arXiv.1906.07127},
+	shorttitle = {Danger of using fully homomorphic encryption},
+	abstract = {Fully homomorphic encryption is a promising crypto primitive to encrypt your data while allowing others to compute on the encrypted data. But there are many well-known problems with fully homomorphic encryption such as {CCA} security and circuit privacy problem. Despite these problems, there are still many companies are currently using or preparing to use fully homomorphic encryption to build data security applications. It seems that the full homomorphic encryption is very close to practicality and these problems can be easily mitigated in implementation. Although the those problems are well known in theory, there is no public discussion of their actual impact on real application. Our research shows that there are many security pitfalls in fully homomorphic encryption from the perspective of practical application. The security problems of a fully homomorphic encryption in a real application is more severe than imagined. In this paper, we will take Microsoft {SEAL} as an examples to introduce the security pitfalls of fully homomorphic encryption from the perspective of implementation and practical application},
+	number = {{arXiv}:1906.07127},
+	publisher = {{arXiv}},
+	author = {Peng, Zhiniang},
+	urldate = {2022-08-09},
+	date = {2019-06-17},
+	eprinttype = {arxiv},
+	eprint = {1906.07127 [cs]},
+	keywords = {Computer Science - Cryptography and Security},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/RSEUSM6A/Peng - 2019 - Danger of using fully homomorphic encryption A lo.pdf:application/pdf},
+}
+
+@misc{wang_variational_2022,
+	title = {Variational Model Inversion Attacks},
+	url = {http://arxiv.org/abs/2201.10787},
+	doi = {10.48550/arXiv.2201.10787},
+	abstract = {Given the ubiquity of deep neural networks, it is important that these models do not reveal information about sensitive data that they have been trained on. In model inversion attacks, a malicious user attempts to recover the private dataset used to train a supervised neural network. A successful model inversion attack should generate realistic and diverse samples that accurately describe each of the classes in the private dataset. In this work, we provide a probabilistic interpretation of model inversion attacks, and formulate a variational objective that accounts for both diversity and accuracy. In order to optimize this variational objective, we choose a variational family defined in the code space of a deep generative model, trained on a public auxiliary dataset that shares some structural similarity with the target dataset. Empirically, our method substantially improves performance in terms of target attack accuracy, sample realism, and diversity on datasets of faces and chest X-ray images.},
+	number = {{arXiv}:2201.10787},
+	publisher = {{arXiv}},
+	author = {Wang, Kuan-Chieh and Fu, Yan and Li, Ke and Khisti, Ashish and Zemel, Richard and Makhzani, Alireza},
+	urldate = {2022-08-09},
+	date = {2022-01-26},
+	eprinttype = {arxiv},
+	eprint = {2201.10787 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/DYNQXJC6/Wang et al. - 2022 - Variational Model Inversion Attacks.pdf:application/pdf},
+}
+
+@misc{rigaki_survey_2021,
+	title = {A Survey of Privacy Attacks in Machine Learning},
+	url = {http://arxiv.org/abs/2007.07646},
+	doi = {10.48550/arXiv.2007.07646},
+	abstract = {As machine learning becomes more widely used, the need to study its implications in security and privacy becomes more urgent. Although the body of work in privacy has been steadily growing over the past few years, research on the privacy aspects of machine learning has received less focus than the security aspects. Our contribution in this research is an analysis of more than 40 papers related to privacy attacks against machine learning that have been published during the past seven years. We propose an attack taxonomy, together with a threat model that allows the categorization of different attacks based on the adversarial knowledge, and the assets under attack. An initial exploration of the causes of privacy leaks is presented, as well as a detailed analysis of the different attacks. Finally, we present an overview of the most commonly proposed defenses and a discussion of the open problems and future directions identified during our analysis.},
+	number = {{arXiv}:2007.07646},
+	publisher = {{arXiv}},
+	author = {Rigaki, Maria and Garcia, Sebastian},
+	urldate = {2022-08-09},
+	date = {2021-04-01},
+	eprinttype = {arxiv},
+	eprint = {2007.07646 [cs]},
+	keywords = {Computer Science - Cryptography and Security, Computer Science - Machine Learning},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/VRKYXH9I/Rigaki and Garcia - 2021 - A Survey of Privacy Attacks in Machine Learning.pdf:application/pdf},
+}
+
+@misc{boemer_ngraph-he_2019,
+	title = {{nGraph}-{HE}: A Graph Compiler for Deep Learning on Homomorphically Encrypted Data},
+	url = {http://arxiv.org/abs/1810.10121},
+	doi = {10.48550/arXiv.1810.10121},
+	shorttitle = {{nGraph}-{HE}},
+	abstract = {Homomorphic encryption ({HE})---the ability to perform computation on encrypted data---is an attractive remedy to increasing concerns about data privacy in deep learning ({DL}). However, building {DL} models that operate on ciphertext is currently labor-intensive and requires simultaneous expertise in {DL}, cryptography, and software engineering. {DL} frameworks and recent advances in graph compilers have greatly accelerated the training and deployment of {DL} models to various computing platforms. We introduce {nGraph}-{HE}, an extension of {nGraph}, Intel's {DL} graph compiler, which enables deployment of trained models with popular frameworks such as {TensorFlow} while simply treating {HE} as another hardware target. Our graph-compiler approach enables {HE}-aware optimizations-- implemented at compile-time, such as constant folding and {HE}-{SIMD} packing, and at run-time, such as special value plaintext bypass. Furthermore, {nGraph}-{HE} integrates with {DL} frameworks such as {TensorFlow}, enabling data scientists to benchmark {DL} models with minimal overhead.},
+	number = {{arXiv}:1810.10121},
+	publisher = {{arXiv}},
+	author = {Boemer, Fabian and Lao, Yixing and Cammarota, Rosario and Wierzynski, Casimir},
+	urldate = {2022-08-09},
+	date = {2019-04-02},
+	eprinttype = {arxiv},
+	eprint = {1810.10121 [cs]},
+	note = {version: 3},
+	keywords = {Computer Science - Cryptography and Security},
+	file = {arXiv Fulltext PDF:/home/ketl1/Zotero/storage/2K8E3AQR/Boemer et al. - 2019 - nGraph-HE A Graph Compiler for Deep Learning on H.pdf:application/pdf},
+}
+
+@inproceedings{dowlin_cryptonets_2016,
+	location = {New York, {NY}, {USA}},
+	title = {{CryptoNets}: applying neural networks to encrypted data with high throughput and accuracy},
+	series = {{ICML}'16},
+	shorttitle = {{CryptoNets}},
+	abstract = {Applying machine learning to a problem which involves medical, financial, or other types of sensitive data, not only requires accurate predictions but also careful attention to maintaining data privacy and security. Legal and ethical requirements may prevent the use of cloud-based machine learning solutions for such tasks. In this work, we will present a method to convert learned neural networks to {CryptoNets}, neural networks that can be applied to encrypted data. This allows a data owner to send their data in an encrypted form to a cloud service that hosts the network. The encryption ensures that the data remains confidential since the cloud does not have access to the keys needed to decrypt it. Nevertheless, we will show that the cloud service is capable of applying the neural network to the encrypted data to make encrypted predictions, and also return them in encrypted form. These encrypted predictions can be sent back to the owner of the secret key who can decrypt them. Therefore, the cloud service does not gain any information about the raw data nor about the prediction it made. We demonstrate {CryptoNets} on the {MNIST} optical character recognition tasks. {CryptoNets} achieve 99\% accuracy and can make around 59000 predictions per hour on a single {PC}. Therefore, they allow high throughput, accurate, and private predictions.},
+	pages = {201--210},
+	booktitle = {Proceedings of the 33rd International Conference on International Conference on Machine Learning - Volume 48},
+	publisher = {{JMLR}.org},
+	author = {Dowlin, Nathan and Gilad-Bachrach, Ran and Laine, Kim and Lauter, Kristin and Naehrig, Michael and Wernsing, John},
+	urldate = {2022-08-09},
+	date = {2016-06-19},
+	file = {Dowlin et al. - CryptoNets Applying Neural Networks to Encrypted .pdf:/home/ketl1/Zotero/storage/KPK6LIU9/Dowlin et al. - CryptoNets Applying Neural Networks to Encrypted .pdf:application/pdf},
 }
