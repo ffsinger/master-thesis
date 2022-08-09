@@ -82,6 +82,7 @@ Finally, it discusses the trade-off between security and performance in this con
 % This section is usually 3-5 pages.
 
 This chapter introduces the main concepts that form the basis of this work, namely homomorphic encryption and different ML models, such as logistic regression and neural networks.
+It will be useful for understanding the subsequent chapters.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
@@ -229,7 +230,9 @@ As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization 
 
 % This section is usually 5-10 pages.
 
-In this chapter, we formalize the privacy and security threats that need to be mitigated, and describe our solutions to some of these issues from a high-level perspective.
+Now that the main mathematical and cryptographic concepts have been introduced, we focus on the problems that need to be solved.
+In this chapter, we formalize the privacy and security threats that need to be mitigated.
+We also describe our solutions to some of these issues from a high-level perspective, along with the important design decisions that were made.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Threat model}
@@ -417,7 +420,13 @@ This means that no approximations are necessary for non-polynomial functions, an
 
 % This section is usually 3-5 pages.
 
-This chapter covers the lower-level aspects of the solutions. It presents the libraries used and the architecture of the implementation. It also highlights the challenges faced during development, as a way to introduce the limitations.
+In the previous chapter, we described the different security threats that occur in ML systems. 
+We identified that data can be at risk in both the training and the inference steps, and that homomorphic encryption is a way of protecting this data.
+We started with a high-level description of the solutions, before focusing on how to apply these principles for specific ML models, namely Logistic Regression and Neural Networks.
+
+This chapter covers the lower-level aspects of the solutions. 
+It presents the libraries used and the architecture of the implementation.
+It also highlights the challenges faced during development, as a way to introduce the limitations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Backends}
@@ -543,8 +552,10 @@ Solutions to these problems include having domain knowledge or using auxiliary d
 % Describe the evaluation setup, the designed experiments, and how the experiments showcase the individual points you want to prove.
 % This section is usually 5-10 pages.
 
-Benchmarks and analyses of the results are presented in this chapter. 
-It includes LR training and CNN inference with two different architectures.
+Now that the whole system has been presented in details in the two previous chapters, it is important to evaluate its performance and compare it to existing baselines.
+It will serve to determine if such a system is usable in practice.
+In this chapter, we provide benchmarks and analyses of the results for LR training and CNN inference with two different architectures.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}\label{sec:eval_lr}
@@ -856,11 +867,9 @@ Furthermore, the hybrid version has a much smaller footprint and is also much fa
 % Here you can highlight the related work, how it solved the problem, and why it solved a different problem. Do not play down the importance of related work, all of these systems have been published and evaluated! Say what is different and how you overcome some of the weaknesses of related work by discussing the trade-offs. Stay positive!
 % This section is usually 3-5 pages.
 
+While some of the design and implementation decisions presented in the previous chapters are new, many other papers already suggest solutions for homomorphically encrypted machine learning.
 
-Many papers suggest solutions for homomorphically encrypted machine learning.
-One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which is a 5-layers CNN evaluated on the MNIST dataset.
-
-It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
+One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which is a 5-layers CNN evaluated on the MNIST dataset. It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
 
 For instance, Badawi et al. \cite{badawi_privft_2019, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification). 
 We started with this architecture before moving to a more generic framework.
