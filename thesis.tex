@@ -68,13 +68,17 @@ These have the advantage of allowing some operations, primarily additions and mu
 The downside of this approach is that it comes with severe performance and precision limitations, and is thus difficult to apply in the context of machine learning where computations are already gluttonous in resources. 
 Nevertheless, this has been an active research field that has seen promising advances in the past decade.
 
-The goal of this project is to identify, implement and evaluate the state-of-the-art solutions of homomorphically encrypted machine learning. 
-It also aims to formalize the threats that exist in machine learning processes, and describe how they can be mitigated using homomorphic encryption.
-Finally, it discusses the trade-off between security and performance in this context.
+The goal of this project is to identify, implement, evaluate and possibly improve the state-of-the-art solutions of homomorphically encrypted machine learning. It aims to determine if such solutions are practical for real-world systems, notably by exploring the trade-offs between security and performance.
+
+In \autoref{chap:background}, we will introduce the basics of homomorphic encryption and two different types of ML models, namely logistic regression and neural networks. 
+Then, we will formalize in \autoref{chap:design} the threats that exist in ML processes, and describe how they can be mitigated using homomorphic encryption.
+More specifically, we will see how HE can protect data during both the training step and the inference step, and what it entails to transform an ML algorithm to a homomorphically-friendly version.
+The implementation details and challenges are given in \autoref{chap:implementation}.
+Finally, we present and analyze the different performance metrics in \autoref{chap:evaluation}.
 
 
 %%%%%%%%%%%%%%%%%%%%
-\chapter{Background}
+\chapter{Background}\label{chap:background}
 %%%%%%%%%%%%%%%%%%%%
 
 % The background section introduces the necessary background to understand your work. 
@@ -82,7 +86,8 @@ Finally, it discusses the trade-off between security and performance in this con
 
 % This section is usually 3-5 pages.
 
-This chapter introduces the main concepts that form the basis of this work, namely homomorphic encryption and different ML models, such as logistic regression and neural networks.
+This chapter introduces the main concepts that form the basis of this work, namely homomorphic encryption and machine learning.
+The main ML models of interest for this thesis are logistic regression models and neural networks.
 It will be useful for understanding the subsequent chapters.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -222,7 +227,7 @@ As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization 
 
 
 %%%%%%%%%%%%%%%%
-\chapter{Design}
+\chapter{Design}\label{chap:design}
 %%%%%%%%%%%%%%%%
 
 % Introduce and discuss the design decisions that you made during this project.
@@ -413,7 +418,7 @@ This means that no approximations are necessary for non-polynomial functions, an
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Implementation}
+\chapter{Implementation}\label{chap:implementation}
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 % The implementation covers some of the implementation details of your project.
@@ -1043,7 +1048,7 @@ It uses \emph{channelwise} packing.
 
 For more readability, this version does not support padding. The output channels are thus smaller than the input.
 
-The version for \emph{pixelwise} packing is much simpler, as it only requires one homomorphic multiplication and addition in the inner loop.
+The version for \emph{pixelwise} packing is much simpler, as it only requires one homomorphic multiplication and addition in the inner loop. It is thus omitted here.
 
 \begin{algorithm}
 
