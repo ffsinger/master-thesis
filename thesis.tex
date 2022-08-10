@@ -330,11 +330,29 @@ If the data comes from external data owners and should not be visible to the mod
 However, this feature is not available in many HE libraries.
 
 If we distinguish the client (data and model owner) and the server (computing power provider), the steps of an encrypted training procedure can be described as follows:
-\begin{enumerate}
-    \item Client: initialize the keys and encrypt the data. Send the encrypted data and other objects or parameters required for homomorphic computations (e.g. rotation keys, relinearization keys).
-    \item Server: train the model. Send back the encrypted weights.
-    \item Client: decrypt the weights.
-\end{enumerate}
+% \begin{enumerate}
+%     \item Client: initialize the keys and encrypt the data. Send the encrypted data and other objects or parameters required for homomorphic computations (e.g. rotation keys, relinearization keys).
+%     \item Server: train the model. Send back the encrypted weights.
+%     \item Client: decrypt the weights.
+% \end{enumerate}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{ p{0.45\linewidth} | p{0.45\linewidth} }
+    \hline
+    Client & Server \\
+    \hline
+    1. Generate keys &  \\
+    4. Send relinearization and rotation keys &  \\
+    2. Encrypt training data &  \\
+    3. Send encrypted data & \\
+     & 5. Training \\
+     & 6. Send back encrypted weights \\
+    7. Decrypt weights &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 As training can be a fairly complex and resource-intensive process, it is wise to start with a simple classification model. 
 Logistic regression models are simple and have been extensively studied as part of the 2017 iDASH secure genome analysis competition. 
@@ -355,6 +373,8 @@ The pseudocode for the encryption and training algorithm is given in the appendi
 It basically translates \autoref{eq:gradient_descent} into an algorithm containing only homomorphic operations on vectors.
 We need to be careful to minimize the total number of operations, as well as the multiplicative depth.
 
+The inference step described in \autoref{eq:logistic_reg_pred} can also be translated to a homomorphic version in order to have a completely encrypted pipeline, but this scenario will be described in the following section with a more complex model.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Private inference}\label{sec:private_inference}
@@ -363,7 +383,7 @@ We need to be careful to minimize the total number of operations, as well as the
 
 In the case of an inference service provided by a model owner to a client, another threat is that the client's data can be abused. 
 Even with a privacy policy, the client has no technical guarantee that this data will not be shared, stolen, or used for different purposes. 
-As opposed to the attacks mentioned in \autoref{sec:threats}, this threat is independent of the ML model and involves only the data. 
+As opposed to many attacks mentioned in \autoref{sec:threats}, this threat is independent of the ML model and involves only the data. 
 Homomorphic encryption aims to reduce this risk, thus improving the overall trust in the system.
 
 There are two approaches to this problem. 
@@ -371,32 +391,54 @@ In both cases, we assume that a model has been trained beforehand.
 
 In the most common approach, the client encrypts the data and sends it to the inference service, which learns nothing about the data and the inference result.
 
-In the second approach, the weights of the model are encrypted and sent to the client. 
+In the second approach, the client computes the inference by themselves with the trained model.
+Unfortunately, few services will accept to send the model in cleartext, in fear of it being stolen.
+However, the weights of the model can be encryted and sent to the client. 
 This requires an additional round-trip of communications for the decryption step, which can reveal the inference result to the service if no precautions are made. 
 In addition, the architecture of the model must be revealed to the client, which incurs the risk of it being stolen and retrained from scratch by a competitor. 
-Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two.
+Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two, because the algorithms are quite similar.
 
 This time, if we consider the client to be the data owner and the server to be the model owner, the steps are very similar to \autoref{sec:secure_training}:
-\begin{enumerate}
-    \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys (relinearization or rotation keys).
-    \item Server: do the inference. Send back the result.
-    \item Client: decrypt the result.
-\end{enumerate}
+% \begin{enumerate}
+%     \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys (relinearization or rotation keys).
+%     \item Server: do the inference. Send back the result.
+%     \item Client: decrypt the result.
+% \end{enumerate}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{ p{0.45\linewidth} | p{0.45\linewidth} }
+    \hline
+    Client & Server \\
+    \hline
+    1. Generate keys &  \\
+    4. Send relinearization and rotation keys &  \\
+    2. Encrypt data &  \\
+    3. Send encrypted data & \\
+     & 5. Inference \\
+     & 6. Send back encrypted label \\
+    7. Decrypt label &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 Note that the inference step can also be delegated to an external cloud provider without risks of compromising the data.
+In addition, the first two steps only need to be done once if the client makes multiple inference requests over time.
 
-Because inference requires much less resources than training, we can look at more complex models. 
+Because predictions require much less resources than training, we can look at more complex models. 
 As neural networks are extremely popular nowadays, a deep learning framework compatible with encrypted data would have many use-cases.
 
 \subsection{Data packing}
 
-This problem, especially for the special case of neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. 
-One of the particularity of their approach is that they pack the $n$ pixels of an input image into $n$ different ciphertexts. 
-This is very efficient when batching multiple images (by putting the pixels of the first image in the first slots, the pixels of the second image in the second slots, etc) but results in a lot of wasted space if only one image needs to be evaluated. 
-In the following, we will call this method \emph{pixelwise packing}.
+This problem, especially for the special case of convolutional neural networks, has already been widely studied. One of the first solution was proposed by Dowlin et al. \cite{dowlin_cryptonets_2016} in 2016. 
+One particularity of their approach lies in how they encode the data into vectors.
+They pack the $n$ pixels of an input image into $n$ different ciphertexts. 
+This is very efficient when batching multiple images (by putting the pixels of the first image in the first slots, the pixels of the second image in the second slots, etc) but it results in a lot of wasted space if only one image needs to be evaluated. 
+From now on, we will call this method \emph{pixelwise packing}.
 
 An alternative is to pack the pixels of an image one after the others in the same ciphertext. 
-This results in a more efficient use of space when doing few inferences. For simplicity, we assume that the number of pixels fit into a single ciphertext. 
+This results in a more efficient use of space when doing few inferences. For simplicity, we assume that all the pixels fit into a single ciphertext. 
 We also separate each channel into its own ciphertext. 
 For this reason, we call this method \emph{channelwise packing}.
 
@@ -404,10 +446,12 @@ Both methods have their own trade-offs that highly depend on the architecture of
 They are evaluated side by side in \autoref{chap:evaluation}. 
 From the theoretical complexity, we expect pixelwise packing to be best when kernels and fully connected layers are small.
 
+% TODO? Theoretical complexity formula
+
 In terms of memory, pixelwise packing may produce more ciphertexts, but it has the advantage of not needing any rotation key, which can take a few gigabytes when the ring dimension is large.
 
 For our framework to be flexible on the architecture of the model, the same type of packing is kept throughout the layers. 
-However, it would be possible to optimize a specific architecture by switching between multiple packings, as is done for LoLa in \cite{brutzkus_low_2019}. 
+However, it would be possible to optimize a specific architecture by switching between multiple packings, as it is done for LoLa in \cite{brutzkus_low_2019}. 
 The authors describe other packing methods optimized for certain tasks.
 
 The pseudocode for a convolutional layer with channelwise packing is given as an example in \autoref{algo:conv2d_channelwise} of the appendix.
@@ -415,7 +459,7 @@ The pseudocode for a convolutional layer with channelwise packing is given as an
 \subsection{Hybrid approach}\label{sec:hybrid_cnn}
 
 As will be shown in \autoref{chap:evaluation}, a fully encrypted inference on a deep network can still be very time-consuming.
-This is mainly due to the first convolutional layers that extract features from an image.
+This is mainly due to the total depth of the network and to the first convolutional layers that extract features from an image.
 
 These first layers are often quite generic and sometimes rely on publicly available pre-trained weights.
 From the perspective of the model owner, making these layers public can be acceptable because most of the knowledge derived from the data is concentrated in the last classification layers.
