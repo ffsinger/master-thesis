@@ -231,7 +231,7 @@ It was first introduced by López-Alt et al. \cite{lopez-alt_--fly_2012} in 2012
 Then, Chen et al. \cite{chen_efficient_2019} adapted this idea for bootstrappable schemes such as BFV and CKKS.
 In this setting, any party can encrypt data and join the pool of computations.
 There is no need for an initialization step between parties, which means that the participants do not need to be known in advance.
-It is only during the decryption process that every party involved needs to participate.
+It is only during the decryption process that every party involved has to participate.
 
 \emph{Multiparty Homomorphic Encryption} (MHE) is the second approach suggested by Mouchet al. \cite{mouchet_multiparty_2021}.
 In this case, the key generation process must be done collaboratively with every participant in order to create a common public key.
@@ -249,7 +249,7 @@ As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization 
 
 % This section is usually 5-10 pages.
 
-Now that the main mathematical and cryptographic concepts have been introduced, we focus on the problems that need to be solved.
+Now that the main mathematical and cryptographic concepts have been introduced, we focus on the problems to be solved.
 In this chapter, we formalize the privacy and security threats that need to be mitigated.
 We also describe our solutions to some of these issues from a high-level perspective, along with the important design decisions that were made.
 
@@ -264,7 +264,7 @@ This will help us to understand how homomorphic encryption can be used to mitiga
 \begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth]{figures/dataflow-ml.pdf}
-    \caption{Dataflow diagram for a general ML system.}
+    \caption{Dataflow diagram for a general ML system. Rectangles represent entities, circles represent processes, arrows stand for data flows, and trust boundaries are illustrated with dashed lines. It is around these trust boundaries that we expect many threats to appear, because it often implies a communication between two entities.}
     \label{fig:dataflow}
 \end{figure}
 
@@ -299,9 +299,11 @@ If the system lets adversaries define the labels, the model can also be poisoned
 This type of attack can be detected with the help of another model specialized in anomaly detection.
 
 For evasion or impersonation attacks, the attack vector is the same but it involves carefully crafted inputs in order to produce a specific result. 
+These attacks are often carried out to evade spam filters or to impersonate someone in a biometric recognition system.
 
-In the same vein, data ordering attacks aim to reduce the utility or even bias the model by putting some data points first \cite{shumailov_manipulating_2021}. 
-This could be used to introduce racist or sexist biases, for instance. Thus, it is important to shuffle the training data properly.
+In the same vein, data ordering attacks aim to reduce the utility or even bias the model by putting some data points first during training \cite{shumailov_manipulating_2021}. 
+This could be used to introduce racist or sexist biases, for instance. 
+Thus, it is important to shuffle the training data properly.
 
 If the attacker has unlimited access to the prediction results, it may be possible to reconstruct and steal an approximation of the model (model extraction attack). 
 The typical adversary carrying out this attack could be a competitor unwilling to dedicate the resources necessary for training a model from scratch.
@@ -309,6 +311,10 @@ The typical adversary carrying out this attack could be a competitor unwilling t
 In the case of membership inference attacks, inversion attacks, attribute and property inference attacks, the goal is to reconstruct part of the training dataset. 
 This can either be general or target a single individual. To be successful, the attacker sometimes requires data poisoning \cite{hidano_model_2017}, or needs access to additional information, such as confidence levels or auxiliary datasets \cite{fredrikson_model_2015, wang_variational_2022}.
 
+Referring back to the dataflow diagram in \autoref{fig:dataflow}, we see that most attacks occur on the trust boundary around the database, and the one around the client.
+There is also a privacy risk when the training data is transmitted to the labeler, which could be a third party mandated by Amazon Mechanical Turk or other similar services.
+
+As we will see in the following sections, there are two other threats that are of particular interest for us, one during the training process and one during the inference process.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Secure training}\label{sec:secure_training}
