@@ -72,7 +72,7 @@ The goal of this project is to identify, implement, evaluate and possibly improv
 
 In \autoref{chap:background}, we will introduce the basics of homomorphic encryption and two different types of ML models, namely logistic regression and neural networks. 
 Then, we will formalize in \autoref{chap:design} the threats that exist in ML processes, and describe how they can be mitigated using homomorphic encryption.
-More specifically, we will see how HE can protect data during both the training step and the inference step, and what it entails to transform an ML algorithm to a homomorphically-friendly version.
+More specifically, we will see how HE can protect data during both the training phase and the inference phase, and what it entails to transform an ML algorithm to a homomorphically-friendly version.
 The implementation details and challenges are given in \autoref{chap:implementation}.
 Finally, we present and analyze the different performance metrics in \autoref{chap:evaluation}.
 
@@ -93,7 +93,7 @@ It will be useful for understanding the subsequent chapters.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}
 
-Logistic regression (LR) is a simple and widely used model for classification. 
+Logistic regression (LR) is a simple and widely used model for supervised classification. 
 Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^d$ and the corresponding label $y_i \in \{-1,1\}$ among two classes, the training phase consists of learning a vector of weights $\mathbf{w} \in \mathbb{R}^{d+1}$ minimizing the loss function:
 \begin{equation}\label{eq:logistic_reg_train}
     \mathcal{L}(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^{n} \log(1 + \exp(-\mathbf{z}_i^T \mathbf{w})) 
@@ -111,7 +111,7 @@ where $\gamma > 0$ is the learning rate and $\sigma$ is the sigmoid function (or
     \sigma(x) = \frac{1}{1 + e^{-x}}
 \end{equation}
 
-Classifying a new point $\mathbf{x}$ can be done as follows:
+Classifying a new data point $\mathbf{x}$ can be done as follows:
 \begin{equation}\label{eq:logistic_reg_pred}
     y = 
     \begin{cases}
@@ -136,11 +136,12 @@ The most common is $\mathrm{ReLU}(x) = \max(0, x)$, but the sigmoid (\autoref{eq
 
 The training phase is made of two main steps. 
 First, a data point (or a batch of data points) is evaluated successively through the layers, in what we call the forward pass. 
-Then, we perform a gradient descent by computing the gradients at each neuron and by updating the weights, starting from the end of the network. 
+Then, we perform a gradient descent by computing the gradient of the loss function at each neuron and by updating the weights, starting from the end of the network. 
 This is called the backward pass.
 
 Once the model is trained, it can be used to classify new data points. 
 For this operation, only the forward pass is required.
+Each output neuron typically corresponds to a class, and the output values represent the likelihood that a point is part of this class.
 
 \section{Convolutional neural networks}
 
@@ -158,9 +159,21 @@ where $b_i$ is the bias, $w_i \in \mathbb{R}^{c \times k_1 \times k_2}$ is the k
 Another important type of layer is the \emph{pooling} layer, that will aggregate a neighborhood of neurons into one value. 
 The type of aggregate is usually a \emph{max} operation or an \emph{average}.
 
-The traditional architecture of a convolutional neural network (CNN) starts with an alternate of convolutions, activation functions and pooling layers. 
-Then, the input is flatten into one dimension and feeded to a sequence of fully connected layers.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{figures/cnn.pdf}
+  \caption{Traditional CNN architecture.}
+  \label{fig:cnn}
+\end{figure}
 
+As illustrated in \autoref{fig:cnn}, the traditional architecture of a convolutional neural network (CNN) starts with an alternate of convolutions, activation functions and pooling layers. 
+Each feature learned is encoded into a channel, and the convolutions will progressively increase the number of channels.
+The role of the pooling layers is to reduce the size of these channels.
+At some point, the input is flatten into one dimension and feeded to a sequence of fully connected layers.
+
+This covers basic CNN architectures for supervised classification, but more advanced tools are often included in modern networks, such as \emph{batch normalization}, \emph{dropout}, or \emph{skip connections}.
+There are also different types of architectures, such as \emph{recurrent neural networks} that are used for temporal data.
+We will not go into such details, but support for these advanced methods could be done as future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Homomorphic encryption}
