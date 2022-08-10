@@ -332,7 +332,7 @@ However, this feature is not available in many HE libraries.
 If we distinguish the client (data and model owner) and the server (computing power provider), the steps of an encrypted training procedure can be described as follows:
 \begin{enumerate}
     \item Client: initialize the keys and encrypt the data. Send the encrypted data and other objects or parameters required for homomorphic computations (e.g. rotation keys, relinearization keys).
-    \item Server: do the training. Send back the encrypted weights.
+    \item Server: train the model. Send back the encrypted weights.
     \item Client: decrypt the weights.
 \end{enumerate}
 
@@ -341,17 +341,19 @@ Logistic regression models are simple and have been extensively studied as part 
 The winning solution has been proposed by Kim et al. ~\cite{kim_logistic_2018}. 
 This will be the basis of our implementation.
 
-However, it was necessary to make a few adjustments to remove some limitations. 
+However, it is necessary to make a few adjustments to remove some limitations. 
 The input matrix is padded with zeros such that the number of columns is a power of two. 
 This step is necessary for efficiently summing the elements of each row in logarithmic time. 
 Then, the matrix is packed row by row into one or multiple ciphertexts. 
-This method supports an arbitrary number of data points but requires that the number of features is lower than the number of slots (usually between $8`192$ and $32`768$). 
+This method supports an arbitrary number of data points but requires that the number of features is lower than the number of slots, which is a power of two usually between $8`192$ and $32`768$. 
 
 For the training step, a regularization term has also been added. 
 Apart from its common usage in ML for avoiding overfitting, it has in this case the added advantage of improving the precision of the computations. 
 This is because the learned coefficients are kept small, and the sigmoid approximation that we use is only precise for a certain interval around $0$.
 
-The pseudocode for the training algorithm is given in the appendix (\autoref{algo:lr_training}).
+The pseudocode for the encryption and training algorithm is given in the appendix (\autoref{algo:lr_training}).
+It basically translates \autoref{eq:gradient_descent} into an algorithm containing only homomorphic operations on vectors.
+We need to be careful to minimize the total number of operations, as well as the multiplicative depth.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
