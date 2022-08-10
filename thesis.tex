@@ -206,7 +206,7 @@ Here is an overview of the basic operations available with CKKS:
     \item \texttt{Relinearize}: After a multiplication, the resulting ciphertext will be in $R_q^3$ and will continue to grow after each multiplication. 
     Relinearization is used to bring it back to $R_q^2$ and facilitate decryption.
     \item \texttt{Rescale}: Rounding operation performed to maintain the size of a ciphertext after a multiplication.
-    \item \texttt{Bootstrap} \cite{nielsen_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
+    \item \texttt{Bootstrap} \cite{cheon_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
 \end{itemize}
 
 During the initialization phase, some parameters need to be set:
@@ -493,7 +493,7 @@ This means that no approximations are necessary for non-polynomial functions, an
 
 In the previous chapter, we described the different security threats that occur in ML systems. 
 We identified that data can be at risk in both the training and the inference steps, and that homomorphic encryption is a way of protecting this data.
-We started with a high-level description of the solutions, before focusing on how to apply these principles for specific ML models, namely Logistic Regression and Neural Networks.
+We started with a high-level description of the solutions, before focusing on how to apply these principles for specific ML models, namely logistic regression and neural networks.
 
 This chapter covers the lower-level aspects of the solutions. 
 It presents the libraries used and the architecture of the implementation.
@@ -509,27 +509,27 @@ A more complete survey and comparison of the different libraries can be found in
 Each of these libraries has its own particularities, as there is not yet a complete standard for homomomorphic encryption (although the work has been started in \cite{albrecht_homomorphic_2021}). 
 In the next subsections, we will introduce the ones that have been used in this project.
 
-Despite these differences, we implemented a higher abstraction to unify the usage of these libraries, and to provide a more intuitive API for non-expert programmers. 
+Despite these differences, we implemented a higher-level abstraction to unify the usage of these libraries, and to provide a more intuitive API for non-expert programmers. 
 Thanks to this, the ML algorithms can be implemented independently of the backend. 
 The set of available primitives is slightly reduced, because the relinearization and rescaling operations are performed automatically when necessary.
 There are also utility functions to export the keys and ciphertexts into a \texttt{base64} encoded JSON object.
 This gives an example of how clients and servers can share these objects in practice.
 
 One of the requirements of the project was to code in Python. 
-This means that our implementation needs bindings to use these libraries.
+This means that our implementation needs bindings to use these \texttt{C++} libraries.
 
 \subsection{PALISADE}
 
-PALISADE is a widely used open-source library written in \texttt{C++}. 
+PALISADE is a widely used open-source library. 
 It provides incomplete bindings for Python, but we can extend them as needed. 
 
 In its basic usage, the library creates a context from a set of parameters and stores the keys needed for the evaluation (rotation keys, etc). 
 It is slightly higher-level than other libraries by default, e.g., it rescales ciphertexts automatically. 
 It also provides a wide set of utility functions, such as polynomial evaluation. 
-Surprisingly, this function is not optimized to minimize the multiplication depth, which is critical in our case.
+Surprisingly, this function is not optimized to minimize the multiplicative depth, which is critical in our case.
 Thus, we still need to implement our polynomial functions manually.
 
-Multi-party HE is supported, but not bootstrapping.
+Multi-party HE is supported, but there is no bootstrapping procedure.
 
 \subsection{SEAL}
 
@@ -563,9 +563,9 @@ To overcome this, it would be possible to send the intermediate weights to the c
 However, this way the client learns some information on the weights.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Neural network}
+\section{Neural networks}
 
-Similarly to the logistic regression, a class wraps encryption, prediction and decryption functions. 
+Similarly to the logistic regression, a class wraps the encryption, prediction and decryption functions. 
 It also translates layers defined with the \texttt{pytorch} library into an encrypted version.
 
 The following layers are supported, for both the \emph{pixelwise} and the \emph{channelwise} packing methods:
@@ -573,9 +573,9 @@ The following layers are supported, for both the \emph{pixelwise} and the \emph{
   \item Fully connected layer
   \item 2D convolution
   \item 2D Average pooling
-  \item Approximate sigmoid activation
-  \item Approximate $\tanh$ activation
-  \item Square activation $f(x) = x^2$
+  \item Approximate sigmoid activation function
+  \item Approximate $\tanh$ activation function
+  \item Square activation function $f(x) = x^2$
 \end{itemize}
 
 The pipelines show an example of a client-server separation and a non-encrypted training procedure.
@@ -585,19 +585,21 @@ The pipelines show an example of a client-server separation and a non-encrypted 
 \section{Challenges}
 
 Many problems arise when implementing or using these algorithms. 
-First, the limited number of operations available with homomomorphic encryption forces us to find approximations or workarounds. 
+First, the limited number of operations available with homomomorphic encryption forces us to find approximations or workarounds for some functions.
+This is the case for the sigmoid or $\tanh$ functions.
 These approximations are usually only precise in a certain range around zero. 
 If the computations are not kept in this interval, they risk to overflow or become extremely biased.
+Some other operations such as conditionals are also very expensive and complex to implement \cite{chialva_conditionals_2019}.
 
 Then, we are in practice limited in the number of operations that we can chain. 
 Even if CKKS with bootstrapping does not theoretically have this limitation, the imprecision of each computation, inherent to the scheme, will make the error grow continuously.
-Also, the bootstrapping operation is not available in all libraries and is very slow.
+Also, the bootstrapping operation is not available in all libraries and still takes several seconds at best \cite{bossuat_efficient_2021}.
 
 An important consideration is to be aware of the security level of the encryption. 
 The security level is commonly defined as a number of bits. 
 It estimates roughly the number of operations that an attacker would have to do on a ciphertext to learn some information about the private key or the data.
-The Homomorphic Encryption Standard \cite{albrecht_homomorphic_2021} suggests values of the ring dimension $N$ and the coefficient modulus $q$ that achieve a security level of $128$, $192$, and $256$. 
-A security of $128$ bits is often the minimum for future-proof applications, but $80$ bits can also be considered sufficient for the current computing power.
+The Homomorphic Encryption Standard \cite{albrecht_homomorphic_2021} suggests values of the ring dimension $N$ and the coefficient modulus $q$ that achieve a security level of $128$, $192$, and $256$ bits. 
+A security of $128$ bits is often the minimum for future-proof applications, but $80$ bits can also be considered sufficient given the computing power of current computers.
 Thus, many researchers in the field of homomomorphic encryption use a level of $80$ bits to present their results, and we did the same in \autoref{chap:evaluation}.
 It is however important to keep in mind that security can (and probably should) be increased for use in production, at the cost of an additional sacrifice in performance.
 
@@ -731,7 +733,7 @@ These are the two most time-consuming steps in this setting.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Neural network}\label{sec:eval_cnn}
+\section{Neural networks}\label{sec:eval_cnn}
 
 \begin{table}[h!]
   \begin{center}
