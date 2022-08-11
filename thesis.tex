@@ -573,12 +573,12 @@ The following layers are supported, for both the \emph{pixelwise} and the \emph{
   \item Fully connected layer
   \item 2D convolution
   \item 2D Average pooling
-  \item Approximate sigmoid activation function
-  \item Approximate $\tanh$ activation function
+  \item Approximate sigmoid activation $f(x) = 0.5 - 1.20096 \cdot (x/8) + 0.81562 \cdot (x/8)^3$ \cite{kim_logistic_2018}
+  \item Approximate $\tanh$ activation $f(x) = -0.00163574303018748 \cdot x^3 + 0.249476365628036 \cdot x$ \cite{podschwadt_classification_2020}
   \item Square activation function $f(x) = x^2$
 \end{itemize}
 
-The pipelines show an example of a client-server separation and a non-encrypted training procedure.
+The pipelines show an example of a client-server separation, as well as a non-encrypted training procedure for learning and storing the model weights.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -635,10 +635,10 @@ In this chapter, we provide benchmarks and analyses of the results for LR traini
 
 The following evaluation has been carried out on a small dataset of $80$ training samples and $20$ test samples. 
 The samples have $2$ features and can be linearly separated in two classes.
-We also compare our results with a bigger dataset of $16000$ training points and $4000$ test points.
+We also compare these results with a bigger dataset of $16000$ training points and $4000$ test points.
 
 For the cryptographic parameters, we take a ring dimension of $2^{14}$, a scale of $25$ and a security level of $80$ bits. 
-The number of gradient descent iterations is $3$, the learning rate at iteration t is the function $f(t) = 10 / (t+1)$ and the degree of the polynomial approximation of the sigmoid is $3$.
+The number of gradient descent iterations is $3$, the learning rate at iteration $t$ is the function $f(t) = 10 / (t+1)$, and the degree of the polynomial approximation of the sigmoid is $3$.
 These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ GB of RAM.
 
 \begin{table}[h!]
@@ -668,26 +668,30 @@ These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ G
 \end{figure}
 
 The total runtime and memory usage of the different pipelines are summarized in \autoref{table:lr_runtime} and \autoref{fig:lr_memory}. 
-Two pipelines serve as baselines:
+As a reminder, the \emph{plaintext} pipeline uses the same algorithm as the two encrypted pipelines (\emph{palisade} and \emph{seal}), but without encryption.
+Two other pipelines serve as true baselines:
 \begin{itemize}
-  \item \texttt{standard}: a simple implementation of a textbook logistic regression, without encryption.
-  \item \texttt{sklearn}: a commonly used ML library.
+  \item \emph{standard}: a simple implementation of a textbook logistic regression, without encryption.
+  \item \emph{sklearn}: a commonly used ML library.
 \end{itemize}
 
 Note that the small training dataset can be put entirely in 1 ciphertext, while it takes 10 ciphertexts to encrypt the big dataset.
 
 We first observe that the encrypted pipelines are orders of magnitude slower than the baselines.
-By comparing the plaintext and the standard pipelines, it appears that transforming the algorithm to a homomorphically-friendly version has a negligible performance cost in relation to the overhead of encryption.
-There is also not a big time difference between training on $80$ points and on $16000$ points, because part of the algorithm is independent on the number of ciphertexts.
+By comparing the plaintext and the standard pipelines, it appears that transforming the algorithm to a homomorphically-friendly version has a negligible performance cost relatively to the overhead of encryption.
+There is also not a big time difference between training on $80$ points and on $16000$ points, because part of the algorithm is independent on the number of input ciphertexts.
 
 The model performance metrics (accuracy and area under the curve) are not different from the baseline (equal to 1 for the small dataset and close to 1 for the big one).
 
 The approximate memory usage is almost identical to for the two datasets.
-This indicates that it is dominated by the crypto context, especially the rotation key which can take a few gigabytes if the ring dimension is high. 
+This indicates that it is dominated by the crypto context and not the ciphertexts.
+In particular, the rotation key can take a few gigabytes if the ring dimension is high.
+It also seems that SEAL consumes more memory than PALISADE, by a factor of at least $3$ in this case.
 
-\autoref{table:lr_steps} presents the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
+\autoref{table:lr_steps} breaks down the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
 PALISADE is faster than SEAL by around a factor $2$ for training and a factor $10$ for the initialization. 
 These are the two most time-consuming steps in this setting.
+Note that the encryption steps also include the packing of the data into vectors, which is why this step still takes a bit of time in the plaintext pipeline.
 
 \begin{table}[h!]
   \begin{center}
@@ -754,7 +758,8 @@ These are the two most time-consuming steps in this setting.
   \end{center}
 \end{table}
 
-The network architecture used in this evaluation (\autoref{table:poc}) is not designed for maximal accuracy, rather it shows the differences between different layer types.
+Let us now evaluate the performance of neural networks inference.
+The network architecture used in this section (\autoref{table:poc}) is not designed for maximal accuracy, rather it shows the differences between different layer types.
 
 \begin{table}[h!]
   \begin{center}
@@ -843,6 +848,8 @@ This result is due to the high number of rotation operations and the higher mult
 \autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type. 
 However, it is important to keep in mind that homomorphic computations are slower on the first levels, with fresh ciphertexts. 
 Thus, a layer placed at the beginning of a network will be slower than its equivalent at the end of the network.
+This is although not the case for the plaintext pipeline, which indicatest that the convolutional layer is still the slowest by far.
+It also shows that channelwise packing has an advantage for linear layers and activation functions, compared to pixelwise packing.
 
 % Keep the table ?
 % \begin{table}[h!]
@@ -885,7 +892,7 @@ Layers are described in \autoref{table:lenet}.
 
 \begin{table}[h!]
   \begin{center}
-    \caption{Architecture of an homomorphically encrypted LeNet-5}
+    \caption{Architecture of a homomorphically encrypted LeNet-5}
     \label{table:lenet}
     \begin{tabular}{ c c c c c c c c }
     \hline
@@ -968,7 +975,8 @@ Furthermore, the hybrid version has a much smaller footprint and is also much fa
 
 While some of the design and implementation decisions presented in the previous chapters are new, many other papers already suggest solutions for homomorphically encrypted machine learning.
 
-One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which is a 5-layers CNN evaluated on the MNIST dataset. It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
+One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which is a 5-layers CNN evaluated on the MNIST dataset. 
+It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
 
 For instance, Badawi et al. \cite{badawi_privft_2020, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification). 
 We started with this architecture before moving to a more generic framework.
@@ -976,11 +984,11 @@ We started with this architecture before moving to a more generic framework.
 Similarly to our hybrid model, LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it. 
 It then selects an optimal packing method at each layer.
 
-Lee et al. \cite{lee_privacy-preserving_2021} focus on maximum accuracy by using a deep model (ResNet-20).
+Lee et al. \cite{lee_privacy-preserving_2021} focus on a maximal accuracy by using a deep model (ResNet-20).
 
 Compared to these solutions, our design is meant to be flexible to allow finding the desired trade-off between performance and utility.
 
-Some works tackle NN training, but this requires either to use bootstrapping or to delegate the weights update to the client \cite{mihara_neural_2020} or to a semi-honest server \cite{bellafqira_secure_2018}.
+Some works tackle NN training, but this requires either to use bootstrapping, or to delegate the weights update to the client \cite{mihara_neural_2020} or to a semi-honest server \cite{bellafqira_secure_2018}.
 
 Surveys \cite{pulido-gaytan_privacy-preserving_2021,podschwadt_sok_2022} of privacy-preserving neural networks summarize these works, list the available libraries and explain the challenges.
 
@@ -1006,7 +1014,7 @@ Even simple models like logistic regression are several orders of magnitude slow
 The same applies for neural networks. Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases involving deep networks and big images.
 
 However, the potential threats that would be solved by these solutions are sufficiently important to justify continuing the efforts in this field.
-Optimizations can be found either at the cryptographic level or at the algorithmic level of machine learning models, by using different packing methods or approximations.
+Optimizations can be found either at the cryptographic level or at the algorithmic level of ML models, for instance by using different packing methods or approximations.
 Parallelization can be extremely valuable, and the desired security level also has a high impact on performance.
 
 Another promising paradigm is to delegate some computations to the client and to keep the encrypted parts of the pipeline to a strict minimum while still providing enough security. 
@@ -1039,7 +1047,7 @@ Note that homomorphic operations ($\mathbf{Mult}$, $\mathbf{Add}$, $\mathbf{Rota
 
 In this type of algorithms, the computation of dot products is very common. 
 It is done by first multiplying the two vectors, and successively adding the result with a rotated copy of the result. 
-This outputs a vector containing the dot product at every element, which can be masked if needed.
+This outputs a vector containing the dot product at every element, but it can be masked if it needs to be only at one position.
 
 By doing rotations of successive powers of two, the computational complexity of dot products can be reduced to $O(\log n)$ instead of $O(n)$. 
 This is the reason why vectors are often padded with zeros to the next power of two.
@@ -1068,13 +1076,13 @@ For simplicity, we use traditional gradient descent instead of Nesterov's gradie
   Add a leading column of ones to $\mathbf{X}$\;
   Pairwise multiply the points of $\mathbf{X}$ with their corresponding label in $\mathbf{y}$, as a matrix $\mathbf{Z}$\;
   Pad the columns of $\mathbf{Z}$ with zeros to the next power of two $d_{pad}$\;
-  Encrypt the matrix $\mathbf{Z}$ row-wisely into a set of ciphertexts $\{c_{z_i}\}_{i=1}^L$\;
+  Encrypt the matrix $\mathbf{Z}$ row by row into a set of ciphertexts $\{c_{z_i}\}_{i=1}^L$\;
   Let $r = 2^{\lceil\log_2\min(n, s / d_{pad})\rceil}$ be the number of rows in each ciphertext\;
 
   \CommentSty{// Training}\;
   Initialize a vector of size $s$ with random Xavier weights duplicated at each interval $d_{pad}$, and encrypt it into $c_\beta$\;
   Let $\mathbf{SigmoidApprox}$ be a sigmoid approximation function as defined in \cite{kim_logistic_2018}\;
-  Let $x = [x_1, ..., x_s]$ a mask vector where $x_u = 1$ if $(u-1) \mod d_{pad}=0$, and $x_u=0$ otherwise\;
+  Let $x = [x_1, ..., x_s]$ be a mask vector keeping only the first element of each row, where $x_u = 1$ if $(u-1) \mod d_{pad}=0$, and $x_u=0$ otherwise\;
   Let $p$ a regularization vector with each non-padded element set to $-2/C$\;
   \For{$t=1,...,T$}{
     \For{$i=1,...,L$}{
@@ -1113,7 +1121,7 @@ For simplicity, we use traditional gradient descent instead of Nesterov's gradie
 \autoref{algo:conv2d_channelwise} shows how to evaluate an encrypted 2D convolution layer that is part of a neural network. 
 It uses \emph{channelwise} packing.
 
-For more readability, this version does not support padding. The output channels are thus smaller than the input.
+For more readability, this version does not support padding. The output feature maps are thus smaller than the input.
 
 The version for \emph{pixelwise} packing is much simpler, as it only requires one homomorphic multiplication and addition in the inner loop. It is thus omitted here.
 
@@ -1144,12 +1152,12 @@ The version for \emph{pixelwise} packing is much simpler, as it only requires on
             }
             Let $a$ be a zero vector with element $i \cdot C_{out} + j$\ set to $1$\;
             $z \leftarrow \mathbf{Mult}(z, a)$\;
-            $d_{bl} \leftarrow \mathbf{Add}(d_{bl}, z)$\;
+            $d_{bm} \leftarrow \mathbf{Add}(d_{bm}, z)$\;
           }
         }
       }
       Let $y$ be a vector filled with the bias value for channel $m$\;
-      $d_{bl} \leftarrow \mathbf{Add}(d_{bl}, y)$\;
+      $d_{bm} \leftarrow \mathbf{Add}(d_{bm}, y)$\;
     }
   }
   
