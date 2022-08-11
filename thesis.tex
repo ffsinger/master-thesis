@@ -572,9 +572,9 @@ The following layers are supported, for both the \emph{pixelwise} and the \emph{
 \begin{itemize}
   \item Fully connected layer
   \item 2D convolution
-  \item 2D Average pooling
-  \item Approximate sigmoid activation $f(x) = 0.5 - 1.20096 \cdot (x/8) + 0.81562 \cdot (x/8)^3$ \cite{kim_logistic_2018}
-  \item Approximate $\tanh$ activation $f(x) = -0.00163574303018748 \cdot x^3 + 0.249476365628036 \cdot x$ \cite{podschwadt_classification_2020}
+  \item 2D average pooling
+  \item Approximate sigmoid activation function (from \cite{kim_logistic_2018}) \\ $f(x) = 0.5 - 1.20096 \cdot (x/8) + 0.81562 \cdot (x/8)^3$ 
+  \item Approximate $\tanh$ activation function (from \cite{podschwadt_classification_2020}) \\ $f(x) = -0.00163574303018748 \cdot x^3 + 0.249476365628036 \cdot x$ 
   \item Square activation function $f(x) = x^2$
 \end{itemize}
 
