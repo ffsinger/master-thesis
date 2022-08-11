@@ -290,6 +290,8 @@ From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_
     \item Property inference attacks (leaking features of datasets)
 \end{itemize}
 
+\subsubsection{Poisoning attacks}
+
 In many cases, the attacker needs to influence the training process by injecting or modifying the input data.
 
 Let us take the example of a classification model based on textual data from documents. 
@@ -650,8 +652,8 @@ These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ G
     \hline
      & plaintext & palisade & seal & standard & sklearn \\
     \hline
-    Total runtime [s] - small & $0.00281$ & $1.57305$ & $9.34806$ & $0.00027$ & $0.00560$ \\
-    Total runtime [s] - big & $0.01043$ & $6.21762$ & $19.03898$ & $0.00199$ & $0.00926$ \\
+    Total runtime [s] - small & $0.0028$ & $1.5731$ & $9.3481$ & $0.0003$ & $0.0056$ \\
+    Total runtime [s] - big & $0.0104$ & $6.2176$ & $19.0390$ & $0.0020$ & $0.0093$ \\
     % Keep this ?
     % Memory [MB] - small & $369$ & $1040$ & $3710$ & $367$ & $369$ \\
     % Memory [MB] - big & $369$ & $1060$ & $3820$ & $348$ & $349$ \\
@@ -698,7 +700,7 @@ Note that the encryption steps also include the packing of the data into vectors
     \caption{Runtime of the LR at each step, in seconds}
     \label{table:lr_steps}
     \vspace*{2mm}
-    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=5, 1000 sep={ }}
+    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=4, 1000 sep={ }}
     \pgfplotstabletypeset[
       % multicolumn names,
       col sep=comma,
@@ -766,7 +768,7 @@ The network architecture used in this section (\autoref{table:poc}) is not desig
     \caption{Runtime of the CNN at each step, in seconds (pw = pixelwise and cw = channelwise)}
     \label{table:cnn_runtime}
     \vspace*{2mm}
-    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=5, 1000 sep={ }}
+    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=4, 1000 sep={ }}
     \pgfplotstabletypeset[
       col sep=comma,
       display columns/0/.style={
@@ -818,7 +820,7 @@ This result is due to the high number of rotation operations and the higher mult
     \caption{Runtime of the CNN prediction at each layer, in seconds}
     \label{table:cnn_layers}
     \vspace*{2mm}
-    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=5, 1000 sep={ }}
+    \pgfkeys{/pgf/number format/.cd, fixed, fixed zerofill, precision=4, 1000 sep={ }}
     \pgfplotstabletypeset[
       col sep=comma,
       display columns/0/.style={
@@ -950,10 +952,10 @@ Furthermore, the hybrid version has a much smaller footprint and is also much fa
     \hline
     &  Runtime [min] &  Memory [MB] &  Accuracy \\
     \hline
-    pytorch & $0.005$ & $392$ & $0.976$ \\ % &  &  &  \\
-    plaintext-pixelwise & $0.136$ & $379$ & $0.976$ \\ % &  &  &  \\
-    seal-pixelwise & $176.000$ & $51800$ & $0.953$ \\ % &  &  &  \\
+    pytorch & $0.005$ & $392$ & $0.976$ \\
+    plaintext-pixelwise & $0.136$ & $379$ & $0.976$ \\
     hybrid-seal-pixelwise & $8.570$ & $2210$ & $0.964$ \\
+    seal-pixelwise & $176.000$ & $51800$ & $0.953$ \\
     \hline
     \end{tabular}
   \end{center}
