@@ -86,12 +86,15 @@ Finally, we present and analyze the different performance metrics in \autoref{ch
 
 % This section is usually 3-5 pages.
 
-This chapter introduces the main concepts that form the basis of this work, namely homomorphic encryption and machine learning.
-The main ML models of interest for this thesis are logistic regression models and neural networks.
+This chapter introduces the main concepts that form the basis of this work, namely machine learning (\ref{sec:background_ml}) and homomorphic encryption (\ref{sec:background_he}).
 It will be useful for understanding the subsequent chapters.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Logistic regression}
+\section{Machine Learning}\label{sec:background_ml}
+
+The main ML models of interest for this thesis are logistic regression models, neural networks and convolutional neural networks.
+
+\subsection{Logistic regression}
 
 Logistic regression (LR) is a simple and widely used model for supervised classification. 
 Given a set of $n$ training points $\mathbf{x}_i \in \mathbb{R}^d$ and the corresponding label $y_i \in \{-1,1\}$ among two classes, the training phase consists of learning a vector of weights $\mathbf{w} \in \mathbb{R}^{d+1}$ minimizing the loss function:
@@ -120,8 +123,8 @@ Classifying a new data point $\mathbf{x}$ can be done as follows:
     \end{cases}
 \end{equation}
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Neural networks}
+
+\subsection{Neural networks}
 
 Neural networks (NN) are defined as a succession of \emph{layers}, each consisting of operations on a set of input neurons, which are typically real numbers.
 
@@ -143,7 +146,8 @@ Once the model is trained, it can be used to classify new data points.
 For this operation, only the forward pass is required.
 Each output neuron typically corresponds to a class, and the output values represent the likelihood that a point is part of this class.
 
-\section{Convolutional neural networks}
+
+\subsection{Convolutional neural networks}
 
 In many practical cases, particularly for image recognition, the input dimensions can be quite big. 
 This is a problem, because a linear layer connects every input neuron with every output neuron. 
@@ -176,7 +180,7 @@ There are also different types of architectures, such as \emph{recurrent neural 
 We will not go into such details, but support for these advanced methods could be done as future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\section{Homomorphic encryption}
+\section{Homomorphic encryption}\label{sec:background_he}
 
 The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern schemes used today. 
 This problem has been studied for many years, with the first schemes supporting only one type of operation, such as the Paillier \cite{paillier_public-key_1999} cryptosystem supporting homomorphic additions. 
@@ -251,13 +255,13 @@ As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization 
 
 Now that the main mathematical and cryptographic concepts have been introduced, we focus on the problems to be solved.
 In this chapter, we formalize the privacy and security threats that need to be mitigated.
-We also describe our solutions to some of these issues from a high-level perspective, along with the important design decisions that were made.
+We also describe our solutions to some of these issues from a high-level perspective, and explain the important design decisions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Threat model}
 
 Instead of focusing directly on specific issues, it is useful to draw an overview of the threats that a machine learning system can face.
-This will help us to understand how homomorphic encryption can be used to mitigate some threats, and how these mitigations can be bypassed.
+This will help us understand how homomorphic encryption can be used to mitigate some threats, and how these mitigations can be bypassed.
 
 \subsection{Data-flow diagram}
 
@@ -316,7 +320,7 @@ This can either be general or target a single individual. To be successful, the 
 Referring back to the dataflow diagram in \autoref{fig:dataflow}, we see that most attacks occur on the trust boundary around the database, and the one around the client.
 There is also a privacy risk when the training data is transmitted to the labeler, which could be a third party mandated by Amazon Mechanical Turk or other similar services.
 
-As we will see in the following sections, there are two other threats that are of particular interest for us, one during the training process and one during the inference process.
+As we will see in the following sections, there are two other threats that are of particular interest to us, one during the training process and one during the inference process.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Secure training}\label{sec:secure_training}
@@ -1009,15 +1013,22 @@ Although NN and LR are the most studied models, there are also solutions for dec
 
 % In the conclusion you repeat the main result and finalize the discussion of your project. Mention the core results and why as well as how your system advances the status quo.
 
-The field of homomorphic encryption is still emerging from the academia, and it still needs improvements before being usable in a real-world application. 
-In particular, machine learning is a resource-intensive process that suffers greatly from the overhead of encryption.
+% TODO summarize the points in chronological order
 
-Even simple models like logistic regression are several orders of magnitude slower to train, and require a lot of memory. 
-The same applies for neural networks. Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases involving deep networks and big images.
+Starting from a wide range of threats related to ML systems, we have identified two important threats that can be mitigated using homomorphic encryption.
+The suggested solutions take into account the practical constraints of a real-world deployement, such as runtime, memory usage and accuracy.
+We evaluated different alternatives that can be used depending on the context.
+
+From the results, we have seen that even simple models like logistic regression are several orders of magnitude slower to train, and require a lot of memory compared to a cleartext version. 
+The same applies for neural networks. 
+Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases involving deep networks and big images.
+
+We then conclude that homomorphic encryption is still an emerging technology from the academia, and it still needs improvements before being usable in a real-world application. 
+In particular, machine learning is a resource-intensive process that suffers greatly from the overhead of encryption.
 
 However, the potential threats that would be solved by these solutions are sufficiently important to justify continuing the efforts in this field.
 Optimizations can be found either at the cryptographic level or at the algorithmic level of ML models, for instance by using different packing methods or approximations.
-Parallelization can be extremely valuable, and the desired security level also has a high impact on performance.
+Parallelization can also be extremely valuable, and the desired security level has a high impact on performance as well.
 
 Another promising paradigm is to delegate some computations to the client and to keep the encrypted parts of the pipeline to a strict minimum while still providing enough security. 
 The appropriate trade-off needs to be found on a case-by-case basis, depending on the capabilities of the client and those of the adversary.
