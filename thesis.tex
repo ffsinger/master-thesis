@@ -202,24 +202,24 @@ Here is an overview of the basic operations available with CKKS:
     \item \texttt{KeyGen}: Generate a public key and a private key.
     \item \texttt{Encode}: Encode a vector of complex numbers into a plaintext, which is a polynomial in the ring $R = \mathbb{Z}[X]/(X^N + 1)$.
     \item \texttt{Decode}: Decode a plaintext back into a vector.
-    \item \texttt{Encrypt}: Encrypt a plaintext with the public key into an element of $R_q^2$ where $R_q = R/qR$ is a set of polynomials with coefficients modulo $q$.
+    \item \texttt{Encrypt}: Encrypt a plaintext with the public key into an element of $R_{q_L}^2$ where $R_{q_L} = R/{q_L}R$ is the set of polynomials from $R$ with coefficients modulo ${q_L}$.
     \item \texttt{Decrypt}: Decrypt a ciphertext with the private key.
     \item \texttt{Add}: Pairwise addition of two ciphertexts, or one ciphertext and one plaintext.
     \item \texttt{Multiply}: Pairwise multiplication of two ciphertexts/plaintext.
     \item \texttt{Rotate}: Permute the elements in a ciphertext by shifting them by $k$ positions.
-    \item \texttt{Relinearize}: After a multiplication, the resulting ciphertext will be in $R_q^3$ and will continue to grow after each multiplication. 
-    Relinearization is used to bring it back to $R_q^2$ and facilitate decryption.
-    \item \texttt{Rescale}: Rounding operation performed to maintain the size of a ciphertext after a multiplication.
-    \item \texttt{Bootstrap} \cite{cheon_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations.
+    \item \texttt{Relinearize}: After a multiplication, the resulting ciphertext will be in $R_{q_l}^3$ and will continue to grow after each multiplication. 
+    Relinearization is used to bring it back to $R_{q_l}^2$ and facilitate decryption.
+    \item \texttt{Rescale}: Rounding operation performed to maintain the size of a ciphertext after a multiplication. It computes $\lfloor \frac{q_{l'}}{q_l} \cdot c \rceil \in R_{q_{l'}}^2$ for a ciphertext $c \in R_{q_l}^2$.
+    \item \texttt{Bootstrap} \cite{cheon_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations. It puts it back in $R_{q_L}^2$.
 \end{itemize}
 
 During the initialization phase, some parameters need to be set:
 
 \begin{itemize}
   \item The \emph{ring degree} $N$ determines the size of the vectors that we encode. A higher degree also provides more security.
-  \item The \emph{moduli chain} is a set of coprime integers of approximately the same size as $q$. 
-  The number of elements should be at least the multiplicative depth of the function to be computed.
-  \item The \emph{scale} of the plaintext, determining how many bits are consumed during a rescale operation.
+  \item The \emph{moduli chain} is a sequence of coprime integers $\{ q_0, ..., q_L \}$. 
+  The number $L$ should be at least the multiplicative depth of the function to be computed, because one element is usually "consumed" for each rescaling operation, and one is consumed during decryption.
+  \item The \emph{scale} of the plaintext, influencing the precision of the result.
 \end{itemize}
 
 These parameters need to be carefully tuned based on the problem at hand. 
@@ -1012,8 +1012,6 @@ Although NN and LR are the most studied models, there are also solutions for dec
 %%%%%%%%%%%%%%%%%%%%
 
 % In the conclusion you repeat the main result and finalize the discussion of your project. Mention the core results and why as well as how your system advances the status quo.
-
-% TODO summarize the points in chronological order
 
 Starting from a wide range of threats related to ML systems, we have identified two important threats that can be mitigated using homomorphic encryption.
 The suggested solutions take into account the practical constraints of a real-world deployement, such as runtime, memory usage and accuracy.
