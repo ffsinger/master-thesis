@@ -281,44 +281,71 @@ Thus, in this case, the goal of this diagram is to be a tool for identifying the
 
 \subsection{Threats}\label{sec:threats}
 
-From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many types of threats:
+From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many common types of threats.
 
-\begin{itemize}
-    \item Poisoning attacks
-    \item Evasion/impersonation attacks
-    \item Data ordering attacks
-    \item Model extraction attacks
-    \item Membership inference attacks
-    \item Inversion attacks
-    \item Attribute inference attacks (leakings features of samples)
-    \item Property inference attacks (leaking features of datasets)
-\end{itemize}
+% \begin{itemize}
+%     \item Poisoning attacks
+%     \item Evasion/impersonation attacks
+%     \item Data ordering attacks
+%     \item Model extraction attacks
+%     \item Membership inference attacks
+%     \item Inversion attacks
+%     \item Attribute inference attacks (leakings features of samples)
+%     \item Property inference attacks (leaking features of datasets)
+% \end{itemize}
+
+\subsubsection{Poisoning attacks}
 
 In many cases, the attacker needs to influence the training process by injecting or modifying the input data.
-
 Let us take the example of a classification model based on textual data from documents. 
 To carry out a poisoning attack, an adversary could create spam documents with uncommon words. 
 This will reduce the utility of the system by replacing useful words in the feature vector. 
 If the system lets adversaries define the labels, the model can also be poisoned with incorrect labels. 
 This type of attack can be detected with the help of another model specialized in anomaly detection.
 
-For evasion or impersonation attacks, the attack vector is the same but it involves carefully crafted inputs in order to produce a specific result. 
+\subsubsection{Evasion/impersonation attacks}
+
+For this type, the attack vector is the same but it involves carefully crafted inputs in order to produce a specific result. 
 These attacks are often carried out to evade spam filters or to impersonate someone in a biometric recognition system.
+
+\subsubsection{Data ordering attacks}
 
 In the same vein, data ordering attacks aim to reduce the utility or even bias the model by putting some data points first during training \cite{shumailov_manipulating_2021}. 
 This could be used to introduce racist or sexist biases, for instance. 
 Thus, it is important to shuffle the training data properly.
 
-If the attacker has unlimited access to the prediction results, it may be possible to reconstruct and steal an approximation of the model (model extraction attack). 
+\subsubsection{Model extraction attacks}
+
+If the attacker has unlimited access to the prediction results, it is possible to reconstruct and steal an approximation of the model. 
 The typical adversary carrying out this attack could be a competitor unwilling to dedicate the resources necessary for training a model from scratch.
 
-In the case of membership inference attacks, inversion attacks, attribute and property inference attacks, the goal is to reconstruct part of the training dataset. 
-This can either be general or target a single individual. To be successful, the attacker sometimes requires data poisoning \cite{hidano_model_2017}, or needs access to additional information, such as confidence levels or auxiliary datasets \cite{fredrikson_model_2015, wang_variational_2022}.
+\subsubsection{Inference attacks}
 
-Referring back to the dataflow diagram in \autoref{fig:dataflow}, we see that most attacks occur on the trust boundary around the database, and the one around the client.
+This family is contains multiple subcategories, but the general goal is to extract some knowledge from the training dataset. 
+It can either be general or target a single individual.
+
+A common type is \textbf{membership inference}, where the adversary tries to determine if a known sample was part of the training data. 
+In some cases, being part of a dataset is a sensitive information in itself, such as for criminal or medical records.
+The intuition behind this attack is the following.
+If a model returns a high confidence value for a sample, this sample is likely to have been encountered during training.
+This is due to the degree of overfitting that usually appears in practice when training ML models.
+
+Sometimes, only part of a sample is known and the goal is to find a sensitive attribute. 
+This is called an \textbf{attribute inference} or \textbf{model inversion attack}.
+For instance, an attacker may want to infer the medical conditions of a person, using some known attributes (age, gender, weight) and the result of a classifier trained on this data.
+
+To be successful, the attacker sometimes requires data poisoning \cite{hidano_model_2017}, or needs access to additional information, such as confidence levels or auxiliary datasets \cite{fredrikson_model_2015, wang_variational_2022}.
+
+Finally, \textbf{property inference attacks} aim to leak general features of a dataset, even if these are not explicitly encoded and are not part of the learning task.
+This is problematic because the data subject is usually not aware of the type of information that can be derived.
+
+
+\subsubsection{Other threats}
+
+Referring back to the dataflow diagram in \autoref{fig:dataflow}, we see that most of these attacks occur on the trust boundary around the database, and the one around the client.
 There is also a privacy risk when the training data is transmitted to the labeler, which could be a third party mandated by Amazon Mechanical Turk or other similar services.
 
-As we will see in the following sections, there are two other threats that are of particular interest to us, one during the training process and one during the inference process.
+As we will see in details in the following sections, there are two other threats that are of particular interest to us, one during the training process and one during the inference process.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Secure training}\label{sec:secure_training}
