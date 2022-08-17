@@ -1007,25 +1007,30 @@ Furthermore, the hybrid version has a much smaller footprint and is also much fa
 While some of the design and implementation decisions presented in the previous chapters are new, many other papers already suggest solutions for homomorphically encrypted machine learning.
 
 One of the most influential is CryptoNets \cite{dowlin_cryptonets_2016}, which is a 5-layers CNN evaluated on the MNIST dataset. 
-It inspired many other works that attempted to include optimizations to alleviate the strong performance limitations.
+The packing method used is what we call \emph{pixelwise packing} in this work.
+They also replace max-pooling layers with scaled mean-pooling layers, and ReLU with a square activation function.
+They choose YASHE as the encryption scheme, which is not commonly used today.
+It inspired many other works that attempted to include optimizations to alleviate the performance and memory limitations.
 
-For instance, Badawi et al. \cite{badawi_privft_2020, badawi_towards_2020} implement an optimization using GPUs and design an algorithm for a specific network architecture (\emph{fasttext} for text classification). 
+For instance, Badawi et al. \cite{badawi_towards_2020} implement an optimization using GPUs and evaluate their results on both the MNIST and CIFAR-10 datasets.
+In \cite{badawi_privft_2020}, they design an algorithm for a specific network architecture of 2 fully connected layers (\emph{fasttext} for text classification). 
 We started with this architecture before moving to a more generic framework.
 
 Similarly to our hybrid model, LoLa \cite{brutzkus_low_2019} first computes a low dimension representation before encrypting it. 
 It then selects an optimal packing method at each layer.
+It also chooses an optimal matrix-vector multiplication algorithm based on the packing.
+In our framework, the packing type does not change across the layers, because it would be difficult to select automatically.
 
-Lee et al. \cite{lee_privacy-preserving_2021} focus on a maximal accuracy by using a deep model (ResNet-20).
-
-Compared to these solutions, our design is meant to be flexible to allow finding the desired trade-off between performance and utility.
+Lee et al. \cite{lee_privacy-preserving_2021} focus on a maximal accuracy by using a deep model (ResNet-20) on CIFAR-10.
+It is one of the few works that uses bootstrapping.
 
 Some works tackle NN training, but this requires either to use bootstrapping, or to delegate the weights update to the client \cite{mihara_neural_2020} or to a semi-honest server \cite{bellafqira_secure_2018}.
 
 Surveys \cite{pulido-gaytan_privacy-preserving_2021,podschwadt_sok_2022} of privacy-preserving neural networks summarize these works, list the available libraries and explain the challenges.
+Compared to all these solutions, our design is meant to be flexible to allow finding the desired trade-off between performance and utility.
 
 Regarding logistic regression training, Kim et al. \cite{kim_logistic_2018} heavily inspired this work, with the exception of a few generalizations on the input size and the use of regularization.
 The libraries used are also different, as they used HEAAN.
-
 Other solutions include Bonte and Vercauteren \cite{bonte_privacy-preserving_2018} and Chen et al. \cite{chen_logistic_2018}.
 Both are using the BFV encryption scheme.
 
