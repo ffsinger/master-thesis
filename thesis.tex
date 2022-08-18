@@ -375,9 +375,9 @@ If we distinguish the client (data and model owner) and the server (computing po
     Client & Server \\
     \hline
     1. Generate keys &  \\
-    4. Send relinearization and rotation keys &  \\
-    2. Encrypt training data &  \\
-    3. Send encrypted data & \\
+    2. Send relinearization and rotation keys &  \\
+    3. Encrypt training data &  \\
+    4. Send encrypted data & \\
      & 5. Training \\
      & 6. Send back encrypted weights \\
     7. Decrypt weights &  \\
@@ -425,7 +425,7 @@ In the most common approach, the client encrypts the data and sends it to the in
 
 In the second approach, the client computes the inference by themselves with the trained model.
 Unfortunately, few services will accept to send the model in cleartext, in fear of it being stolen.
-However, the weights of the model can be encryted and sent to the client. 
+However, the weights of the model can be encrypted and sent to the client. 
 This requires an additional round-trip of communications for the decryption step, which can reveal the inference result to the service if no precautions are made. 
 In addition, the architecture of the model must be revealed to the client, which incurs the risk of it being stolen and retrained from scratch by a competitor. 
 Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two, because the algorithms are quite similar.
@@ -444,9 +444,9 @@ This time, if we consider the client to be the data owner and the server to be t
     Client & Server \\
     \hline
     1. Generate keys &  \\
-    4. Send relinearization and rotation keys &  \\
-    2. Encrypt data &  \\
-    3. Send encrypted data & \\
+    2. Send relinearization and rotation keys &  \\
+    3. Encrypt data &  \\
+    4. Send encrypted data & \\
      & 5. Inference \\
      & 6. Send back encrypted label \\
     7. Decrypt label &  \\
@@ -493,13 +493,15 @@ The pseudocode for a convolutional layer with channelwise packing is given as an
 As will be shown in \autoref{chap:evaluation}, a fully encrypted inference on a deep network can still be very time-consuming.
 This is mainly due to the total depth of the network and to the first convolutional layers that extract features from an image.
 
-These first layers are often quite generic and sometimes rely on publicly available pre-trained weights.
+These first layers are often generic and sometimes rely on publicly available pre-trained weights.
 From the perspective of the model owner, making these layers public can be acceptable because most of the knowledge derived from the data is concentrated in the last classification layers.
 
-Thus, an hybrid solution alternating between cleartext and encrypted parts could provide an important performance improvement at the expense of a reasonably small security sacrifice.
+Thus, a hybrid solution alternating between cleartext and encrypted parts could provide an important performance improvement at the expense of a reasonably small security sacrifice (the increased chance of a model extraction attack).
 Although more computing power is required from the client, they keep the same guarantees in terms of data privacy.
+It should however be assessed whether the divulgation of these weights represents a privacy risk from the perspective of the training data owner.
+Indeed, it could facilitate some of the attacks mentioned in \autoref{sec:threats}, such as membership inference or model inversion attacks.
 
-Such an architecture is illustrated in \autoref{fig:hybrid_cnn}.
+The architecture of a hybrid model is illustrated in \autoref{fig:hybrid_cnn}.
 In this case, the client computes all the convolutions and pooling layers, then flattens and encrypts the result. 
 The server only has to evaluate the fully connected layers on encrypted data.
 
@@ -511,7 +513,7 @@ The server only has to evaluate the fully connected layers on encrypted data.
 \end{figure}
 
 Another advantage of this approach is that the first layers are not restricted in the range of operations, because they are computed in cleartext. 
-This means that no approximations are necessary for non-polynomial functions, and that popular layer types like ReLU or MaxPool are available.
+This means that no approximations are necessary for non-polynomial functions, and that popular layer types like ReLU or max-pooling are available.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -555,13 +557,11 @@ This means that our implementation needs bindings to use these \texttt{C++} libr
 PALISADE is a widely used open-source library. 
 It provides incomplete bindings for Python, but we can extend them as needed. 
 
-In its basic usage, the library creates a context from a set of parameters and stores the keys needed for the evaluation (rotation keys, etc). 
+In its basic usage, the library creates a context from a set of parameters and stores the keys needed for the evaluation (such as rotation keys). 
 It is slightly higher-level than other libraries by default, e.g., it rescales ciphertexts automatically. 
 It also provides a wide set of utility functions, such as polynomial evaluation. 
 Surprisingly, this function is not optimized to minimize the multiplicative depth, which is critical in our case.
-Thus, we still need to implement our polynomial functions manually.
-
-Multi-party HE is supported, but there is no bootstrapping procedure.
+Thus, we still need to implement our polynomial functions manually. Finally, multi-party HE is supported, but there is no bootstrapping procedure.
 
 \subsection{SEAL}
 
@@ -569,14 +569,12 @@ SEAL, developed by Microsoft, is one of the most popular libraries.
 A complete set of Python bindings is already available \cite{hugang_seal-python_2022}.
 
 It offers finer grained initialization parameters and a lower-level API (e.g., we need to set the moduli size at each level, and rescaling needs to be done manually).
-
-It does not offer bootstrapping, nor a multi-party version.
+However, it does not offer bootstrapping, nor a multi-party version.
 
 \subsection{Plaintext}
 
 When dealing with ciphertexts, it is extremely useful to have a cleartext pipeline that can be inspected for easier debugging. 
 It can also be used to evaluate the cost of translating an algorithm to a homomorphic-encryption-friendly version, independently of the cost of encryption. 
-
 For this backend, we used \texttt{numpy} vectors to represent the ciphertexts.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -597,9 +595,8 @@ However, this way the client learns some information on the weights.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Neural networks}
 
-Similarly to the logistic regression, a class wraps the encryption, prediction and decryption functions. 
+Similarly to logistic regression, a class wraps the encryption, prediction and decryption functions. 
 It also translates layers defined with the \texttt{pytorch} library into an encrypted version.
-
 The following layers are supported, for both the \emph{pixelwise} and the \emph{channelwise} packing methods:
 \begin{itemize}
   \item Fully connected layer
@@ -646,7 +643,7 @@ Hopefully, this will be resolved in the future with the current effort on standa
 Finally, it is also more challenging to set the numerous ML parameters.
 Without knowledge of the training data, a model owner has little means to evaluate a model and tune the parameters.
 They cannot observe the evolution of the loss at the end of an iteration, which makes it impossible to apply a convergence criterion.
-Solutions to these problems include having domain knowledge or using auxiliary datasets.
+Solutions to these problems include having domain knowledge or using auxiliary datasets to find good parameter values.
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -665,13 +662,21 @@ In this chapter, we provide benchmarks and analyses of the results for LR traini
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Logistic regression}\label{sec:eval_lr}
 
-The following evaluation has been carried out on a small dataset of $80$ training samples and $20$ test samples. 
+The following evaluation has first been carried out on a small dataset of $80$ training samples and $20$ test samples. 
 The samples have $2$ features and can be linearly separated in two classes.
 We also compare these results with a bigger dataset of $16000$ training points and $4000$ test points.
 
 For the cryptographic parameters, we take a ring dimension of $2^{14}$, a scale of $25$ and a security level of $80$ bits. 
 The number of gradient descent iterations is $3$, the learning rate at iteration $t$ is the function $f(t) = 10 / (t+1)$, and the degree of the polynomial approximation of the sigmoid is $3$.
 These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ GB of RAM.
+
+The total runtime and memory usage of the different pipelines are summarized in \autoref{table:lr_runtime} and \autoref{fig:lr_memory}. 
+As a reminder, the \emph{plaintext} pipeline uses the same algorithm as the two encrypted pipelines (\emph{palisade} and \emph{seal}), but without encryption.
+Two other pipelines serve as true baselines:
+\begin{itemize}
+  \item \emph{standard}: a simple implementation of a textbook logistic regression, without encryption.
+  \item \emph{sklearn}: a commonly used ML library.
+\end{itemize}
 
 \begin{table}[h!]
   \begin{center}
@@ -699,28 +704,20 @@ These tests were run on an \emph{AMD Ryzen 5 5600x} with $12$ threads and $32$ G
   \label{fig:lr_memory}
 \end{figure}
 
-The total runtime and memory usage of the different pipelines are summarized in \autoref{table:lr_runtime} and \autoref{fig:lr_memory}. 
-As a reminder, the \emph{plaintext} pipeline uses the same algorithm as the two encrypted pipelines (\emph{palisade} and \emph{seal}), but without encryption.
-Two other pipelines serve as true baselines:
-\begin{itemize}
-  \item \emph{standard}: a simple implementation of a textbook logistic regression, without encryption.
-  \item \emph{sklearn}: a commonly used ML library.
-\end{itemize}
-
 Note that the small training dataset can be put entirely in 1 ciphertext, while it takes 10 ciphertexts to encrypt the big dataset.
 
-We first observe that the encrypted pipelines are orders of magnitude slower than the baselines.
+We first observe that the encrypted pipelines are 3 to 4 orders of magnitude slower than the baselines.
 By comparing the plaintext and the standard pipelines, it appears that transforming the algorithm to a homomorphically-friendly version has a negligible performance cost relatively to the overhead of encryption.
 There is also not a big time difference between training on $80$ points and on $16000$ points, because part of the algorithm is independent on the number of input ciphertexts.
 
-The model performance metrics (accuracy and area under the curve) are not different from the baseline (equal to 1 for the small dataset and close to 1 for the big one).
+The model performance metrics (\emph{accuracy} and \emph{area under the curve}) are not different from the baseline (equal to 1 for the small dataset and close to 1 for the big one).
 
-The approximate memory usage is almost identical to for the two datasets.
+The approximate memory usage is almost identical for the two datasets.
 This indicates that it is dominated by the crypto context and not the ciphertexts.
 In particular, the rotation key can take a few gigabytes if the ring dimension is high.
 It also seems that SEAL consumes more memory than PALISADE, by a factor of at least $3$ in this case.
 
-\autoref{table:lr_steps} breaks down the runtime at every step (encryption, training, decryption, etc) of the different backends for the small dataset.
+\autoref{table:lr_steps} breaks down the runtime at every step (initialization, encryption, training, prediction, and decryption) of the different backends for the small dataset.
 PALISADE is faster than SEAL by around a factor $2$ for training and a factor $10$ for the initialization. 
 These are the two most time-consuming steps in this setting.
 Note that the encryption steps also include the packing of the data into vectors, which is why this step still takes a bit of time in the plaintext pipeline.
@@ -832,7 +829,7 @@ The network architecture used in this section (\autoref{table:poc}) is not desig
 \end{table}
 
 The runtime of an encrypted inference with a convolutional neural network is presented in \autoref{table:cnn_runtime}. 
-For this setting, we omit the PALISADE pipeline and show only the SEAL and plaintext pipelines with both packing methods, along with a baseline using \texttt{pytorch}.
+For this setting, we omit the PALISADE pipeline and show only the SEAL and plaintext pipelines with both packing methods, along with a baseline using the \texttt{pytorch} library.
 
 The other difference with \autoref{sec:eval_lr} is that we simulate a true client-server communication and report the time needed to serialize and deserialize the request and the response.
 These steps are summed in one column \emph{serialize} for readability.
@@ -840,7 +837,7 @@ As introduced in \autoref{sec:private_inference}, the client needs to send the e
 The server responds with the encrypted result.
 For this evaluation, these objects are encoded in \texttt{base64} and sent in JSON via HTTP.
 
-We observe that the serialization step takes a considerable amount of time because the data and the keys can be quite big. 
+We observe that the serialization step takes a considerable amount of time because the data and the keys take a lot of memory.
 However, the runtime is still dominated by the prediction step, which takes around 2 minutes for this simple network.
 The channelwise packing method was designed to reduce the latency for non-batched data, but it completely fails in this aspect by being even slower than pixelwise packing, except for the encryption step.
 This result is due to the high number of rotation operations and the higher multiplicative depth.
@@ -880,7 +877,7 @@ This result is due to the high number of rotation operations and the higher mult
 \autoref{table:cnn_layers} breaks down the prediction step to show the impact of each layer type. 
 However, it is important to keep in mind that homomorphic computations are slower on the first levels, with fresh ciphertexts. 
 Thus, a layer placed at the beginning of a network will be slower than its equivalent at the end of the network.
-This is although not the case for the plaintext pipeline, which indicatest that the convolutional layer is still the slowest by far.
+This is although not the case for the plaintext pipeline, which indicates that the convolutional layer is still the slowest by far, at least in the plaintext domain.
 It also shows that channelwise packing has an advantage for linear layers and activation functions, compared to pixelwise packing.
 
 % Keep the table ?
@@ -1031,11 +1028,12 @@ Surveys \cite{pulido-gaytan_privacy-preserving_2021,podschwadt_sok_2022} of priv
 Compared to all these solutions, our design is meant to be flexible to allow finding the desired trade-off between performance and utility.
 
 Regarding logistic regression training, Kim et al. \cite{kim_logistic_2018} heavily inspired this work, with the exception of a few generalizations on the input size and the use of regularization.
-The libraries used are also different, as they used HEAAN.
+Another difference is that they used the HEAAN library.
 Other solutions include Bonte and Vercauteren \cite{bonte_privacy-preserving_2018} and Chen et al. \cite{chen_logistic_2018}.
-Both are using the BFV encryption scheme.
+Both are based on the BFV encryption scheme.
 
 Although NN and LR are the most studied models, there are also solutions for decision trees \cite{akavia_privacy-preserving_2019} and SVMs \cite{park_he-friendly_2020}.
+It is always good to have a variety of models at hand, because each has its own advantages and disadvantages.
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -1050,7 +1048,7 @@ We evaluated different alternatives that can be used depending on the context.
 
 From the results, we have seen that even simple models like logistic regression are several orders of magnitude slower to train, and require a lot of memory compared to a cleartext version. 
 The same applies for neural networks. 
-Even by protecting only to the inference phase, it is still prohibitively expensive for many use-cases involving deep networks and big images.
+Even by protecting only the inference phase, it is still prohibitively expensive for many use-cases involving deep networks and big images.
 
 We then conclude that homomorphic encryption is still an emerging technology from the academia, and it still needs improvements before being usable in a real-world application. 
 In particular, machine learning is a resource-intensive process that suffers greatly from the overhead of encryption.
