@@ -70,7 +70,7 @@ Nevertheless, this has been an active research field that has seen promising adv
 
 The goal of this project is to identify, implement, evaluate and possibly improve the state-of-the-art solutions of homomorphically encrypted machine learning. It aims to determine if such solutions are practical for real-world systems, notably by exploring the trade-offs between security and performance.
 
-In \autoref{chap:background}, we will introduce the basics of homomorphic encryption and two different types of ML models, namely logistic regression and neural networks. 
+In \autoref{chap:background}, we will introduce two different types of ML models, namely logistic regression and neural networks, and the basics of homomorphic encryption. 
 Then, we will formalize in \autoref{chap:design} the threats that exist in ML processes, and describe how they can be mitigated using homomorphic encryption.
 More specifically, we will see how HE can protect data during both the training phase and the inference phase, and what it entails to transform an ML algorithm to a homomorphically-friendly version.
 The implementation details and challenges are given in \autoref{chap:implementation}.
@@ -150,7 +150,7 @@ Each output neuron typically corresponds to a class, and the output values repre
 \subsection{Convolutional neural networks}
 
 In many practical cases, particularly for image recognition, the input dimensions can be quite big. 
-This is a problem, because a linear layer connects every input neuron with every output neuron. 
+This is a problem, because a linear layer connects every input neuron with every output neuron, which results in a quadratic number of operations. 
 In order to improve performance and better exploit the spatiality properties of pixels in images, we can limit the connections of a pixel to its neighborhood. 
 This amounts to applying a convolution.
 
@@ -182,8 +182,9 @@ We will not go into such details, but support for these advanced methods could b
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Homomorphic encryption}\label{sec:background_he}
 
-The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern schemes used today. 
-This problem has been studied for many years, with the first schemes supporting only one type of operation, such as the Paillier \cite{paillier_public-key_1999} cryptosystem supporting homomorphic additions. 
+The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern and commonly used schemes.
+This concept has been introduced in 1978 by the authors of the RSA cryptosystem \cite{rivest_data_1978}.
+The first schemes supported only one type of operation, such as homomorphic additions with the Paillier \cite{paillier_public-key_1999} cryptosystem (1999).
 
 More formally, for a scheme supporting homomorphic additions on two elements $x$ and $y$ of a set, there should be an operation $\oplus$ as well as encryption and decryption operations $Enc$ and $Dec$ respectively, such that : 
 \begin{equation}\label{eq:homomorphic_add}
@@ -202,8 +203,8 @@ Here is an overview of the basic operations available with CKKS:
     \item \texttt{KeyGen}: Generate a public key and a private key.
     \item \texttt{Encode}: Encode a vector of complex numbers into a plaintext, which is a polynomial in the ring $R = \mathbb{Z}[X]/(X^N + 1)$.
     \item \texttt{Decode}: Decode a plaintext back into a vector.
-    \item \texttt{Encrypt}: Encrypt a plaintext with the public key into an element of $R_{q_L}^2$ where $R_{q_L} = R/{q_L}R$ is the set of polynomials from $R$ with coefficients modulo ${q_L}$.
-    \item \texttt{Decrypt}: Decrypt a ciphertext with the private key.
+    \item \texttt{Encrypt}: Using the public key, encrypt a plaintext into an element of $R_{q_L}^2$ where $R_{q_L} = R/{q_L}R$ is the set of polynomials from $R$ with coefficients modulo ${q_L}$.
+    \item \texttt{Decrypt}: Decrypt a ciphertext using the private key.
     \item \texttt{Add}: Pairwise addition of two ciphertexts, or one ciphertext and one plaintext.
     \item \texttt{Multiply}: Pairwise multiplication of two ciphertexts/plaintext.
     \item \texttt{Rotate}: Permute the elements in a ciphertext by shifting them by $k$ positions.
@@ -218,7 +219,7 @@ During the initialization phase, some parameters need to be set:
 \begin{itemize}
   \item The \emph{ring degree} $N$ determines the size of the vectors that we encode. A higher degree also provides more security.
   \item The \emph{moduli chain} is a sequence of coprime integers $\{ q_0, ..., q_L \}$. 
-  The number $L$ should be at least the multiplicative depth of the function to be computed, because one element is usually "consumed" for each rescaling operation, and one is consumed during decryption.
+  The number $L$ should be at least the multiplicative depth of the function to be computed, because one element is usually "consumed" for each rescaling operation, and one more is needed during decryption.
   \item The \emph{scale} of the plaintext, influencing the precision of the result.
 \end{itemize}
 
@@ -237,7 +238,7 @@ In this setting, any party can encrypt data and join the pool of computations.
 There is no need for an initialization step between parties, which means that the participants do not need to be known in advance.
 It is only during the decryption process that every party involved has to participate.
 
-\emph{Multiparty Homomorphic Encryption} (MHE) is the second approach suggested by Mouchet al. \cite{mouchet_multiparty_2021}.
+\emph{Multiparty Homomorphic Encryption} (MHE) is the second approach suggested by Mouchet et al. \cite{mouchet_multiparty_2021}.
 In this case, the key generation process must be done collaboratively with every participant in order to create a common public key.
 This provides less flexibility, but the advantage lies in efficiency.
 As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization keys do not grow with the number of parties.
@@ -279,7 +280,7 @@ Another gray area is the feature extraction process that can happen in different
 
 Thus, in this case, the goal of this diagram is to be a tool for identifying the threats, rather than an exhaustive reference.
 
-\subsection{Threats}\label{sec:threats}
+\subsection{Threats on ML systems}\label{sec:threats}
 
 From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many common types of threats.
 
