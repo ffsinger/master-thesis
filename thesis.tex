@@ -24,8 +24,8 @@
 
 With the ever increasing use of machine learning models processing millions of data points, techniques for protecting this data have emerged.
 The use of homomorphic encryption is promising but still suffers from strong performance issues and relatively low adoption outside of the academia.
-We formalize the threats related to machine learning and attempt to solve the problems of secure model training and private inference using homomomorphic encryption.
-Logistic regression models are used for training, and neural networks are used for inference.
+First, we formalize the threats related to machine learning and then attempt to solve the problems of secure model training and private inference using homomomorphic encryption.
+In particular, we use logistic regression models for the training problem, and neural networks for inference.
 We implement the solutions using two popular homomorphic encryption libraries and analyze the results in terms of runtime, memory usage and accuracy, with the perspective of a real-world deployement.
 We find that heavy optimizations or security and privacy sacrifices need to be made for many use-cases, but we also explore trade-offs that can be acceptable, such as shifting some of the computations to the client.
 
