@@ -184,7 +184,7 @@ We will not go into such details, but support for these advanced methods could b
 
 The basic idea of homomorphic encryption is to allow computations on encrypted data, which is not possible with most modern and commonly used schemes.
 This concept has been introduced in 1978 by the authors of the RSA cryptosystem \cite{rivest_data_1978}.
-The first schemes supported only one type of operation, such as homomorphic additions with the Paillier \cite{paillier_public-key_1999} cryptosystem (1999).
+The first schemes supported only one type of operation, such as homomorphic additions with the Paillier cryptosystem (1999) \cite{paillier_public-key_1999}.
 
 More formally, for a scheme supporting homomorphic additions on two elements $x$ and $y$ of a set, there should be an operation $\oplus$ as well as encryption and decryption operations $Enc$ and $Dec$ respectively, such that : 
 \begin{equation}\label{eq:homomorphic_add}
@@ -256,7 +256,7 @@ As opposed to MKHE, the size of ciphertexts, rotation keys, and relinearization 
 
 Now that the main mathematical and cryptographic concepts have been introduced, we focus on the problems to be solved.
 In this chapter, we formalize the privacy and security threats that need to be mitigated.
-We also describe our solutions to some of these issues from a high-level perspective, and explain the important design decisions.
+We also describe our solutions to some of these issues from a high-level perspective, and explain the important design decisions made for these solutions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 \section{Threat model}
@@ -297,7 +297,7 @@ From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_
 
 \subsubsection{Poisoning attacks}
 
-In many cases, the attacker needs to influence the training process by injecting or modifying the input data.
+In many cases, an attacker wants to influence the training process by injecting or modifying the input data.
 Let us take the example of a classification model based on textual data from documents. 
 To carry out a poisoning attack, an adversary could create spam documents with uncommon words. 
 This will reduce the utility of the system by replacing useful words in the feature vector. 
@@ -322,7 +322,7 @@ The typical adversary carrying out this attack could be a competitor unwilling t
 
 \subsubsection{Inference attacks}
 
-This family is contains multiple subcategories, but the general goal is to extract some knowledge from the training dataset. 
+This family contains multiple subcategories, but the general goal is to extract some knowledge from the training dataset. 
 It can either be general or target a single individual.
 
 A common type is \textbf{membership inference}, where the adversary tries to determine if a known sample was part of the training data. 
@@ -403,7 +403,7 @@ This is because the learned coefficients are kept small, and the sigmoid approxi
 
 The pseudocode for the encryption and training algorithm is given in the appendix (\autoref{algo:lr_training}).
 It basically translates \autoref{eq:gradient_descent} into an algorithm containing only homomorphic operations on vectors.
-We need to be careful to minimize the total number of operations, as well as the multiplicative depth.
+For maximal efficiency, we need to be careful to minimize the total number of operations, as well as the number of chained multiplications (multiplicative depth).
 
 The inference step described in \autoref{eq:logistic_reg_pred} can also be translated to a homomorphic version in order to have a completely encrypted pipeline, but this scenario will be described in the following section with a more complex model.
 
