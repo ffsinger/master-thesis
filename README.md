@@ -1,4 +1,4 @@
-# Document representation for end to end encrypted search and machine learning
+# Secure and private machine learning using homomorphic encryption
 
 Master thesis
 
