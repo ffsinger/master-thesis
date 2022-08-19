@@ -200,25 +200,28 @@ The former two work with vectors of integers, and the latter deals with vectors 
 
 Here is an overview of the basic operations available with CKKS:
 \begin{itemize}
-    \item \texttt{KeyGen}: Generate a public key and a private key.
-    \item \texttt{Encode}: Encode a vector of complex numbers into a plaintext, which is a polynomial in the ring $R = \mathbb{Z}[X]/(X^N + 1)$.
-    \item \texttt{Decode}: Decode a plaintext back into a vector.
-    \item \texttt{Encrypt}: Using the public key, encrypt a plaintext into an element of $R_{q_L}^2$ where $R_{q_L} = R/{q_L}R$ is the set of polynomials from $R$ with coefficients modulo ${q_L}$.
-    \item \texttt{Decrypt}: Decrypt a ciphertext using the private key.
-    \item \texttt{Add}: Pairwise addition of two ciphertexts, or one ciphertext and one plaintext.
-    \item \texttt{Multiply}: Pairwise multiplication of two ciphertexts/plaintext.
-    \item \texttt{Rotate}: Permute the elements in a ciphertext by shifting them by $k$ positions.
-    \item \texttt{Relinearize}: After a multiplication, the resulting ciphertext will be in $R_{q_l}^3$ and will continue to grow after each multiplication. 
+    \item \texttt{KeyGen(params)}: Generate a public key and a private key.
+    \item \texttt{Encode(x)}: Encode a vector of complex numbers into a plaintext, which is a polynomial in the ring $R = \mathbb{Z}[X]/(X^N + 1)$.
+    \item \texttt{Decode(x)}: Decode a plaintext back into a vector.
+    \item \texttt{Encrypt(x, pub\_key)}: Using the public key, encrypt a plaintext into an element of $R_{q_L}^2$ where $R_{q_L} = R/{q_L}R$ is the set of polynomials from $R$ with coefficients modulo ${q_L}$.
+    \item \texttt{Decrypt(x, sec\_key)}: Decrypt a ciphertext using the private key.
+    \item \texttt{Add(x, y)}: Pairwise addition of two ciphertexts, or one ciphertext and one plaintext.
+    \item \texttt{Multiply(x, y)}: Pairwise multiplication of two ciphertexts/plaintext.
+    \item \texttt{Rotate(x, k, rot\_key)}: Permute the elements in a ciphertext by shifting them by $k$ positions to the left.
+    \item \texttt{Relinearize(x, rel\_key)}: After a multiplication, the resulting ciphertext will be in $R_{q_l}^3$ and will continue to grow after each multiplication. 
     Relinearization is used to bring it back to $R_{q_l}^2$ and facilitate decryption.
-    \item \texttt{Rescale}: Rounding operation performed to maintain the size of a ciphertext after a multiplication. It computes $\lfloor \frac{q_{l'}}{q_l} \cdot c \rceil \in R_{q_{l'}}^2$ for a ciphertext $c \in R_{q_l}^2$.
-    \item \texttt{Bootstrap} \cite{cheon_bootstrapping_2018}: Refresh a ciphertext once it reached its maximum number of operations. It puts it back in $R_{q_L}^2$.
+    It requires a relinearization key, sometimes also called an evaluation key.
+    \item \texttt{Rescale(x)}: Rounding operation performed to maintain the size of a ciphertext after a multiplication. It computes $\lfloor \frac{q_{l'}}{q_l} \cdot x \rceil \in R_{q_{l'}}^2$ for a ciphertext $x \in R_{q_l}^2$.
+    \item \texttt{Bootstrap(x)}: Refresh a ciphertext once it reached its maximum number of operations, by putting it back in $R_{q_L}^2$. Details are available in \cite{cheon_bootstrapping_2018} and \cite{bossuat_efficient_2021}.
 \end{itemize}
 
 During the initialization phase, some parameters need to be set:
 
 \begin{itemize}
-  \item The \emph{ring degree} $N$ determines the size of the vectors that we encode. A higher degree also provides more security.
-  \item The \emph{moduli chain} is a sequence of coprime integers $\{ q_0, ..., q_L \}$. 
+  \item The \emph{ring degree} $N$ determines the size of the vectors that we encode.
+  It should be a power of two.
+  A higher degree also provides more security.
+  \item The \emph{moduli chain} is a sequence of integers $\{ q_0, ..., q_L \}$. 
   The number $L$ should be at least the multiplicative depth of the function to be computed, because one element is usually "consumed" for each rescaling operation, and one more is needed during decryption.
   \item The \emph{scale} of the plaintext, influencing the precision of the result.
 \end{itemize}
@@ -599,9 +602,9 @@ Similarly to logistic regression, a class wraps the encryption, prediction and d
 It also translates layers defined with the \texttt{pytorch} library into an encrypted version.
 The following layers are supported, for both the \emph{pixelwise} and the \emph{channelwise} packing methods:
 \begin{itemize}
-  \item Fully connected layer
-  \item 2D convolution
-  \item 2D average pooling
+  \item Fully connected layer of any size
+  \item 2D convolution with zero-padding
+  \item 2D average pooling with stride
   \item Approximate sigmoid activation function (from \cite{kim_logistic_2018}) \\ $f(x) = 0.5 - 1.20096 \cdot (x/8) + 0.81562 \cdot (x/8)^3$ 
   \item Approximate $\tanh$ activation function (from \cite{podschwadt_classification_2020}) \\ $f(x) = -0.00163574303018748 \cdot x^3 + 0.249476365628036 \cdot x$ 
   \item Square activation function $f(x) = x^2$
