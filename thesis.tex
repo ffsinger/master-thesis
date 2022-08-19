@@ -197,7 +197,6 @@ Fully homomorphic schemes support two types of primitive operations, typically a
 
 From this blueprint were born many cryptosystems that are used today, such as BGV \cite{brakerski_leveled_2012}, BFV \cite{fan_somewhat_2012}, or CKKS \cite{cheon_homomorphic_2017, cheon_full_2019}. 
 The former two work with vectors of integers, and the latter deals with vectors of complex numbers.
-
 Here is an overview of the basic operations available with CKKS:
 \begin{itemize}
     \item \texttt{KeyGen(params)}: Generate a public key and a private key.
@@ -214,16 +213,15 @@ Here is an overview of the basic operations available with CKKS:
     \item \texttt{Rescale(x)}: Rounding operation performed to maintain the size of a ciphertext after a multiplication. It computes $\lfloor \frac{q_{l'}}{q_l} \cdot x \rceil \in R_{q_{l'}}^2$ for a ciphertext $x \in R_{q_l}^2$.
     \item \texttt{Bootstrap(x)}: Refresh a ciphertext once it reached its maximum number of operations, by putting it back in $R_{q_L}^2$. Details are available in \cite{cheon_bootstrapping_2018} and \cite{bossuat_efficient_2021}.
 \end{itemize}
-
 During the initialization phase, some parameters need to be set:
-
 \begin{itemize}
   \item The \emph{ring degree} $N$ determines the size of the vectors that we encode.
   It should be a power of two.
   A higher degree also provides more security.
   \item The \emph{moduli chain} is a sequence of integers $\{ q_0, ..., q_L \}$. 
   The number $L$ should be at least the multiplicative depth of the function to be computed, because one element is usually "consumed" for each rescaling operation, and one more is needed during decryption.
-  \item The \emph{scale} of the plaintext, influencing the precision of the result.
+  \item The \emph{scaling factor} $\Delta$ of the plaintext, influencing the precision of the result.
+  It is used to discretize real numbers during encoding, and should not be confused with the rescaling operation.
 \end{itemize}
 
 These parameters need to be carefully tuned based on the problem at hand. 
