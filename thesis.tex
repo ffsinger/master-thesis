@@ -285,17 +285,6 @@ Thus, in this case, the goal of this diagram is to be a tool for identifying the
 
 From surveys of the ML security literature \cite{liu_survey_2018, rigaki_survey_2021}, we can identify many common types of threats.
 
-% \begin{itemize}
-%     \item Poisoning attacks
-%     \item Evasion/impersonation attacks
-%     \item Data ordering attacks
-%     \item Model extraction attacks
-%     \item Membership inference attacks
-%     \item Inversion attacks
-%     \item Attribute inference attacks (leakings features of samples)
-%     \item Property inference attacks (leaking features of datasets)
-% \end{itemize}
-
 \subsubsection{Poisoning attacks}
 
 In many cases, an attacker wants to influence the training process by injecting or modifying the input data.
@@ -363,11 +352,6 @@ If the data comes from external data owners and should not be visible to the mod
 However, this feature is not available in many HE libraries.
 
 If we distinguish the client (data and model owner) and the server (computing power provider), the steps of an encrypted training procedure can be described as follows:
-% \begin{enumerate}
-%     \item Client: initialize the keys and encrypt the data. Send the encrypted data and other objects or parameters required for homomorphic computations (e.g. rotation keys, relinearization keys).
-%     \item Server: train the model. Send back the encrypted weights.
-%     \item Client: decrypt the weights.
-% \end{enumerate}
 
 \begin{table}[h!]
   \begin{center}
@@ -432,11 +416,6 @@ In addition, the architecture of the model must be revealed to the client, which
 Due to these limitations, we will focus on the first approach, but the runtime estimates should not differ too much between the two, because the algorithms are quite similar.
 
 This time, if we consider the client to be the data owner and the server to be the model owner, the steps are very similar to \autoref{sec:secure_training}:
-% \begin{enumerate}
-%     \item Client: initialize the keys and encrypt the data. Send the encrypted data and the required keys (relinearization or rotation keys).
-%     \item Server: do the inference. Send back the result.
-%     \item Client: decrypt the result.
-% \end{enumerate}
 
 \begin{table}[h!]
   \begin{center}
@@ -990,11 +969,6 @@ Furthermore, the hybrid version has a much smaller footprint and is also much fa
 \end{table}
 
 
-%\subsection{PDF-split}
-%The goal is to find a convolutional network that would be appropriate for the problem of finding logical separations between documents. 
-%As this problem requires us to make a prediction for each page in a document, pixelwise packing is more appropriate for its ability to batch many inferences.
-
-
 %%%%%%%%%%%%%%%%%%%%%%
 \chapter{Related work}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -1174,7 +1148,6 @@ The version for \emph{pixelwise} packing is much simpler, as it only requires on
   \SetKwProg{Fn}{Function}{:}{}
   \SetKwInOut{Precondition}{Precondition}
 
-  % A collection of ciphertexts $c$ where $c_{bk}$ is the ciphertext for sample $b=1,...,B$ and channel $k=1,...,K$
   \KwIn{A collection of ciphertexts for $B$ samples and $W_{in}$ input channels where each ciphertext represents a row-wise encoded image of size $R_{in} \times C_{in}$, a collection of kernels and biases, and the ring degree $N$}
   \KwOut{A collection $d$ of ciphertexts for $B$ samples and $W_{out}$ output channels}
   \Precondition{$R_{in} \cdot C_{in} \leq N/2$}
